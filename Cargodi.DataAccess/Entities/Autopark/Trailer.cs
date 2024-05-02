@@ -14,5 +14,5 @@ public class Trailer
 	public Autopark Autopark { get; set; } = null!;
 	public int AutoparkId { get; set; }
 
-	public List<TrailerInShipSchedule> Schedules { get; set; } = null!;
+	public ICollection<Ship.Ship>? Ships { get; set; }
 }

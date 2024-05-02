@@ -6,4 +6,6 @@ public class Client
 
 	public User User { get; set; } = null!;
 	public long UserId { get; set; }
+	
+	public string Name { get; set; } = null!;
 }

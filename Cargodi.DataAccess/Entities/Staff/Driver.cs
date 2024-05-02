@@ -5,7 +5,7 @@ public class Driver
 	public int Id { get; set; }
 
 	public Autopark.Autopark Autopark { get; set; } = null!;
-	public int AuoparkId { get; set; }
+	public int AutoparkId { get; set; }
 
 	public string License { get; set; } = null!;
 	public string SecondName { get; set; } = null!;
@@ -14,6 +14,9 @@ public class Driver
 
 	public User User { get; set; } = null!;
 	public long UserId { get; set; }
+	
+	public DateTime EmployDate { get; set; }
+	public DateTime? FireDate { get; set; }
 	
 	public ICollection<Ship.Ship>? Ships { get; set; }
 	public ICollection<Category> Categories { get; set; } = null!;

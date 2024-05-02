@@ -13,4 +13,9 @@ public class Operator
 	public string SecondName { get; set; } = null!;
 	public string FirstName { get; set; } = null!;
 	public string? MiddleName { get; set; } 
+	
+	public DateTime EmployDate { get; set; }
+	public DateTime? FireDate { get; set; }
+	
+	public ICollection<Order.Order>? Orders { get; set; }
 }

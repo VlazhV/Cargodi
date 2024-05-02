@@ -16,5 +16,8 @@ public class Car
 	public Autopark Autopark { get; set; } = null!;
 	public int AutoparkId { get; set; }
 
-	public List<CarInShipSchedule> Schedules { get; set; } = null!;  
+	public CarType CarType { get; set; } = null!;
+	public int CarTypeId { get; set; }
+
+	public ICollection<Ship.Ship>? Ships { get; set; }
 }

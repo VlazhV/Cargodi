@@ -12,5 +12,6 @@ public class Address
 	public bool IsNorth { get; set; }
 
 	public ICollection<Autopark.Autopark>? Autoparks { get; set; }
-	public ICollection<Order.Order>? Orders { get; set; }
+	public ICollection<Order.Order>? LoadOrders { get; set; }
+	public ICollection<Order.Order>? DeliveryOrders { get; set; }
 }

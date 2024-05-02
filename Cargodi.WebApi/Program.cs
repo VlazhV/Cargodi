@@ -1,4 +1,18 @@
+using System.Reflection;
+using Cargodi.DataAccess.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<DatabaseContext>(options => 
+{
+	options.UseSqlServer(
+		builder.Configuration.GetConnectionString("Default"),
+		sqlBuilder =>
+			sqlBuilder.MigrationsAssembly(
+				Assembly.GetAssembly(typeof(DatabaseContext))?.GetName().Name)
+			);
+});
 
 // Add services to the container.
 
@@ -12,8 +26,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
