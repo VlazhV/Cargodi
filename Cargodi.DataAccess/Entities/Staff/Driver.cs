@@ -14,6 +14,9 @@ public class Driver
 
 	public User User { get; set; } = null!;
 	public long UserId { get; set; }
+
+	public DriverStatus DriverStatus { get; set; } = null!;
+	public int DriverStatusId { get; set; }
 	
 	public DateTime EmployDate { get; set; }
 	public DateTime? FireDate { get; set; }
