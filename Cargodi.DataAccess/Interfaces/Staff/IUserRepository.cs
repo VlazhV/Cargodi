@@ -5,7 +5,9 @@ namespace Cargodi.DataAccess.Interfaces.Staff;
 
 public interface IUserRepository: IRepository<User, long>
 {
-	bool DoesItExist(User candidate);
+	Task<bool> DoesItExistAsync(User candidate, CancellationToken cancellationToken);
+
+	Task<bool> DoesItExistAsync(long id, CancellationToken cancellationToken);
 	
 	Task<IList<string>> GetRolesAsync(User user);
 	Task<User?> FindByNameAsync(string name);

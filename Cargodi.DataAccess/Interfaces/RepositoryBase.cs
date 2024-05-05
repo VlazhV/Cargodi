@@ -32,11 +32,6 @@ protected readonly DatabaseContext _db;
 		return await _db.Set<T>().AsNoTracking().ToListAsync(cancellationToken);
 	}
 
-    public Task<IEnumerable<T>> GetAsync(CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<T?> GetByIdAsync(K id, CancellationToken cancellationToken)
 	{
 		return await _db.Set<T>().FindAsync(id, cancellationToken);

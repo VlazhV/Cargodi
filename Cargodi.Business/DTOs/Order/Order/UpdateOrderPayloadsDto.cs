@@ -2,7 +2,7 @@ using Cargodi.Business.DTOs.Order.Payload;
 
 namespace Cargodi.Business.DTOs.Order.Order;
 
-public class UpdateOrderPayloadDto
+public class UpdateOrderPayloadsDto
 {
 	public string LoadAddress { get; set; } = null!;
 	public string DeliverAddress { get; set; } = null!;

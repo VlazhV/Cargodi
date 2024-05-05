@@ -3,6 +3,7 @@ using Cargodi.DataAccess.Entities;
 using Cargodi.DataAccess.Interfaces;
 using Cargodi.DataAccess.Interfaces.Staff;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cargodi.DataAccess.Repositories.Staff;
 
@@ -40,14 +41,19 @@ public class UserRepository : RepositoryBase<User, long>, IUserRepository
 		return await _userManager.DeleteAsync(user);
 	}
 
-	public bool DoesItExist(User candidate)
+	public async Task<bool> DoesItExistAsync(User candidate, CancellationToken cancellationToken)
 	{
-		return _db.Users.Any(u => u.Email!.Equals(candidate.Email)
+		return await _db.Users.AnyAsync(u => u.Email!.Equals(candidate.Email)
 					|| u.UserName!.Equals(candidate.UserName)
-					|| u.PhoneNumber!.Equals(candidate.PhoneNumber));
+					|| u.PhoneNumber!.Equals(candidate.PhoneNumber), cancellationToken);
 	}
 
-	public async Task<User?> FindByIdAsync(string id)
+    public async Task<bool> DoesItExistAsync(long id, CancellationToken cancellationToken)
+    {
+		return await _db.Users.AnyAsync(u => u.Id == id, cancellationToken);
+    }
+
+    public async Task<User?> FindByIdAsync(string id)
 	{
 		return await _userManager.FindByIdAsync(id);
 	}
