@@ -1,3 +1,9 @@
+using Cargodi.Business.Interfaces.Autopark;
+using Cargodi.Business.Interfaces.Identity;
+using Cargodi.Business.Interfaces.Order;
+using Cargodi.Business.Services.Autopark;
+using Cargodi.Business.Services.Identity;
+using Cargodi.Business.Services.Order;
 using Cargodi.DataAccess.Interfaces.Autopark;
 using Cargodi.DataAccess.Interfaces.Order;
 using Cargodi.DataAccess.Interfaces.Ship;
@@ -29,5 +35,23 @@ public static class Startup
 		//Staff
 		services.AddScoped<IDriverRepository, DriverRepository>();
 		services.AddScoped<IUserRepository, UserRepository>();
+	}
+	
+	public static void ConfigureServices(this IServiceCollection services)
+	{
+		//Autopark
+		services.AddScoped<IAutoparkService, AutoparkService>();
+		services.AddScoped<ICarService, CarService>();
+		services.AddScoped<ITrailerService, TrailerService>();
+
+		//Identity
+		services.AddScoped<IIdentityService, IdentityService>();
+		services.AddScoped<ITokenService, TokenService>();
+		services.AddScoped<IUserService, UserService>();
+
+		//Order
+		services.AddScoped<IOrderService, OrderService>();
+		services.AddScoped<IPayloadService, PayloadService>();
+		
 	}
 }
