@@ -1,6 +1,6 @@
 namespace Cargodi.DataAccess.Entities.Autopark;
 
-public class Car
+public class Car: ICarrier
 {
 	public int Id{ get; set; }
 	public string LicenseNumber { get; set; } = null!;
@@ -16,8 +16,21 @@ public class Car
 	public Autopark Autopark { get; set; } = null!;
 	public int AutoparkId { get; set; }
 
+	public Autopark ActualAutopark { get; set; } = null!;
+	public int ActualAutoparkId { get; set; }
+
 	public CarType CarType { get; set; } = null!;
 	public int CarTypeId { get; set; }
 
 	public ICollection<Ship.Ship>? Ships { get; set; }
+	
+	public bool CanInclude(int biggestLinearSize)
+	{
+		return CapacityHeight > biggestLinearSize || CapacityWidth > biggestLinearSize || CapacityLength > biggestLinearSize;
+	}
+	
+	public int Capacity()
+	{
+		return CapacityHeight * CapacityLength * CapacityWidth;
+	}
 }

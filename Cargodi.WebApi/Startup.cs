@@ -4,6 +4,8 @@ using Cargodi.Business.Interfaces.Order;
 using Cargodi.Business.Services.Autopark;
 using Cargodi.Business.Services.Identity;
 using Cargodi.Business.Services.Order;
+using Cargodi.DataAccess.Data;
+using Cargodi.DataAccess.Entities;
 using Cargodi.DataAccess.Interfaces.Autopark;
 using Cargodi.DataAccess.Interfaces.Order;
 using Cargodi.DataAccess.Interfaces.Ship;
@@ -12,6 +14,7 @@ using Cargodi.DataAccess.Repositories.Autopark;
 using Cargodi.DataAccess.Repositories.Order;
 using Cargodi.DataAccess.Repositories.Ship;
 using Cargodi.DataAccess.Repositories.Staff;
+using Microsoft.AspNetCore.Identity;
 
 namespace Cargodi.WebApi;
 
@@ -52,6 +55,11 @@ public static class Startup
 		//Order
 		services.AddScoped<IOrderService, OrderService>();
 		services.AddScoped<IPayloadService, PayloadService>();
+		
+		services.AddIdentity<User, IdentityRole<long>>()
+			.AddEntityFrameworkStores<DatabaseContext>()
+			.AddUserManager<UserManager<User>>()
+			.AddSignInManager<SignInManager<User>>();
 		
 	}
 }

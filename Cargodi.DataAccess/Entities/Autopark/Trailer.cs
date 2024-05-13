@@ -1,6 +1,6 @@
 namespace Cargodi.DataAccess.Entities.Autopark;
 
-public class Trailer
+public class Trailer: ICarrier
 {
 	public int Id { get; set; }
 	public string LicenseNumber { get; set; } = null!;
@@ -11,8 +11,21 @@ public class Trailer
 
 	public int Carrying { get; set; }
 
+	public Autopark ActualAutopark { get; set; } = null!;
+	public int ActualAutoparkId { get; set; }
+
 	public Autopark Autopark { get; set; } = null!;
 	public int AutoparkId { get; set; }
 
 	public ICollection<Ship.Ship>? Ships { get; set; }
+
+	public bool CanInclude(int biggestLinearSize)
+	{
+		return CapacityHeight > biggestLinearSize || CapacityWidth > biggestLinearSize || CapacityLength > biggestLinearSize;
+	}
+
+	public int Capacity()
+	{
+		return CapacityHeight * CapacityLength * CapacityWidth;
+	}
 }

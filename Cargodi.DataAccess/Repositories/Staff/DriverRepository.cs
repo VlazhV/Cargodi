@@ -11,13 +11,11 @@ public class DriverRepository : RepositoryBase<Driver, int>, IDriverRepository
 {
 	public DriverRepository(DatabaseContext databaseContext): base(databaseContext)
 	{	}
-	public async Task<IEnumerable<Driver>> GetAvailableAsync(CancellationToken cancellationToken)
+	public async Task<IEnumerable<Driver>> GetSuitableDriversAsync(IEnumerable<Category> categories, CancellationToken cancellationToken)
 	{
 		return await _db.Drivers
-			.Include(d => d.Ships)
-			.Include(d => d.DriverStatus)
-			.Where(d => d.Ships!.First().Finish != null && d.DriverStatus == DriverStatuses.Works)
-			.AsNoTracking()
+			.Include(d => d.Categories)
+			.Where(d => d.Categories.Intersect(categories).Any())
 			.ToListAsync(cancellationToken);
 	}
 

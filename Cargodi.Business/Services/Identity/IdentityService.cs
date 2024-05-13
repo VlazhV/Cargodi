@@ -48,22 +48,16 @@ public class IdentityService : IIdentityService
 
 	public async Task<UserDto> RegisterAsync(RegisterDto registerDto, string? receptionistRole, CancellationToken cancellationToken)
 	{
-		if (receptionistRole != Roles.Manager && receptionistRole != Roles.Admin)
-			throw new ApiException("Unauthorized", ApiException.Unauthorized);
-		
-		if (receptionistRole == Roles.Manager && registerDto.Role == Roles.Admin)
-			throw new ApiException("No permission", ApiException.BadRequest);
-					
 		var user = _mapper.Map<User>(registerDto);
 		
 		if (await _userRepository.DoesItExistAsync(user, cancellationToken))
 			throw new ApiException("email, phone number or user name is reserved", ApiException.BadRequest);
-		
-		var password = GenerateRandom();
+
+		var password = $"{user.UserName}_{registerDto.Role!.ToUpper()}_123";
 		await HandleIdentityResultAsync(_userRepository.CreateAsync(user, password));
 		
 		await HandleIdentityResultAsync(_userRepository.AddToRoleAsync(user, registerDto.Role!));
-		//send to mail password;
+		
 		
 		var userDto = _mapper.Map<UserDto>(user);
 		userDto.Role = (await _userRepository.GetRolesAsync(user)).First();
@@ -79,7 +73,7 @@ public class IdentityService : IIdentityService
 			throw new ApiException("email, phone number or user name is reserved", ApiException.BadRequest);
 		
 		await HandleIdentityResultAsync(_userRepository.CreateAsync(user, signupDto.Password!));			
-		await _userRepository.AddToRoleAsync(user, Roles.Client);
+		await _userRepository.AddToRoleAsync(user, Roles.Admin);
 		
 		var tokenDto = await LoginAsync(_mapper.Map<LoginDto>(signupDto), cancellationToken);
 

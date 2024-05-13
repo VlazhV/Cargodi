@@ -28,6 +28,8 @@ public class CarService : ICarService
 		}
 						
 		var car = _mapper.Map<Car>(carDto);
+
+		car.ActualAutoparkId = car.AutoparkId;
 		
 		car = await _carRepository.CreateAsync(car, cancellationToken);
 		await _carRepository.SaveChangesAsync(cancellationToken);

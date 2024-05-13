@@ -1,6 +1,12 @@
 using System.Reflection;
+using Cargodi.Business.Extensions.AutomapperProfiles;
+using Cargodi.Business.Extensions;
 using Cargodi.DataAccess.Data;
+using Cargodi.WebApi;
 using Microsoft.EntityFrameworkCore;
+using Cargodi.WebApi.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,12 +20,25 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 			);
 });
 
-// Add services to the container.
+
+builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(IdentityProfile)));
+
+builder.Services.ConfigureRepositories();
+builder.Services.ConfigureServices();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services.AddIdentityService(builder.Configuration);
+
+		
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerServices();
+
+builder.Services.AddRouting(options => {
+	options.LowercaseUrls = true;
+	options.LowercaseQueryStrings = true;
+});
+
 
 var app = builder.Build();
 
@@ -30,8 +49,9 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseExceptionHandlerMiddleware();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

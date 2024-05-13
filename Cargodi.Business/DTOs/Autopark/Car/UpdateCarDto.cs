@@ -13,4 +13,6 @@ public class UpdateCarDto
 	public int CapacityHeight { get; set; } //mm
 	
 	public string CarType { get; set; } = null!;
+	public int AutoparkId { get; set; }
+	public int ActualAutoparkId { get; set; }
 }

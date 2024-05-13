@@ -7,6 +7,9 @@ public class Driver
 	public Autopark.Autopark Autopark { get; set; } = null!;
 	public int AutoparkId { get; set; }
 
+	public Autopark.Autopark ActualAutopark { get; set; } = null!;
+	public int AcutalAutoparkId { get; set; }
+
 	public string License { get; set; } = null!;
 	public string SecondName { get; set; } = null!;
 	public string FirstName { get; set; } = null!;

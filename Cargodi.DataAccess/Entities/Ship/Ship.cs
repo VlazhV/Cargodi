@@ -18,6 +18,13 @@ public class Ship
 
 	public Operator Operator { get; set; } = null!;
 	public int OperatorId { get; set; }
+	
+	public int AutoparkStartId { get; set; }
+	public Autopark.Autopark AutoparkStart { get; set; } = null!;
+	
+	public int AutoparkFinishId { get; set; }
+	public Autopark.Autopark AutoparkFinish { get; set; } = null!;
 
 	public ICollection<Driver> Drivers { get; set; } = null!;
+	public ICollection<Stop> Stops { get; set; } = null!;
 }

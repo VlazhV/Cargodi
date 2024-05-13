@@ -4,5 +4,5 @@ namespace Cargodi.DataAccess.Interfaces.Staff;
 
 public interface IDriverRepository : IRepository<Driver, int>
 {
-	Task<IEnumerable<Driver>> GetAvailableAsync(CancellationToken cancellationToken);
+	Task<IEnumerable<Driver>> GetSuitableDriversAsync(IEnumerable<Category> categories, CancellationToken cancellationToken);
 }

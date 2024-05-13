@@ -11,15 +11,12 @@ namespace Cargodi.Business.Services.Identity;
 public class UserService : IUserService
 {
 	private readonly IUserRepository _userRepository;
-	private readonly ITokenService _tokenService;
 	private readonly IMapper _mapper;
 
 	public UserService(
 			IUserRepository userRepository,
-			ITokenService tokenService,
 			IMapper mapper)
 	{
-		_tokenService = tokenService;
 		_userRepository = userRepository;
 		_mapper = mapper;
 	}

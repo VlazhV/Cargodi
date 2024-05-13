@@ -10,7 +10,13 @@ public class Autopark
 	public int Capacity { get; set; }
 	
 	public List<Car>? Cars { get; set; }
+	public List<Car>? ActualCars{ get; set; }
+	
 	public List<Trailer>? Trailers { get; set; }
+	public List<Trailer>? ActualTrailers{ get; set; }
+	
 	public List<Operator>? Operators { get; set; }
+	
 	public List<Driver>? Drivers { get; set; }
+	public List<Driver>? ActualDrivers { get; set; }
 }
