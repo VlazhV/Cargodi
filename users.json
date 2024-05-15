@@ -2,6 +2,11 @@
   {
     "userName": "superadmin",
     "password": "SUPER-admin0"
+  },
+  {
+    "userName": "superadmin1",
+    "password": "SUPER-admin1"
   }
+
 
 ]

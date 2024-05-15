@@ -7,14 +7,43 @@ namespace Cargodi.DataAccess.Repositories.Autopark;
 
 public class AutoparkRepository : RepositoryBase<Entities.Autopark.Autopark, int>, IAutoparkRepository
 {
-    public AutoparkRepository(DatabaseContext db) : base(db)
-    {
-    }
+	public AutoparkRepository(DatabaseContext db) : base(db)
+	{
+	}
 
-    public async Task<bool> DoesItExistAsync(int id, CancellationToken cancellationToken)
-    {
-        return await _db.Autoparks
+	public async Task<bool> DoesItExistAsync(int id, CancellationToken cancellationToken)
+	{
+		return await _db.Autoparks
 			.AsNoTracking()
 			.AnyAsync(a => a.Id == id, cancellationToken);
-    }
+	}
+
+	public async Task<IEnumerable<Entities.Autopark.Autopark>> GetAutoparksWithAddressesVehicleAsync(CancellationToken cancellationToken)
+	{
+		return await _db.Autoparks
+			.Include(a => a.Address)
+			.Include(a => a.Cars)
+			.Include(a => a.ActualCars)
+			.Include(a => a.Trailers)
+			.Include(a => a.ActualTrailers)
+			.Include(a => a.Drivers)
+			.Include(a => a.ActualDrivers)
+			.AsNoTracking()
+			.ToListAsync(cancellationToken);
+	}
+
+	public async Task<Entities.Autopark.Autopark?> GetAutoparkWithAddressesVehicleByIdAsync(int id, CancellationToken cancellationToken)
+	{
+		return await _db.Autoparks
+			.Include(a => a.Address)
+			.Include(a => a.Cars)
+			.Include(a => a.ActualCars)
+			.Include(a => a.Trailers)
+			.Include(a => a.ActualTrailers)
+			.Include(a => a.Drivers)
+			.Include(a => a.ActualDrivers)
+			.AsNoTracking()
+			.FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
+	}
+
 }

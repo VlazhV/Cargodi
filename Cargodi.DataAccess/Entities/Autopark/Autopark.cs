@@ -19,4 +19,7 @@ public class Autopark
 	
 	public List<Driver>? Drivers { get; set; }
 	public List<Driver>? ActualDrivers { get; set; }
+
+	public List<Ship.Ship> ShipStarts { get; set; } = null!;
+	public List<Ship.Ship> ShipFinishes { get; set; } = null!;
 }

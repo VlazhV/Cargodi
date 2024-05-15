@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Cargodi.Business.DTOs.Identity;
 using Cargodi.Business.Interfaces.Identity;
+using Cargodi.DataAccess.Constants;
 using Cargodi.WebApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,9 +32,12 @@ public class IdentityController: ControllerBase
 	}
 
 	[HttpPost("register")]
-	[AuthorizeAdminManager]
+	[Authorize]
 	public async Task<ActionResult<UserDto>> Register([FromBody] RegisterDto registerDto, CancellationToken cancellationToken)
-	{				
-		return Ok(await _identityService.RegisterAsync(registerDto, User.FindFirst(ClaimTypes.Role)?.Value, cancellationToken));		
+	{
+		if (!User.IsInRole(Roles.Admin) && !User.IsInRole(Roles.Manager))
+			return NotFound();
+		
+		return Ok(await _identityService.RegisterAsync(registerDto, User.FindFirst(ClaimTypes.Role)?.Value, cancellationToken));
 	}
 }

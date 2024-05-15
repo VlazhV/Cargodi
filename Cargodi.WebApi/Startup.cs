@@ -1,16 +1,20 @@
 using Cargodi.Business.Interfaces.Autopark;
 using Cargodi.Business.Interfaces.Identity;
 using Cargodi.Business.Interfaces.Order;
+using Cargodi.Business.Interfaces.Ship;
 using Cargodi.Business.Services.Autopark;
 using Cargodi.Business.Services.Identity;
 using Cargodi.Business.Services.Order;
+using Cargodi.Business.Services.Ship;
 using Cargodi.DataAccess.Data;
 using Cargodi.DataAccess.Entities;
 using Cargodi.DataAccess.Interfaces.Autopark;
+using Cargodi.DataAccess.Interfaces.Common;
 using Cargodi.DataAccess.Interfaces.Order;
 using Cargodi.DataAccess.Interfaces.Ship;
 using Cargodi.DataAccess.Interfaces.Staff;
 using Cargodi.DataAccess.Repositories.Autopark;
+using Cargodi.DataAccess.Repositories.Common;
 using Cargodi.DataAccess.Repositories.Order;
 using Cargodi.DataAccess.Repositories.Ship;
 using Cargodi.DataAccess.Repositories.Staff;
@@ -38,6 +42,10 @@ public static class Startup
 		//Staff
 		services.AddScoped<IDriverRepository, DriverRepository>();
 		services.AddScoped<IUserRepository, UserRepository>();
+		services.AddScoped<IOperatorRepository, OperatorRepository>();
+
+		//Common
+		services.AddScoped<IAddressRepository, AddressRepository>();
 	}
 	
 	public static void ConfigureServices(this IServiceCollection services)
@@ -51,15 +59,18 @@ public static class Startup
 		services.AddScoped<IIdentityService, IdentityService>();
 		services.AddScoped<ITokenService, TokenService>();
 		services.AddScoped<IUserService, UserService>();
-
-		//Order
-		services.AddScoped<IOrderService, OrderService>();
-		services.AddScoped<IPayloadService, PayloadService>();
 		
 		services.AddIdentity<User, IdentityRole<long>>()
 			.AddEntityFrameworkStores<DatabaseContext>()
 			.AddUserManager<UserManager<User>>()
 			.AddSignInManager<SignInManager<User>>();
 		
+		//Order
+		services.AddScoped<IOrderService, OrderService>();
+		services.AddScoped<IPayloadService, PayloadService>();
+
+		//ship
+		services.AddScoped<IShipService, ShipService>();
+		services.AddScoped<IShipGeneratingService, ShipGeneratingService>();
 	}
 }

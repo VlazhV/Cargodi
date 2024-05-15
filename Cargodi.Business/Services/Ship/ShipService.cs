@@ -60,7 +60,7 @@ public class ShipService : IShipService
 		foreach(var d in ship.Drivers)
 		{
 			var driver =  await _driverRepository.GetByIdAsync(d.Id, cancellationToken);
-			driver!.AcutalAutoparkId = ship.AutoparkFinishId;
+			driver!.ActualAutoparkId = ship.AutoparkFinishId;
 			_driverRepository.Update(driver);
 		}
 

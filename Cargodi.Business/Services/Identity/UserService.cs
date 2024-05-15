@@ -41,7 +41,7 @@ public class UserService : IUserService
 			throw new ApiException("Unauthorized", ApiException.Unauthorized);
 
 		var users = await _userRepository.GetAllAsync(cancellationToken);
-
+		
 		return _mapper.Map<IEnumerable<UserIdDto>>(users);
 	}
 

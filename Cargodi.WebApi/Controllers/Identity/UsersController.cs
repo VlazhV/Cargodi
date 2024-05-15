@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Cargodi.Business.DTOs.Identity;
 using Cargodi.Business.Interfaces.Identity;
+using Cargodi.DataAccess.Constants;
 using Cargodi.WebApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,27 +9,33 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cargodi.WebApi.Controllers.Identity;
 
 [ApiController]
-[Route("api/users")]
+[Route("api")]
 public class UsersController: ControllerBase
 {
-	private IUserService _userSerivce;
+	private readonly IUserService _userSerivce;
 	public UsersController
 		(IUserService userService)
 	{
 		_userSerivce = userService;
 	}
 	
-	[HttpGet]
-	[AuthorizeAdminManager]
+	[HttpGet("users")]
+	[Authorize]
 	public async Task<ActionResult<IEnumerable<UserIdDto>>> GetAllAsync(CancellationToken cancellationToken)
-	{		
+	{
+		if (!User.IsInRole(Roles.Admin) && !User.IsInRole(Roles.Manager))
+			return NotFound();
+		
 		return Ok(await _userSerivce.GetAllAsync(User.FindFirst(ClaimTypes.Role)?.Value, cancellationToken));
 	}
 	
-	[HttpGet("{id}")]
-	[AuthorizeAdminManager]
+	[HttpGet("users/{id}")]
+	[Authorize]
 	public async Task<ActionResult<UserDto>> GetByIdAsync(string id, CancellationToken cancellationToken) 
-	{		
+	{	
+		if (!User.IsInRole(Roles.Admin) && !User.IsInRole(Roles.Manager))
+			return NotFound();
+			
 		return Ok(await _userSerivce.GetByIdAsync(id, User.FindFirst(ClaimTypes.Role)?.Value, cancellationToken));
 	}
 	
@@ -54,7 +61,7 @@ public class UsersController: ControllerBase
 		return Ok();
 	}
 	
-	[HttpDelete("{id}")]
+	[HttpDelete("users/{id}")]
 	[Authorize]
 	public async Task<ActionResult> DeleteUserAsync ([FromRoute] string? id, CancellationToken cancellationToken)
 	{

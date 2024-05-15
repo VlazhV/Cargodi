@@ -40,11 +40,11 @@ public class ShipGeneratingService : IShipGeneratingService
 		_mapper = mapper;
 	}
 
-	public async Task<IEnumerable<GetShipDto>> BuildRouteAsync(CancellationToken cancellationToken)
-	{
-		var orders = await _orderRepository.GetOrdersWithPayloadsAsync(cancellationToken);
-		var autoparks = await _autoparkRepository.GetAutoparksWithAddressesAsync(cancellationToken);
-	}
+	// public async Task<IEnumerable<GetShipDto>> BuildRouteAsync(CancellationToken cancellationToken)
+	// {
+	// 	var orders = await _orderRepository.GetOrdersWithPayloadsAsync(cancellationToken);
+	// 	var autoparks = await _autoparkRepository.GetAutoparksWithAddressesAsync(cancellationToken);
+	// }
 
 	public async Task<IEnumerable<Driver>> SelectDriversAsync(Car car, CancellationToken cancellationToken)
 	{

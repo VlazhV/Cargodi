@@ -27,7 +27,7 @@ public class ExceptionHandlerMiddleware
 		{
 			await HandleValidationExceptionAsync(context, ex);			
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
 			await HandleInternalServerErrorAsync(context);
 		}
