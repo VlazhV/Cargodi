@@ -42,7 +42,7 @@ public class TrailerRepository : RepositoryBase<Trailer, int>, ITrailerRepositor
 			.Where(ship => ship.Start != null && ship.Finish == null)
 			.Select(ship => ship.Trailer)
 				.Where(car => car.Carrying > weight && car.Capacity() > volume && car.CanInclude(biggestLinearSize) && car.ActualAutoparkId == autoparkStartId)
-				.OrderBy(trailer => trailer.Capacity())
+				.OrderBy(trailer => trailer.Capacity()).ThenBy(trailer => trailer.Carrying)
 			.ToListAsync(cancellationToken);
 	}
 

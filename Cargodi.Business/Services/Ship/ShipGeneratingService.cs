@@ -1,3 +1,5 @@
+using AutoMapper;
+using Cargodi.Business.DTOs.Ship.Ship;
 using Cargodi.Business.Interfaces.Ship;
 using Cargodi.DataAccess.Constants;
 using Cargodi.DataAccess.Entities.Autopark;
@@ -5,6 +7,7 @@ using Cargodi.DataAccess.Entities.Order;
 using Cargodi.DataAccess.Entities.Staff;
 using Cargodi.DataAccess.Interfaces.Autopark;
 using Cargodi.DataAccess.Interfaces.Order;
+using Cargodi.DataAccess.Interfaces.Ship;
 using Cargodi.DataAccess.Interfaces.Staff;
 
 namespace Cargodi.Business.Services.Ship;
@@ -15,19 +18,32 @@ public class ShipGeneratingService : IShipGeneratingService
 	private readonly ITrailerRepository _trailerRepository;
 	private readonly IDriverRepository _driverRepository;
 	private readonly IPayloadRepository _payloadRepository;
+	private readonly IOrderRepository _orderRepository;
+	private readonly IAutoparkRepository _autoparkRepository;
+	private readonly IShipRepository _shipRepository;
+	private readonly IMapper _mapper;
 	
 	public ShipGeneratingService(ICarRepository carRepository, ITrailerRepository trailerRepository, 
-		IDriverRepository driverRepository, IPayloadRepository payloadRepository)
+		IDriverRepository driverRepository, IPayloadRepository payloadRepository,
+		IOrderRepository orderRepository, IAutoparkRepository autoparkRepository,
+		IShipRepository shipRepository,
+		IMapper mapper)
 	{
 		_carRepository = carRepository;
 		_trailerRepository = trailerRepository;
 		_driverRepository = driverRepository;
 		_payloadRepository = payloadRepository;
+		_orderRepository = orderRepository;
+		_autoparkRepository = autoparkRepository;
+		_shipRepository = shipRepository;
+		
+		_mapper = mapper;
 	}
 
-	public Task<DataAccess.Entities.Ship.Ship> BuildRouteAsync(CancellationToken cancellationToken)
+	public async Task<IEnumerable<GetShipDto>> BuildRouteAsync(CancellationToken cancellationToken)
 	{
-		throw new NotImplementedException();
+		var orders = await _orderRepository.GetOrdersWithPayloadsAsync(cancellationToken);
+		var autoparks = await _autoparkRepository.GetAutoparksWithAddressesAsync(cancellationToken);
 	}
 
 	public async Task<IEnumerable<Driver>> SelectDriversAsync(Car car, CancellationToken cancellationToken)
@@ -51,16 +67,18 @@ public class ShipGeneratingService : IShipGeneratingService
 	
 	public async Task<(Car, Trailer?)> SelectVehicleAsync(DataAccess.Entities.Ship.Ship ship, CancellationToken cancellationToken)
 	{
-		var payloads = _payloadRepository.GetPayloadsOfShip(ship.Id);
+		var shipfull = await _shipRepository.GetShipWithStopsWithOrdersAsync(ship.Id, cancellationToken);
+		var orders = shipfull!.Stops.Select(stop => stop.Order).ToList();
 		
-		int volume = 0;
-		int weight = 0;
+		int volume = FindMaxValue(orders, ValueType.Volume);
+		int weight = FindMaxValue(orders, ValueType.Weight);
+
+		var payloads = orders.SelectMany(o => o.Payloads);
+
 		int biggestLinearSize = 0;
 		
 		foreach (Payload p in payloads)
 		{
-			volume += p.Length * p.Height * p.Width;
-			weight += p.Weight;
 			var maxPayloadSize = Math.Max(p.Width, Math.Max(p.Length, p.Height));
 			biggestLinearSize = Math.Max(biggestLinearSize, maxPayloadSize);
 		}
@@ -80,7 +98,7 @@ public class ShipGeneratingService : IShipGeneratingService
 			throw new ArgumentException("Cannot find vehicle");
 		}
 
-		var carrier = carriers.OrderBy(car => car.Capacity()).First();
+		var carrier = carriers.First();
 		
 		if (carrier.GetType() == typeof(Trailer))
 		{
@@ -91,5 +109,60 @@ public class ShipGeneratingService : IShipGeneratingService
 
 		return ((Car)carrier, null);
 	}
+	
+	private static int FindMaxValue(List<DataAccess.Entities.Order.Order> orders, ValueType valueType)
+	{
+		int[] sumsFromBegin = new int[orders.Count];
+		
+		int currentSum = 0;
+		
+		if (valueType == ValueType.Weight)
+		{
+			for (int i = 0; i < sumsFromBegin.Length; i++)
+			{
+				int orderSum = 0;
+				foreach (var p in orders[i].Payloads)
+				{
+					orderSum += p.Weight;
+				}
 
+				currentSum += orderSum;
+				sumsFromBegin[i] = currentSum;
+			}
+		}
+		else
+		{
+			for (int i = 0; i < sumsFromBegin.Length; i++)
+			{
+				int orderSum = 0;
+				foreach (var p in orders[i].Payloads)
+				{
+					orderSum += p.Width * p.Height * p.Length;
+				}
+
+				currentSum += orderSum;
+				sumsFromBegin[i] = currentSum;
+			}
+		}
+		
+		int maxValue = 0;
+		
+		for (int i = 0; i < orders.Count; i++)
+		{
+			for (int j = 0; j <= i; j++)
+			{
+				int value = sumsFromBegin[i] - sumsFromBegin[j];
+
+				maxValue = Math.Max(maxValue, value);
+			}
+		}
+
+		return maxValue;
+	}
+}
+
+public enum ValueType
+{
+	Weight,
+	Volume
 }

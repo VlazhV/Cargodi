@@ -1,3 +1,4 @@
+using Cargodi.DataAccess.Entities.Ship;
 using Cargodi.DataAccess.Entities.Staff;
 
 namespace Cargodi.DataAccess.Entities.Order;
@@ -25,4 +26,6 @@ public class Order
 	
 	public Operator? Operator { get; set; }
 	public int OperatorId { get; set; }
+
+	public ICollection<Stop> Stops { get; set; } = null!;
 }

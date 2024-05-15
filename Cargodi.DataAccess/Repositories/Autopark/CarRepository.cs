@@ -61,7 +61,7 @@ public class CarRepository : RepositoryBase<Car, int>, ICarRepository
 			.Where(ship => ship.Start != null && ship.Finish == null)
 			.Select(ship => ship.Car)
 				.Where(car => car.Carrying > weight && car.Capacity() > volume && car.CanInclude(biggestLinearSize) && car.ActualAutoparkId == autoparkStartId)
-				.OrderBy(car => car.Capacity())
+				.OrderBy(car => car.Capacity()).ThenBy(car => car.Carrying)
 			.ToListAsync(cancellationToken);
 	}
 }
