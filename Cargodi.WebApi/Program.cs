@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<DatabaseContext>(options => 
+builder.Services.AddDbContext<DatabaseContext>(options =>
 {
 	options.UseSqlServer(
 		builder.Configuration.GetConnectionString("Default"),
@@ -26,15 +26,26 @@ builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(IdentityProfile)));
 builder.Services.ConfigureRepositories();
 builder.Services.ConfigureServices();
 
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy(name: "CORS", policy =>
+		{
+			policy.AllowAnyOrigin()
+				.AllowAnyHeader()
+				.AllowAnyMethod();
+		});
+});
+
 builder.Services.AddControllers();
 
 builder.Services.AddIdentityService(builder.Configuration);
 
-		
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerServices();
 
-builder.Services.AddRouting(options => {
+builder.Services.AddRouting(options =>
+{
 	options.LowercaseUrls = true;
 	options.LowercaseQueryStrings = true;
 });
@@ -50,6 +61,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseExceptionHandlerMiddleware();
+app.UseCors("CORS");
 
 app.UseAuthentication();
 app.UseAuthorization();
