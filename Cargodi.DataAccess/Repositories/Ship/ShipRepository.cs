@@ -7,24 +7,30 @@ namespace Cargodi.DataAccess.Repositories.Ship;
 
 public class ShipRepository : RepositoryBase<Entities.Ship.Ship, int>, IShipRepository
 {
-	public ShipRepository(DatabaseContext db) : base(db)
-	{
-	}
+    public ShipRepository(DatabaseContext db) : base(db)
+    {
+    }
 
-	public async Task<bool> DoesItExistAsync(int id, CancellationToken cancellationToken)
-	{
-		return await _db.Ships
-			.AsNoTracking()
-			.AnyAsync(ship => ship.Id == id, cancellationToken);
-	}
+    public async Task<bool> DoesItExistAsync(int id, CancellationToken cancellationToken)
+    {
+        return await _db.Ships
+            .AsNoTracking()
+            .AnyAsync(ship => ship.Id == id, cancellationToken);
+    }
 
-	public async Task<Entities.Ship.Ship?> GetShipWithStopsWithOrdersAsync(int id, CancellationToken cancellationToken)
-	{
-		return await _db.Ships
-			.Include(ship => ship.Stops)
-				.ThenInclude(stop => stop.Order)
-					.ThenInclude(order => order.Payloads)
-			.FirstOrDefaultAsync(ship => ship.Id == id, cancellationToken);
-	}
+    public async Task<Entities.Ship.Ship?> GetShipWithStopsWithOrdersAsync(int id, CancellationToken cancellationToken)
+    {
+        return await _db.Ships
+            .Include(ship => ship.Stops)
+                .ThenInclude(stop => stop.Order)
+                    .ThenInclude(order => order.Payloads)
+            .FirstOrDefaultAsync(ship => ship.Id == id, cancellationToken);
+    }
+    
+    public async Task CreateManyAsync(IEnumerable<Entities.Ship.Ship> ships, 
+        CancellationToken cancellationToken)
+    {
+        await _db.Ships.AddRangeAsync(ships, cancellationToken);
+    }
 
 }
