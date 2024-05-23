@@ -32,7 +32,7 @@ protected readonly DatabaseContext _db;
 		return await _db.Set<T>().AsNoTracking().ToListAsync(cancellationToken);
 	}
 
-    public async Task<T?> GetByIdAsync(K id, CancellationToken cancellationToken)
+    public virtual async Task<T?> GetByIdAsync(K id, CancellationToken cancellationToken)
 	{
 		return await _db.Set<T>().FindAsync(id, cancellationToken);
 	}

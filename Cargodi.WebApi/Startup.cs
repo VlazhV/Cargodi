@@ -24,53 +24,54 @@ namespace Cargodi.WebApi;
 
 public static class Startup
 {
-	public static void ConfigureRepositories(this IServiceCollection services)
-	{
-		//Autopark
-		services.AddScoped<IAutoparkRepository, AutoparkRepository>();
-		services.AddScoped<ICarRepository, CarRepository>();
-		services.AddScoped<ITrailerRepository, TrailerRepository>();
+    public static void ConfigureRepositories(this IServiceCollection services)
+    {
+        //Autopark
+        services.AddScoped<IAutoparkRepository, AutoparkRepository>();
+        services.AddScoped<ICarRepository, CarRepository>();
+        services.AddScoped<ITrailerRepository, TrailerRepository>();
 
-		//Order
-		services.AddScoped<IOrderRepository, OrderRepository>();
-		services.AddScoped<IPayloadRepository, PayloadRepository>();
+        //Order
+        services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IPayloadRepository, PayloadRepository>();
 
-		//Ship
-		services.AddScoped<IShipRepository, ShipRepository>();
-		services.AddScoped<IStopRepository, StopRepository>();
+        //Ship
+        services.AddScoped<IShipRepository, ShipRepository>();
+        services.AddScoped<IStopRepository, StopRepository>();
 
-		//Staff
-		services.AddScoped<IDriverRepository, DriverRepository>();
-		services.AddScoped<IUserRepository, UserRepository>();
-		services.AddScoped<IOperatorRepository, OperatorRepository>();
+        //Staff
+        services.AddScoped<IDriverRepository, DriverRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IOperatorRepository, OperatorRepository>();
+        services.AddScoped<IClientRepository, ClientRepository>();
 
-		//Common
-		services.AddScoped<IAddressRepository, AddressRepository>();
-	}
-	
-	public static void ConfigureServices(this IServiceCollection services)
-	{
-		//Autopark
-		services.AddScoped<IAutoparkService, AutoparkService>();
-		services.AddScoped<ICarService, CarService>();
-		services.AddScoped<ITrailerService, TrailerService>();
+        //Common
+        services.AddScoped<IAddressRepository, AddressRepository>();
+    }
+    
+    public static void ConfigureServices(this IServiceCollection services)
+    {
+        //Autopark
+        services.AddScoped<IAutoparkService, AutoparkService>();
+        services.AddScoped<ICarService, CarService>();
+        services.AddScoped<ITrailerService, TrailerService>();
 
-		//Identity
-		services.AddScoped<IIdentityService, IdentityService>();
-		services.AddScoped<ITokenService, TokenService>();
-		services.AddScoped<IUserService, UserService>();
-		
-		services.AddIdentity<User, IdentityRole<long>>()
-			.AddEntityFrameworkStores<DatabaseContext>()
-			.AddUserManager<UserManager<User>>()
-			.AddSignInManager<SignInManager<User>>();
-		
-		//Order
-		services.AddScoped<IOrderService, OrderService>();
-		services.AddScoped<IPayloadService, PayloadService>();
+        //Identity
+        services.AddScoped<IIdentityService, IdentityService>();
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IUserService, UserService>();
+        
+        services.AddIdentity<User, IdentityRole<long>>()
+            .AddEntityFrameworkStores<DatabaseContext>()
+            .AddUserManager<UserManager<User>>()
+            .AddSignInManager<SignInManager<User>>();
+        
+        //Order
+        services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped<IPayloadService, PayloadService>();
 
-		//ship
-		services.AddScoped<IShipService, ShipService>();
-		services.AddScoped<IShipGeneratingService, ShipGeneratingService>();
-	}
+        //ship
+        services.AddScoped<IShipService, ShipService>();
+        services.AddScoped<IShipGeneratingService, ShipGeneratingService>();
+    }
 }
