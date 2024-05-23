@@ -6,10 +6,7 @@ export default function Map() {
 
     return (
         <YMap location={{
-            // Координаты центра карты
             center: [37.588144, 55.733842],
-
-            // Уровень масштабирования
             zoom: 10
         }}>
             <YMapDefaultSchemeLayer />
