@@ -1,13 +1,15 @@
 using Cargodi.Business.DTOs.Autopark.Trailer;
 using Cargodi.Business.Interfaces.Autopark;
+using Cargodi.DataAccess.Constants;
 using Cargodi.WebApi.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cargodi.WebApi.Controllers.Autopark;
 
 [Route("api/trailers")]
 [ApiController]
-[AuthorizeAdminManager]
+[Authorize]
 public class TrailersController: ControllerBase
 {
 	private readonly ITrailerService _trailerService;
@@ -19,27 +21,39 @@ public class TrailersController: ControllerBase
 
 		
 	[HttpGet("{id}")]
-	public async Task<ActionResult<GetTrailerAutoparkDto>> GetByIdAsync([FromRoute] int id, CancellationToken cancellationToken)
+	public async Task<ActionResult<GetTrailerDto>> GetByIdAsync([FromRoute] int id, CancellationToken cancellationToken)
 	{
-		return Ok(await _trailerService.GetByIdAsync(id, cancellationToken));
+        if (!User.IsInRole(Roles.Admin) && !User.IsInRole(Roles.Manager))
+            return NotFound();
+
+        return Ok(await _trailerService.GetByIdAsync(id, cancellationToken));
 	}
 	
 	[HttpGet]
-	public async Task<ActionResult<IEnumerable<GetTrailerAutoparkDto>>> GetAllAsync(CancellationToken cancellationToken)
+	public async Task<ActionResult<IEnumerable<GetTrailerDto>>> GetAllAsync(CancellationToken cancellationToken)
 	{
-		return Ok(await _trailerService.GetAllAsync(cancellationToken));
+        if (!User.IsInRole(Roles.Admin) && !User.IsInRole(Roles.Manager))
+            return NotFound();
+
+        return Ok(await _trailerService.GetAllAsync(cancellationToken));
 	}	
 	
 	[HttpPost]
 	public async Task<ActionResult<GetTrailerDto>> CreateAsync([FromBody] UpdateTrailerDto trailerDto, CancellationToken cancellationToken)
 	{
-		return Ok(await _trailerService.CreateAsync(trailerDto, cancellationToken));
+        if (!User.IsInRole(Roles.Admin) && !User.IsInRole(Roles.Manager))
+            return NotFound();
+
+        return Ok(await _trailerService.CreateAsync(trailerDto, cancellationToken));
 	}
 	
 	[HttpDelete("{id}")]
 	public async Task<ActionResult> DeleteAsync([FromRoute] int id, CancellationToken cancellationToken)
 	{
-		await _trailerService.DeleteAsync(id, cancellationToken);
+        if (!User.IsInRole(Roles.Admin) && !User.IsInRole(Roles.Manager))
+            return NotFound();
+
+        await _trailerService.DeleteAsync(id, cancellationToken);
 		
 		return NoContent();
 	}
@@ -47,6 +61,9 @@ public class TrailersController: ControllerBase
 	[HttpPut("{id}")]
 	public async Task<ActionResult<GetTrailerDto>> UpdateAsync([FromRoute] int id, UpdateTrailerDto trailerDto, CancellationToken cancellationToken)
 	{
-		return Ok(await _trailerService.UpdateAsync(id, trailerDto, cancellationToken));
+        if (!User.IsInRole(Roles.Admin) && !User.IsInRole(Roles.Manager))
+            return NotFound();
+
+        return Ok(await _trailerService.UpdateAsync(id, trailerDto, cancellationToken));
 	}		
 }

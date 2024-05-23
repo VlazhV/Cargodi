@@ -72,8 +72,8 @@ public class IdentityService : IIdentityService
 		if (await _userRepository.DoesItExistAsync(user, cancellationToken))
 			throw new ApiException("email, phone number or user name is reserved", ApiException.BadRequest);
 		
-		await HandleIdentityResultAsync(_userRepository.CreateAsync(user, signupDto.Password!));			
-		await _userRepository.AddToRoleAsync(user, Roles.Admin);
+		await HandleIdentityResultAsync(_userRepository.CreateAsync(user, signupDto.Password!));
+        await _userRepository.AddToRoleAsync(user, Roles.Admin);
 		
 		var tokenDto = await LoginAsync(_mapper.Map<LoginDto>(signupDto), cancellationToken);
 
