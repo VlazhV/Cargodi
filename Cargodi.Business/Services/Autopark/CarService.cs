@@ -82,7 +82,7 @@ public class CarService : ICarService
             
         if (carEntityWithLicenseNumber == null || !carEntityWithLicenseNumber.LicenseNumber.Equals(carDto.LicenseNumber))
         {
-            throw new ApiException("Trailer with such license number exists", ApiException.BadRequest);
+            throw new ApiException("Car with such license number exists", ApiException.BadRequest);
         }
     
         

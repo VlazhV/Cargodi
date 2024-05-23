@@ -12,6 +12,14 @@ public class ClientRepository : RepositoryBase<Client, long>, IClientRepository
     {
     }
 
+    public async Task<Client?> CreateClientAsync(Client client, CancellationToken cancellationToken)
+    {
+        var entry = await _db.Clients
+            .AddAsync(client, cancellationToken);
+
+        return entry.Entity;
+    }
+
 
     public Task<bool> DoesItExistAsync(long id, CancellationToken cancellationToken)
     {
@@ -20,4 +28,12 @@ public class ClientRepository : RepositoryBase<Client, long>, IClientRepository
             .AnyAsync(c => c.Id == id, cancellationToken);
     }
 
+    public Task<Client?> GetClientByUserIdAsync(long userId, CancellationToken cancellationToken)
+    {
+        return _db.Clients
+            .AsNoTracking()
+            .Include(c => c.User)
+            .Where(c => c.UserId == userId)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
 }
