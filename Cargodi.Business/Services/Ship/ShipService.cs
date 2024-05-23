@@ -81,7 +81,7 @@ public class ShipService : IShipService
         
         if (ship.Trailer != null)
         {
-            var trailer = await _trailerRepository.GetByIdAsync(ship.TrailerId, cancellationToken);
+            var trailer = await _trailerRepository.GetByIdAsync(ship.TrailerId!.Value, cancellationToken);
             trailer!.ActualAutoparkId = ship.AutoparkFinishId;
             _trailerRepository.Update(trailer);
         }
@@ -111,6 +111,19 @@ public class ShipService : IShipService
         await ValidateDrivers(shipDto.DriverIds, car!, cancellationToken);
 
         var stopsRequest = shipDto.Stops;
+        await ValidateStops(stopsRequest, cancellationToken);
+
+        // update vehicle
+        ship.CarId = shipRequest.CarId;
+        ship.TrailerId = shipRequest.TrailerId;
+
+        // update drivers
+
+
+        // update stops
+
+        _shipRepository.Update(ship);
+        return _mapper.Map<GetShipDto>(ship);
         
     }
     
@@ -172,11 +185,16 @@ public class ShipService : IShipService
             throw new ApiException("invalid route: the number of stops must be even", ApiException.BadRequest);
         }
 
-        var orderIds = stopDtos.Select(stop => stop.OrderId).ToList();
+        var orderIds = stopDtos.Select(stop => stop.OrderId)
+            .OrderBy(id => id)
+            .ToList();
         
-        for (int i = 0; i < orderIds.Count; i++)
+        for (int i = 0; i < orderIds.Count; i += 2)
         {
-            
+            if (orderIds[i] != orderIds[i+1])
+            {
+                throw new ApiException("invalid route", ApiException.BadRequest);
+            }
         }
     }
 }

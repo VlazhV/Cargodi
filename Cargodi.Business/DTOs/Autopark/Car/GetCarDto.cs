@@ -13,5 +13,5 @@ public class GetCarDto
 	public int CapacityWidth { get; set; } //mm	
 	public int CapacityHeight { get; set; } //mm
 
-	public string CarType { get; set; } = null!;
+	public CarTypeDto CarType { get; set; } = null!;
 }

@@ -7,7 +7,7 @@ public class CarType
 {
 	public int Id { get; set; }
 	public string Name { get; set; } = null!;
-	
-	public List<Driver>? Cars { get; set; }
+
+    public List<Driver> Cars { get; set; } = null!;
 	public List<CarTypeCategory> CarTypeCategories { get; set; } = null!;
 }

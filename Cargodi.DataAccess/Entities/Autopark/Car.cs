@@ -22,7 +22,7 @@ public class Car: ICarrier
 	public CarType CarType { get; set; } = null!;
 	public int CarTypeId { get; set; }
 
-	public ICollection<Ship.Ship>? Ships { get; set; }
+    public ICollection<Ship.Ship> Ships { get; set; } = null!;
 	
 	public bool CanInclude(int biggestLinearSize)
 	{
