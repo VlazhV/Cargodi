@@ -1,0 +1,165 @@
+import React, { useEffect, useState } from 'react'
+import { useFetching } from '../Hooks/useFetching'
+import { Link } from 'react-router-dom'
+import AutoparkService from '../Services/AutoparkService'
+import Map from '../Components/Map'
+
+export default function AutoparksPage() {
+
+    const [autoparksData, setAutoparksData] = useState([])
+
+    const [newParkData, setNewParkData] = useState({
+        address: {
+            name: null,
+            longitude: null,
+            latitude: null,
+            isWest: false,
+            isNorth: false
+        },
+        capacity: null,
+    })
+
+    const [fetch, loading, error] = useFetching(async (type) => {
+        switch (type) {
+            case "get":
+                {
+                    const res = await AutoparkService.GetAll()
+                    setAutoparksData(res.data)
+                }
+                break;
+            case "create":
+                {
+                    const res = await AutoparkService.Create(newParkData.address, newParkData.capacity)
+                    fetch("get")
+                }
+                break;
+        }
+
+    })
+
+    useEffect(() => {
+        fetch("get")
+    }, [])
+
+    const handleAddressChange = (e) => {
+        e.preventDefault()
+        setNewParkData(oldValue => { return { capacity: oldValue.capacity, address: { ...oldValue.address, [e.target.id]: e.target.value } } })
+    }
+
+    const handleCapacityChange = (e) => {
+        e.preventDefault()
+        setNewParkData(oldValue => { return { capacity: e.target.value, address: oldValue.address } })
+    }
+
+    const handleCreatePark = (e) => {
+        e.preventDefault()
+        fetch("create")
+    }
+
+    return (
+        <div className="container-fluid mt-5 p-5">
+            <div className='mt-5'>
+                <div className="row justify-content-center">
+                    <div className="col-12 content-head">
+                        <div className="mbr-section-head mb-5">
+                            <h4 className="mbr-section-title mbr-fonts-style align-center mb-0 display-2">
+                                <strong>Автопарки</strong>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                <Map>
+
+                </Map>
+                <div className="justify-content-center d-flex flex-row">
+                    <div className="" >
+                        <div className="mbr-section-head mb-2">
+                            <h6 className="align-center mb-0 display-6">
+                                <strong>Адресс</strong>
+                            </h6>
+                        </div>
+                        <div className="col-12 form-group mb-3" data-for="textarea">
+                            <input name="input" placeholder="Название" type="text" data-form-field="input"
+                                className="form-control" id="name" onChange={handleAddressChange}></input>
+                        </div>
+
+                        <div className="col-12 form-group mb-3" data-for="textarea">
+                            <input name="input" placeholder="Широта" type='text' data-form-field="input"
+                                className="form-control" id="latitude" onChange={handleAddressChange}></input>
+                        </div>
+
+                        <div className="col-12 form-group mb-3" data-for="input">
+                            <input name="input" placeholder="Долгота" type='text' data-form-field="input"
+                                className="form-control" id="longitude" onChange={handleAddressChange}></input>
+                        </div>
+
+                        <div className='px-4 display-4'>
+                            <div className="col-12 form-check mb-3" data-for="input">
+                                <input name="input" type='checkbox' data-form-field="input"
+                                    className="form-check-input" id="isWest" onChange={handleAddressChange}></input>
+                                <label className='form-check-label' >Запад</label>
+                            </div>
+                        </div>
+
+                        <div className='px-4 display-4'>
+                            <div className="col-12 form-check mb-3" data-for="input">
+                                <input name="input" type='checkbox' data-form-field="input"
+                                    className="form-check-input" id="isNorth" onChange={handleAddressChange}></input>
+                                <label className='form-check-label' >Север</label>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div className="">
+                        <div className="col-12 form-group mb-3" data-for="textarea">
+                            <input name="input" placeholder="Вместимость" type="number" data-form-field="input"
+                                className="form-control" id="capacity" min={1} onChange={handleCapacityChange}></input>
+                        </div>
+
+
+                        <div className="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
+                            <button className="btn btn-primary display-7" onClick={handleCreatePark}>Создать автопарк</button>
+                        </div>
+
+                    </div>
+                </div>
+                {
+                    error &&
+                    <div className="border border-danger border rounded-4 p-2 px-4 mt-2">
+                        <span className="text-danger text-center h3">{toString(error)}</span>
+                    </div>
+                }
+                <div className="row">
+
+                    {
+                        autoparksData.map(autoparkData =>
+                            <div className="item features-without-image col-12 col-md-6 col-lg-3 item-mb active border rounded rounded-4" key={autoparkData.id}>
+                                <div className="item-wrapper">
+                                    <div className="item-head">
+                                        <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
+                                            <strong>Автопарк №{autoparkData.id}</strong>
+                                        </h6>
+                                        <h5 className="item-title mbr-fonts-style mb-0 display-5">
+                                            <strong>Адресс:</strong> {autoparkData.address.name}
+                                        </h5>
+                                        <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
+                                            <strong>Вместимость:</strong> {autoparkData.capacity}
+                                        </h6>
+                                    </div>
+
+                                    <div className="mbr-section-btn item-footer">
+                                        <Link to={"/autopark/" + autoparkData.id} className="btn item-btn btn-primary display-7">Подробнее</Link>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    }
+
+                </div>
+            </div>
+
+
+        </div>
+    )
+}
