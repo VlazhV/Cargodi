@@ -1,0 +1,18 @@
+[
+    {
+        "value": "admin",
+        "name": "Админ"
+    },
+    {
+        "value": "driver",
+        "name": "Водитель"
+    },
+    {
+        "value": "client",
+        "name": "Клиент"
+    },
+    {
+        "value": "manager",
+        "name": "Менеджер"
+    }
+]
