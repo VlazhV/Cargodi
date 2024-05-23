@@ -30,7 +30,8 @@ public class DatabaseContext: IdentityDbContext<User, IdentityRole<long>, long>
 	public DbSet<DriverStatus> DriverStatuses { get; set; }
 	public DbSet<Operator> Operators { get; set; }
 	
-	
+	public DbSet<Address> Addresses { get; set; }
+	public DbSet<CarTypeCategory> CarTypesCategories { get; set; }
 	
 	
 	public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }

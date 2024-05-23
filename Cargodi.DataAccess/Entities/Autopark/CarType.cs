@@ -9,6 +9,5 @@ public class CarType
 	public string Name { get; set; } = null!;
 	
 	public List<Driver>? Cars { get; set; }
-	public List<Category> Categories { get; set; } = null!;
-	public List<PayloadType>? PayloadTypes { get; set; }
+	public List<CarTypeCategory> CarTypeCategories { get; set; } = null!;
 }

@@ -38,10 +38,12 @@ public class CarRepository : RepositoryBase<Car, int>, ICarRepository
 	{
 		return await _db.Cars
 			.Include(car => car.CarType)
-				.ThenInclude(type => type.Categories)
+				.ThenInclude(type => type.CarTypeCategories)
+					.ThenInclude(ct => ct.Category)
 			.Where(c => c.Id == car.Id)
 			.Select(car => car.CarType)
-				.SelectMany(type => type.Categories)
+				.SelectMany(type => type.CarTypeCategories)
+					.Select(ct => ct.Category)
 			.ToListAsync(cancellationToken);
 	}
 

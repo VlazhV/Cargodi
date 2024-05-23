@@ -7,6 +7,7 @@ using Cargodi.Business.Exceptions;
 using Cargodi.Business.Interfaces.Order;
 using Cargodi.DataAccess.Constants;
 using Cargodi.DataAccess.Entities.Order;
+using Cargodi.DataAccess.Interfaces.Common;
 using Cargodi.DataAccess.Interfaces.Order;
 using Cargodi.DataAccess.Interfaces.Staff;
 
@@ -17,17 +18,20 @@ public class OrderService : IOrderService
 	private readonly IPayloadRepository _payloadRepository;
 	private readonly IOrderRepository _orderRepository;
 	private readonly IUserRepository _userRepository;
+	private readonly IAddressRepository _addressRepository;
 	private readonly IMapper _mapper;
 	
 	public OrderService
 		(IPayloadRepository payloadRepository,
 		IOrderRepository orderRepository,
 		IUserRepository userRepository,
+		IAddressRepository addressRepository,
 		IMapper mapper)
 	{
 		_payloadRepository = payloadRepository;
 		_orderRepository = orderRepository;
 		_userRepository = userRepository;
+		_addressRepository = addressRepository;
 		_mapper = mapper;
 	}
 	
@@ -60,9 +64,14 @@ public class OrderService : IOrderService
 		order.ClientId = clientId;
 		order.OrderStatusId = OrderStatuses.Processing.Id;
 		order.Time = DateTime.UtcNow;
+		
+		foreach (var p in order.Payloads)
+		{
+			p.PayloadTypeId = p.PayloadType!.Id;
+			p.PayloadType = null;
+		}
 
 		order = await _orderRepository.CreateAsync(order, cancellationToken);
-		order.OrderStatus = OrderStatuses.Processing;
 		await _orderRepository.SaveChangesAsync(cancellationToken);
 		
 		return _mapper.Map<GetOrderDto>(order);

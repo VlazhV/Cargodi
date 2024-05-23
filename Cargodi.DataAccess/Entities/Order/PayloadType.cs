@@ -8,5 +8,4 @@ public class PayloadType
 	public required string Name { get; set; }
 	
 	public List<Payload>? Payloads { get; set; }
-	public List<CarType>? CarTypes { get; set; }
 }
