@@ -10,7 +10,7 @@ namespace Cargodi.Business.DTOs.Ship.Ship;
 public class GetShipDto
 {
     public int Id { get; set; }
-    public GetDriverDto Driver { get; set; } = null!;
+    public List<GetDriverDto> Drivers { get; set; } = null!;
     public GetCarDto Car { get; set; } = null!;
     public GetTrailerDto? Trailer { get; set; }
     public GetAutoparkDto AutoparkStart { get; set; } = null!;

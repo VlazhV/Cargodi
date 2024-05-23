@@ -8,7 +8,7 @@ namespace Cargodi.Business.Interfaces.Ship;
 public interface IShipGeneratingService
 {
 	//Task<IEnumerable<GetShipDto>> BuildRouteAsync(CancellationToken cancellationToken);
-	Task<(Car, Trailer?)> SelectVehicleAsync(DataAccess.Entities.Ship.Ship ship, CancellationToken cancellationToken);
+	Task<IEnumerable<ICarrier>> SelectVehicleAsync(DataAccess.Entities.Ship.Ship ship, CancellationToken cancellationToken);
 	Task<IEnumerable<Driver>> SelectDriversAsync(Car car, CancellationToken cancellationToken);
 	
 }

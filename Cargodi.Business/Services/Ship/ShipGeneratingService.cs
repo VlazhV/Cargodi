@@ -51,23 +51,12 @@ public class ShipGeneratingService : IShipGeneratingService
 		var categoriesToDrive = await _carRepository.GetCategoriesToDriveAsync(car, cancellationToken);
 		var drivers = await _driverRepository.GetSuitableDriversAsync(categoriesToDrive, cancellationToken);
 
-		if (!drivers.Any())
-			throw new ArgumentException("Cannot find any driver to drive the car");
-
-		var selectedDrivers = new List<Driver>
-		{
-			drivers.First()
-		};
-		
-		if (drivers.Count() > 1)
-			selectedDrivers.Add(drivers.Last());
-
-		return selectedDrivers;
+        return drivers;
 	}
 	
-	public async Task<(Car, Trailer?)> SelectVehicleAsync(DataAccess.Entities.Ship.Ship ship, CancellationToken cancellationToken)
+	public async Task<IEnumerable<ICarrier>> SelectVehicleAsync(DataAccess.Entities.Ship.Ship ship, CancellationToken cancellationToken)
 	{
-		var shipfull = await _shipRepository.GetShipWithStopsWithOrdersAsync(ship.Id, cancellationToken);
+		var shipfull = await _shipRepository.GetShipFullInfoByIdAsync(ship.Id, cancellationToken);
 		var orders = shipfull!.Stops.Select(stop => stop.Order).ToList();
 		
 		int volume = FindMaxValue(orders, ValueType.Volume);
@@ -92,22 +81,8 @@ public class ShipGeneratingService : IShipGeneratingService
 		List<ICarrier> carriers = new();	
 		carriers.AddRange(cars);
 		carriers.AddRange(trailers);
-		
-		if (carriers.Count == 0)
-		{
-			throw new ArgumentException("Cannot find vehicle");
-		}
 
-		var carrier = carriers.First();
-		
-		if (carrier.GetType() == typeof(Trailer))
-		{
-			var trucks = await _carRepository.GetCarsOfTypeAsync(CarTypes.Truck, cancellationToken);
-
-			return (trucks.First(), (Trailer)carrier);
-		}
-
-		return ((Car)carrier, null);
+        return carriers;
 	}
 	
 	private static int FindMaxValue(List<DataAccess.Entities.Order.Order> orders, ValueType valueType)

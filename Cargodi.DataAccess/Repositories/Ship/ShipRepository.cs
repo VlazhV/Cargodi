@@ -18,12 +18,18 @@ public class ShipRepository : RepositoryBase<Entities.Ship.Ship, int>, IShipRepo
             .AnyAsync(ship => ship.Id == id, cancellationToken);
     }
 
-    public async Task<Entities.Ship.Ship?> GetShipWithStopsWithOrdersAsync(int id, CancellationToken cancellationToken)
+    public async Task<Entities.Ship.Ship?> GetShipFullInfoByIdAsync(int id, CancellationToken cancellationToken)
     {
         return await _db.Ships
             .Include(ship => ship.Stops)
                 .ThenInclude(stop => stop.Order)
                     .ThenInclude(order => order.Payloads)
+            .Include(ship => ship.Drivers)
+            .Include(ship => ship.Car)
+            .Include(ship => ship.Trailer)
+            .Include(ship => ship.AutoparkStart)
+            .Include(ship => ship.AutoparkFinish)
+            
             .FirstOrDefaultAsync(ship => ship.Id == id, cancellationToken);
     }
     
@@ -33,4 +39,27 @@ public class ShipRepository : RepositoryBase<Entities.Ship.Ship, int>, IShipRepo
         await _db.Ships.AddRangeAsync(ships, cancellationToken);
     }
 
+    public async Task<IEnumerable<Entities.Ship.Ship>> GetAllShipsFullInfoAsync(CancellationToken cancellationToken)
+    {
+        return await _db.Ships
+            .Include(ship => ship.Stops)                
+                .ThenInclude(stop => stop.Order)
+                    .ThenInclude(order => order.Payloads)
+            .Include(ship => ship.Drivers)
+            .Include(ship => ship.Car)
+            .Include(ship => ship.Trailer)
+            .Include(ship => ship.AutoparkStart)
+            .Include(ship => ship.AutoparkFinish)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task RemoveAllStopsOfShipAsync(int shipId, CancellationToken cancellationToken)
+    {
+        var stops = await _db.Stops
+            .Include(stop => stop.Ship)
+            .Where(s => s.Ship.Id == shipId)
+            .ToListAsync(cancellationToken);
+
+        _db.Stops.RemoveRange(stops);
+    }
 }
