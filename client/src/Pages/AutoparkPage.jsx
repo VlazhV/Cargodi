@@ -112,7 +112,7 @@ export default function AutoparkPage() {
                         </div>
                         <div className='d-flex flex-row justify-content-center w-100'>
                             <div className="btn btn-primary display-3" onClick={handleStartEdit}>Редактировать</div>
-                            <div className="btn btn-primary display-3" onClick={handleDelete}>Удалить</div>
+                            <div className="btn btn-danger display-3" onClick={handleDelete}>Удалить</div>
                         </div>
                     </>
                 }

@@ -30,6 +30,7 @@ export default function AutoparksPage() {
                 break;
             case "create":
                 {
+                    console.log(newParkData)
                     const res = await AutoparkService.Create(newParkData.address, newParkData.capacity)
                     fetch("get")
                 }

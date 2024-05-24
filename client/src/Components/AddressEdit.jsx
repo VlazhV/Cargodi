@@ -8,6 +8,8 @@ export default function AddressEdit(props) {
         e.preventDefault()
         let newAddress = address
         newAddress = { ...newAddress, [e.target.id]: e.target.value }
+        newAddress.isWest = Boolean(newAddress.isWest)
+        newAddress.isNorth = Boolean(newAddress.isNorth)
         onAddressChange(newAddress)
     }
 
