@@ -53,14 +53,14 @@ public class TrailerService : ITrailerService
 
 	public async Task<IEnumerable<GetTrailerDto>> GetAllAsync(CancellationToken cancellationToken)
 	{
-		var trailers = await _trailerRepository.GetAllAsync(cancellationToken);
+		var trailers = await _trailerRepository.GetAllTrailersFullInfoAsync(cancellationToken);
 
 		return _mapper.Map<IEnumerable<GetTrailerDto>>(trailers);
 	}
 
 	public async Task<GetTrailerDto> GetByIdAsync(int id, CancellationToken cancellationToken)
 	{
-		var trailer = await _trailerRepository.GetByIdAsync(id, cancellationToken)
+		var trailer = await _trailerRepository.GetTrailerFullInfoByIdAsync(id, cancellationToken)
 			?? throw new ApiException("Trailer not found", ApiException.NotFound);
 
 		return _mapper.Map<GetTrailerDto>(trailer);

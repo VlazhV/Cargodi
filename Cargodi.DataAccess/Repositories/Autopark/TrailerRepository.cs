@@ -56,5 +56,21 @@ public class TrailerRepository : RepositoryBase<Trailer, int>, ITrailerRepositor
             .FirstOrDefaultAsync();
     }
 
+    public Task<Trailer?> GetTrailerFullInfoByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        return _db.Trailers
+            .AsNoTracking()
+            .Include(t => t.TrailerType)
+            .Where(t => t.Id == id)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
 
+    public async Task<IEnumerable<Trailer>> GetAllTrailersFullInfoAsync(CancellationToken cancellationToken)
+    {
+        return await _db.Trailers
+            .AsNoTracking()
+            .Include(t => t.TrailerType)
+            .ToListAsync(cancellationToken);
+            
+    }
 }
