@@ -12,6 +12,4 @@ public class SignupDto
     public string? PhoneNumber { get; set; }
     
     public UpdateClientDto? Client { get; set; }
-    public UpdateDriverDto? Driver { get; set; }
-    public UpdateOperatorDto? Operator { get; set; }
 }

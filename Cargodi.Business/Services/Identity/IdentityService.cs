@@ -76,15 +76,15 @@ public class IdentityService : IIdentityService
         
         if (registerDto.Client != null)
         {
-            await CreateRoleAsync(registerDto.Client, Roles.Client, cancellationToken);
+            await CreateRoleAsync(registerDto.Client, Roles.Client, user.Id, cancellationToken);
         } 
         else if (registerDto.Driver != null)
         {
-            await CreateRoleAsync(registerDto.Driver, Roles.Driver, cancellationToken);
+            await CreateRoleAsync(registerDto.Driver, Roles.Driver, user.Id, cancellationToken);
         }
         else 
         {
-            await CreateRoleAsync(registerDto.Operator!, Roles.Manager, cancellationToken);
+            await CreateRoleAsync(registerDto.Operator!, Roles.Manager, user.Id, cancellationToken);
         }
         
         var userDto = _mapper.Map<UserDto>(user);
@@ -106,19 +106,8 @@ public class IdentityService : IIdentityService
         await HandleIdentityResultAsync(_userRepository.CreateAsync(user, signupDto.Password!));			
         await _userRepository.AddToRoleAsync(user, Roles.Client);
         
-        if (signupDto.Client != null)
-        {
-            await CreateRoleAsync(signupDto.Client, Roles.Client, cancellationToken);
-        } 
-        else if (signupDto.Driver != null)
-        {
-            await CreateRoleAsync(signupDto.Driver, Roles.Driver, cancellationToken);
-        }
-        else 
-        {
-            await CreateRoleAsync(signupDto.Operator!, Roles.Manager, cancellationToken);
-        }
-
+        await CreateRoleAsync(signupDto.Client!, Roles.Client, user.Id, cancellationToken);
+       
         await _clientRepository.SaveChangesAsync(cancellationToken);
         var tokenDto = await LoginAsync(_mapper.Map<LoginDto>(signupDto), cancellationToken);
 
@@ -169,22 +158,30 @@ public class IdentityService : IIdentityService
         }
     }
     
-    private async Task CreateRoleAsync(object dto, string role, CancellationToken cancellationToken)
+    private async Task CreateRoleAsync(object dto, string role, long userId, CancellationToken cancellationToken)
     {        
         switch (role)
         {
             case Roles.Manager:
+            case Roles.Admin:
                 var manager = _mapper.Map<Operator>(dto);
+                manager.UserId = userId;
+                manager.EmployDate = DateTime.UtcNow;
+                manager.FireDate = null;
                 await _operatorRepository.CreateAsync(manager, cancellationToken);
                 break;
                 
             case Roles.Client:
                 var client = _mapper.Map<Client>(dto);
+                client.UserId = userId;
                 await _clientRepository.CreateAsync(client, cancellationToken);
                 break;
                 
             case Roles.Driver:
                 var driver = _mapper.Map<Driver>(dto);
+                driver.UserId = userId;
+                driver.EmployDate = DateTime.UtcNow;
+                driver.FireDate = null;
                 await _driverRepository.CreateAsync(driver, cancellationToken);
                 break;
                 
@@ -200,21 +197,21 @@ public class IdentityService : IIdentityService
         {
             case Roles.Admin:
             case Roles.Manager:
-                if (registerDto.Client == null && registerDto.Driver == null && registerDto.Operator != null)
+                if (!(registerDto.Client == null && registerDto.Driver == null && registerDto.Operator != null))
                 {
                     throw new ApiException("Invalid request", ApiException.BadRequest);
                 }
                 break;
                 
             case Roles.Driver:
-                if (registerDto.Client == null && registerDto.Driver != null && registerDto.Operator == null)
+                if (!(registerDto.Client == null && registerDto.Driver != null && registerDto.Operator == null))
                 {
                     throw new ApiException("Invalid request", ApiException.BadRequest);
                 }
                 break;
                 
             case Roles.Client:
-                if (registerDto.Client != null && registerDto.Driver == null && registerDto.Operator != null)
+                if (!(registerDto.Client != null && registerDto.Driver == null && registerDto.Operator != null))
                 {
                     throw new ApiException("Invalid request", ApiException.BadRequest);
                 }
@@ -227,7 +224,7 @@ public class IdentityService : IIdentityService
     
     private async Task ValidateSignupRequest(SignupDto signUpDto, CancellationToken cancellationToken)
     {
-        if (signUpDto.Client == null || signUpDto.Driver != null || signUpDto.Operator != null)
+        if (signUpDto.Client == null)
         {
             throw new ApiException("Invalid request", ApiException.BadRequest);
         }
