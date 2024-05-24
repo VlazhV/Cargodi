@@ -9,5 +9,5 @@ public class Category
 	[Key]
 	public string Name { get; set; } = null!;
 	public ICollection<Driver>? Drivers { get; set; }
-	public List<CarType> CarTypes { get; set; } = null!;
+	public List<CarTypeCategory> CarTypeCategories { get; set; } = null!;
 }

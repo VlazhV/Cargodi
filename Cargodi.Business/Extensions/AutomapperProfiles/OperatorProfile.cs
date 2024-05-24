@@ -9,7 +9,6 @@ public class OperatorProfile: Profile
 	public OperatorProfile()
 	{
 		CreateMap<UpdateOperatorDto, Operator>();
-		CreateMap<Operator, GetOperatorDto>()
-			.ForMember(dist => dist.Credentials, opt => opt.MapFrom(src => src.User));
+        CreateMap<Operator, GetOperatorDto>();
 	}
 }

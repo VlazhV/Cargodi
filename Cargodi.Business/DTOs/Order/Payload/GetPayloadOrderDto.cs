@@ -12,5 +12,8 @@ public class GetPayloadOrderDto
 	public int Weight { get; set; }
 	
 	public string? Description { get; set; }
+	
 	public GetOrderDto Order { get; set; } = null!;
+	
+	public PayloadTypeDto PayloadType { get; set; } = null!;
 }

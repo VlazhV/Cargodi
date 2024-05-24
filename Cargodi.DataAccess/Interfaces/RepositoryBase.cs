@@ -15,9 +15,9 @@ protected readonly DatabaseContext _db;
 	
 	public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken)
 	{
-		var entry = await _db.AddAsync(entity!, cancellationToken);
-
-		return entry.Entity;
+        var entry = await _db.AddAsync(entity!, cancellationToken);
+       
+        return entry.Entity;
 	}
 
 	public T Delete(T entity)
@@ -32,7 +32,7 @@ protected readonly DatabaseContext _db;
 		return await _db.Set<T>().AsNoTracking().ToListAsync(cancellationToken);
 	}
 
-    public async Task<T?> GetByIdAsync(K id, CancellationToken cancellationToken)
+    public virtual async Task<T?> GetByIdAsync(K id, CancellationToken cancellationToken)
 	{
 		return await _db.Set<T>().FindAsync(id, cancellationToken);
 	}

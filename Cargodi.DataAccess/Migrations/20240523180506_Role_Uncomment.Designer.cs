@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cargodi.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240515182247_migration3")]
-    partial class migration3
+    [Migration("20240523180506_Role_Uncomment")]
+    partial class Role_Uncomment
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,21 +24,6 @@ namespace Cargodi.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("CarTypeCategory", b =>
-                {
-                    b.Property<int>("CarTypesId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CategoriesName")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("CarTypesId", "CategoriesName");
-
-                    b.HasIndex("CategoriesName");
-
-                    b.ToTable("CarTypeCategory");
-                });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Address", b =>
                 {
@@ -54,11 +39,11 @@ namespace Cargodi.DataAccess.Migrations
                     b.Property<bool>("IsWest")
                         .HasColumnType("bit");
 
-                    b.Property<float>("Latitude")
-                        .HasColumnType("real");
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
 
-                    b.Property<float>("Longitude")
-                        .HasColumnType("real");
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -66,7 +51,7 @@ namespace Cargodi.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Autopark.Autopark", b =>
@@ -161,7 +146,71 @@ namespace Cargodi.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CarType");
+                    b.ToTable("CarTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 3,
+                            Name = "Passenger Car"
+                        },
+                        new
+                        {
+                            Id = 1,
+                            Name = "Truck"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Van"
+                        });
+                });
+
+            modelBuilder.Entity("Cargodi.DataAccess.Entities.Autopark.CarTypeCategory", b =>
+                {
+                    b.Property<int>("CarTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CarTypeId", "CategoryName");
+
+                    b.HasIndex("CategoryName");
+
+                    b.ToTable("CarTypesCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            CarTypeId = 1,
+                            CategoryName = "C"
+                        },
+                        new
+                        {
+                            CarTypeId = 1,
+                            CategoryName = "CE"
+                        },
+                        new
+                        {
+                            CarTypeId = 2,
+                            CategoryName = "C"
+                        },
+                        new
+                        {
+                            CarTypeId = 2,
+                            CategoryName = "B"
+                        },
+                        new
+                        {
+                            CarTypeId = 3,
+                            CategoryName = "B"
+                        },
+                        new
+                        {
+                            CarTypeId = 3,
+                            CategoryName = "BE"
+                        });
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Autopark.Trailer", b =>
@@ -194,6 +243,9 @@ namespace Cargodi.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("TrailerTypeId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ActualAutoparkId");
@@ -203,7 +255,43 @@ namespace Cargodi.DataAccess.Migrations
                     b.HasIndex("LicenseNumber")
                         .IsUnique();
 
+                    b.HasIndex("TrailerTypeId");
+
                     b.ToTable("Trailers");
+                });
+
+            modelBuilder.Entity("Cargodi.DataAccess.Entities.Autopark.TrailerType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TrailerType");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 2,
+                            Name = "Bulker"
+                        },
+                        new
+                        {
+                            Id = 1,
+                            Name = "Cistern"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "VanTrailer"
+                        });
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Order.Order", b =>
@@ -279,7 +367,7 @@ namespace Cargodi.DataAccess.Migrations
                         },
                         new
                         {
-                            Id = 3,
+                            Id = 4,
                             Name = "declined"
                         });
                 });
@@ -304,6 +392,9 @@ namespace Cargodi.DataAccess.Migrations
                     b.Property<long>("OrderId")
                         .HasColumnType("bigint");
 
+                    b.Property<int>("PayloadTypeId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Weight")
                         .HasColumnType("int");
 
@@ -314,7 +405,43 @@ namespace Cargodi.DataAccess.Migrations
 
                     b.HasIndex("OrderId");
 
+                    b.HasIndex("PayloadTypeId");
+
                     b.ToTable("Payloads");
+                });
+
+            modelBuilder.Entity("Cargodi.DataAccess.Entities.Order.PayloadType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PayloadType");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 3,
+                            Name = "Bulk"
+                        },
+                        new
+                        {
+                            Id = 1,
+                            Name = "Item"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Liquid"
+                        });
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Ship.Ship", b =>
@@ -343,7 +470,7 @@ namespace Cargodi.DataAccess.Migrations
                     b.Property<DateTime?>("Start")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("TrailerId")
+                    b.Property<int?>("TrailerId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -398,6 +525,24 @@ namespace Cargodi.DataAccess.Migrations
                     b.HasKey("Name");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Name = "B"
+                        },
+                        new
+                        {
+                            Name = "BE"
+                        },
+                        new
+                        {
+                            Name = "C"
+                        },
+                        new
+                        {
+                            Name = "CE"
+                        });
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Staff.Client", b =>
@@ -498,6 +643,23 @@ namespace Cargodi.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DriverStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 3,
+                            Name = "Sick Leave"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Vacations"
+                        },
+                        new
+                        {
+                            Id = 1,
+                            Name = "Works"
+                        });
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Staff.Operator", b =>
@@ -667,6 +829,32 @@ namespace Cargodi.DataAccess.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Name = "client",
+                            NormalizedName = "CLIENT"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Name = "manager",
+                            NormalizedName = "MANAGER"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Name = "admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Name = "driver",
+                            NormalizedName = "DRIVER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<long>", b =>
@@ -772,21 +960,6 @@ namespace Cargodi.DataAccess.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CarTypeCategory", b =>
-                {
-                    b.HasOne("Cargodi.DataAccess.Entities.Autopark.CarType", null)
-                        .WithMany()
-                        .HasForeignKey("CarTypesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Cargodi.DataAccess.Entities.Staff.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CategoriesName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Autopark.Autopark", b =>
                 {
                     b.HasOne("Cargodi.DataAccess.Entities.Address", "Address")
@@ -825,6 +998,25 @@ namespace Cargodi.DataAccess.Migrations
                     b.Navigation("CarType");
                 });
 
+            modelBuilder.Entity("Cargodi.DataAccess.Entities.Autopark.CarTypeCategory", b =>
+                {
+                    b.HasOne("Cargodi.DataAccess.Entities.Autopark.CarType", "CarType")
+                        .WithMany("CarTypeCategories")
+                        .HasForeignKey("CarTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Cargodi.DataAccess.Entities.Staff.Category", "Category")
+                        .WithMany("CarTypeCategories")
+                        .HasForeignKey("CategoryName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CarType");
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Autopark.Trailer", b =>
                 {
                     b.HasOne("Cargodi.DataAccess.Entities.Autopark.Autopark", "ActualAutopark")
@@ -839,9 +1031,17 @@ namespace Cargodi.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Cargodi.DataAccess.Entities.Autopark.TrailerType", "TrailerType")
+                        .WithMany("Trailers")
+                        .HasForeignKey("TrailerTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("ActualAutopark");
 
                     b.Navigation("Autopark");
+
+                    b.Navigation("TrailerType");
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Order.Order", b =>
@@ -895,7 +1095,15 @@ namespace Cargodi.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Cargodi.DataAccess.Entities.Order.PayloadType", "PayloadType")
+                        .WithMany("Payloads")
+                        .HasForeignKey("PayloadTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Order");
+
+                    b.Navigation("PayloadType");
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Ship.Ship", b =>
@@ -927,8 +1135,7 @@ namespace Cargodi.DataAccess.Migrations
                     b.HasOne("Cargodi.DataAccess.Entities.Autopark.Trailer", "Trailer")
                         .WithMany("Ships")
                         .HasForeignKey("TrailerId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("AutoparkFinish");
 
@@ -986,7 +1193,7 @@ namespace Cargodi.DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("Cargodi.DataAccess.Entities.Autopark.CarType", null)
-                        .WithMany("Drivers")
+                        .WithMany("Cars")
                         .HasForeignKey("CarTypeId");
 
                     b.HasOne("Cargodi.DataAccess.Entities.Staff.DriverStatus", "DriverStatus")
@@ -1147,12 +1354,19 @@ namespace Cargodi.DataAccess.Migrations
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Autopark.CarType", b =>
                 {
-                    b.Navigation("Drivers");
+                    b.Navigation("CarTypeCategories");
+
+                    b.Navigation("Cars");
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Autopark.Trailer", b =>
                 {
                     b.Navigation("Ships");
+                });
+
+            modelBuilder.Entity("Cargodi.DataAccess.Entities.Autopark.TrailerType", b =>
+                {
+                    b.Navigation("Trailers");
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Order.Order", b =>
@@ -1167,9 +1381,19 @@ namespace Cargodi.DataAccess.Migrations
                     b.Navigation("Orders");
                 });
 
+            modelBuilder.Entity("Cargodi.DataAccess.Entities.Order.PayloadType", b =>
+                {
+                    b.Navigation("Payloads");
+                });
+
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Ship.Ship", b =>
                 {
                     b.Navigation("Stops");
+                });
+
+            modelBuilder.Entity("Cargodi.DataAccess.Entities.Staff.Category", b =>
+                {
+                    b.Navigation("CarTypeCategories");
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Staff.DriverStatus", b =>
