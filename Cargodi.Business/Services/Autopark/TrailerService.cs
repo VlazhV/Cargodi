@@ -30,9 +30,12 @@ public class TrailerService : ITrailerService
 	{
 		await ValidateRequest(trailerDto, cancellationToken);
 
-		if (await _trailerRepository.DoesItExistAsync(trailerDto.LicenseNumber!, cancellationToken))
+		var carEntityWithLicenseNumber
+		= await _trailerRepository.GetByLicenseNumberAsync(trailerDto.LicenseNumber, cancellationToken);
+
+		if (carEntityWithLicenseNumber != null && !carEntityWithLicenseNumber.LicenseNumber.Equals(trailerDto.LicenseNumber))
 		{
-			throw new ApiException("License number is reserved", ApiException.BadRequest);
+			throw new ApiException("Trailer with such license number exists", ApiException.BadRequest);
 		}
 
 		var trailer = _mapper.Map<Trailer>(trailerDto);
@@ -80,7 +83,7 @@ public class TrailerService : ITrailerService
 		var carEntityWithLicenseNumber
 		= await _trailerRepository.GetByLicenseNumberAsync(trailerDto.LicenseNumber, cancellationToken);
 
-		if (carEntityWithLicenseNumber != null || !carEntityWithLicenseNumber.LicenseNumber.Equals(trailerDto.LicenseNumber))
+		if (carEntityWithLicenseNumber != null && !carEntityWithLicenseNumber.LicenseNumber.Equals(trailerDto.LicenseNumber))
 		{
 			throw new ApiException("Trailer with such license number exists", ApiException.BadRequest);
 		}
