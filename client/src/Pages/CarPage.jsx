@@ -10,6 +10,8 @@ export default function CarPage() {
 
     const { carId } = useParams()
 
+    const [editing, setEditing] = useState(false)
+
     const [carData, setCarData] = useState({
         licenseNumber: "",
         mark: "",
@@ -22,7 +24,11 @@ export default function CarPage() {
         capacityHeight: 0, //mm
 
         carType: { id: null, name: '' },
-        carTypeName: ''
+        carTypeName: '',
+        carTypeId: null,
+
+        autoparkId: null,
+        actualAutoparkId: null
     })
 
     const navigate = useNavigate()
@@ -37,7 +43,7 @@ export default function CarPage() {
                     let typeCarIt = carTypes.find(v => v.id == tempCarData.carType.id)
 
                     tempCarData.carTypeName = typeCarIt ? typeCarIt.name : ''
-
+                    tempCarData.carTypeId = tempCarData.carType.id
 
                     setCarData(res.data)
                 }
@@ -50,6 +56,20 @@ export default function CarPage() {
                     }
                 }
                 break;
+            case "update":
+                {
+                    const res = await CarService.Update(carId, carData)
+
+                    let tempCarData = res.data
+                    let typeCarIt = carTypes.find(v => v.id == tempCarData.carType.id)
+
+                    tempCarData.carTypeName = typeCarIt ? typeCarIt.name : ''
+                    tempCarData.carTypeId = tempCarData.carType.id
+
+                    setCarData(res.data)
+                    setEditing(false)
+                }
+                break;
         }
 
     })
@@ -59,6 +79,27 @@ export default function CarPage() {
         fetch("delete")
     }
 
+    const handleEditingStart = (e) => {
+        e.preventDefault()
+        setEditing(true)
+    }
+
+    const handleEditingCancel = (e) => {
+        e.preventDefault()
+        setEditing(false)
+        fetch("get")
+    }
+
+    const handleEditingSave = (e) => {
+        e.preventDefault()
+        fetch("update")
+    }
+
+    const handleCarChange = (e) => {
+        e.preventDefault()
+        setCarData(prev => ({ ...prev, [e.target.id]: e.target.value }))
+    }
+
     useEffect(() => {
         fetch("get")
     }, [carId])
@@ -66,53 +107,140 @@ export default function CarPage() {
     return (
         <div className="container mt-5 py-5">
 
-            <div className="row justify-content-center mt-5">
-                <div className="col-12 col-md-12 col-lg">
-                    <div className="text-wrapper align-left">
-                        <h1 className="mbr-section-title mbr-fonts-style mb-4 display-4">
-                            <strong>Машина №{carData.id}</strong>
-                        </h1>
+            {
+                !editing &&
+                <div className="row justify-content-center mt-5">
+                    <div className="col-12 col-md-12 col-lg">
+                        <div className="text-wrapper align-left">
+                            <h1 className="mbr-section-title mbr-fonts-style mb-4 display-4">
+                                <strong>Машина №{carData.id}</strong>
+                            </h1>
 
-                        <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                            <strong>Номер лицензии:</strong> <span>{carData.licenseNumber}</span>
-                        </h1>
+                            <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                <strong>Номер лицензии:</strong> <span>{carData.licenseNumber}</span>
+                            </h1>
 
-                        <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                            <strong>Марка:</strong> <span>{carData.mark}</span>
-                        </h1>
+                            <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                <strong>Марка:</strong> <span>{carData.mark}</span>
+                            </h1>
 
-                        <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                            <strong>Дальность езды (км):</strong> <span>{carData.range}</span>
-                        </h1>
+                            <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                <strong>Дальность езды (км):</strong> <span>{carData.range}</span>
+                            </h1>
 
-                        <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                            <strong>Грузоподъёмность (г):</strong> <span>{carData.carrying}</span>
-                        </h1>
+                            <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                <strong>Грузоподъёмность (г):</strong> <span>{carData.carrying}</span>
+                            </h1>
 
-                        <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                            <strong>Объём бака (л):</strong> <span>{carData.tankVolume}</span>
-                        </h1>
+                            <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                <strong>Объём бака (л):</strong> <span>{carData.tankVolume}</span>
+                            </h1>
+                        </div>
+                    </div>
+                    <div className="col-12 col-md-12 col-lg">
+                        <div className="text-wrapper align-left">
+                            <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                <strong>Длинна вместимости (мм):</strong> <span>{carData.capacityLength}</span>
+                            </h1>
+                            <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                <strong>Ширина вместимости (мм):</strong> <span>{carData.capacityWidth}</span>
+                            </h1>
+                            <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                <strong>Высота вместимости (мм):</strong> <span>{carData.capacityHeight}</span>
+                            </h1>
+                            <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                <strong>Тип:</strong> <span>{carData.carTypeName}</span>
+                            </h1>
+                        </div>
                     </div>
                 </div>
-                <div className="col-12 col-md-12 col-lg">
-                    <div className="text-wrapper align-left">
-                        <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                            <strong>Длинна вместимости (мм):</strong> <span>{carData.capacityLength}</span>
-                        </h1>
-                        <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                            <strong>Ширина вместимости (мм):</strong> <span>{carData.capacityWidth}</span>
-                        </h1>
-                        <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                            <strong>Высота вместимости (мм):</strong> <span>{carData.capacityHeight}</span>
-                        </h1>
-                        <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                            <strong>Тип:</strong> <span>{carData.carTypeName}</span>
-                        </h1>
+            }
+
+            {
+                editing &&
+                <div className="row justify-content-center mt-5">
+                    <div className="col-12 col-md-12 col-lg">
+                        <div className="text-wrapper align-left">
+                            <h1 className="mbr-section-title mbr-fonts-style mb-4 display-4">
+                                <strong>Машина №{carData.id}</strong>
+                            </h1>
+
+                            <h1 className="mb-4 input-group">
+                                <strong className='input-group-text display-7'>Номер лицензии:</strong>
+                                <input name="input" value={carData.licenseNumber} type='text'
+                                    className="form-control mx-2" id="licenseNumber" onChange={handleCarChange}></input>
+                            </h1>
+
+                            <h1 className="mb-4 input-group">
+                                <strong className='input-group-text display-7'>Марка:</strong>
+                                <input name="input" value={carData.mark} type='text'
+                                    className="form-control mx-2" id="mark" onChange={handleCarChange}></input>
+                            </h1>
+
+                            <h1 className="mb-4 input-group">
+                                <strong className='input-group-text display-7'>Дальность езды (км):</strong>
+                                <input name="input" value={carData.range} type='text'
+                                    className="form-control mx-2" id="range" onChange={handleCarChange}></input>
+                            </h1>
+
+                            <h1 className="mb-4 input-group">
+                                <strong className='input-group-text display-7'>Грузоподъёмность (г):</strong>
+                                <input name="input" value={carData.carrying} type='text'
+                                    className="form-control mx-2" id="carrying" onChange={handleCarChange}></input>
+                            </h1>
+
+                            <h1 className="mb-4 input-group">
+                                <strong className='input-group-text display-7'>Объём бака (л):</strong>
+                                <input name="input" value={carData.tankVolume} type='text'
+                                    className="form-control mx-2" id="tankVolume" onChange={handleCarChange}></input>
+                            </h1>
+                        </div>
+                    </div>
+                    <div className="col-12 col-md-12 col-lg">
+                        <div className="text-wrapper align-left">
+                            <h1 className="mb-4 input-group">
+                                <strong className='input-group-text display-7'>Длинна вместимости (мм):</strong>
+                                <input name="input" value={carData.capacityLength} type='text'
+                                    className="form-control mx-2" id="capacityLength" onChange={handleCarChange}></input>
+                            </h1>
+                            <h1 className="mb-4 input-group">
+                                <strong className='input-group-text display-7'>Ширина вместимости (мм):</strong>
+                                <input name="input" value={carData.capacityWidth} type='text'
+                                    className="form-control mx-2" id="capacityWidth" onChange={handleCarChange}></input>
+                            </h1>
+                            <h1 className="mb-4 input-group">
+                                <strong className='input-group-text display-7'>Высота вместимости (мм):</strong>
+                                <input name="input" value={carData.capacityHeight} type='text'
+                                    className="form-control mx-2" id="capacityHeight" onChange={handleCarChange}></input>
+                            </h1>
+                            <h1 className="mb-4 input-group">
+                                <div className="col-12 form-group mb-3" data-for="input">
+
+                                    <select name="select" className='form-select display-7 p-3' value={carData.carTypeId} onChange={handleCarChange} id="carTypeId">
+                                        {
+                                            carTypes.map(cType => <option value={cType.id} key={cType.id}>{cType.name}</option>)
+                                        }
+                                    </select>
+                                </div>
+                            </h1>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
 
-            <div className="btn btn-danger display-3" onClick={handleDeleteClick}>Удалить</div>
+            {
+                !editing &&
+                <>
+                    <div className="btn btn-primary display-3" onClick={handleEditingStart}>Изменить</div>
+                    <div className="btn btn-danger display-3" onClick={handleDeleteClick}>Удалить</div>
+                </>
+            }
+            {
+                editing &&
+                <>
+                    <div className="btn btn-primary display-3" onClick={handleEditingSave}>Сохранить</div>
+                    <div className="btn btn-secondary display-3" onClick={handleEditingCancel}>Отмена</div>
+                </>}
 
             {
                 error &&

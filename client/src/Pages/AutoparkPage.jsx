@@ -250,7 +250,7 @@ export default function AutoparkPage() {
                                         <strong>Марка: </strong> {carData.mark}
                                     </h5>
                                     <h5 className="item-title mbr-fonts-style mb-0 display-7">
-                                        <strong>Тип: </strong> {carData.carType.name}
+                                        <strong>Тип: </strong> {carTypes.find(v => v.id == carData.carType.id).name}
                                     </h5>
                                 </div>
 
