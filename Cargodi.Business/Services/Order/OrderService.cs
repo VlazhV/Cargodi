@@ -15,191 +15,191 @@ namespace Cargodi.Business.Services.Order;
 
 public class OrderService : IOrderService
 {
-	private readonly IPayloadRepository _payloadRepository;
-	private readonly IOrderRepository _orderRepository;
-	private readonly IUserRepository _userRepository;
-	private readonly IAddressRepository _addressRepository;
-	private readonly IMapper _mapper;
-	
-	public OrderService
-		(IPayloadRepository payloadRepository,
-		IOrderRepository orderRepository,
-		IUserRepository userRepository,
-		IAddressRepository addressRepository,
-		IMapper mapper)
-	{
-		_payloadRepository = payloadRepository;
-		_orderRepository = orderRepository;
-		_userRepository = userRepository;
-		_addressRepository = addressRepository;
-		_mapper = mapper;
-	}
-	
-	public async Task<GetOrderDto> CreateAsync(long? customerId, ClaimsPrincipal user, UpdateOrderPayloadsDto orderDto, CancellationToken cancellationToken)
-	{
-		long clientId;
+    private readonly IPayloadRepository _payloadRepository;
+    private readonly IOrderRepository _orderRepository;
+    private readonly IClientRepository _clientRepository;
+    private readonly IAddressRepository _addressRepository;
+    private readonly IMapper _mapper;
+    
+    public OrderService
+        (IPayloadRepository payloadRepository,
+        IOrderRepository orderRepository,
+        IClientRepository userRepository,
+        IAddressRepository addressRepository,
+        IMapper mapper)
+    {
+        _payloadRepository = payloadRepository;
+        _orderRepository = orderRepository;
+        _clientRepository = userRepository;
+        _addressRepository = addressRepository;
+        _mapper = mapper;
+    }
+    
+    public async Task<GetOrderDto> CreateAsync(long? customerId, ClaimsPrincipal user, UpdateOrderPayloadsDto orderDto, CancellationToken cancellationToken)
+    {
+        long clientId;
 
-		if (customerId.HasValue)
-		{
-			var role = user.FindFirst(ClaimTypes.Role)!.Value;
-		
-			if (!(role == Roles.Admin || role == Roles.Manager))
-			{
-				throw new ApiException(Messages.NoPermission, ApiException.Forbidden);
-			}
-			
-			clientId = customerId.Value;
-		}
-		else
-		{
-			clientId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-		}
+        if (customerId.HasValue)
+        {
+            var role = user.FindFirst(ClaimTypes.Role)!.Value;
+        
+            if (!(role == Roles.Admin || role == Roles.Manager))
+            {
+                throw new ApiException(Messages.NoPermission, ApiException.Forbidden);
+            }
+            
+            clientId = customerId.Value;
+        }
+        else
+        {
+            clientId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        }
 
-		if (! await _userRepository.DoesItExistAsync(clientId, cancellationToken))
-		{
-			throw new ApiException(Messages.UserIsNotFound, ApiException.NotFound);
-		}
+        if (! await _clientRepository.DoesItExistAsync(clientId, cancellationToken))
+        {
+            throw new ApiException(Messages.UserIsNotFound, ApiException.NotFound);
+        }
 
-		var order = _mapper.Map<DataAccess.Entities.Order.Order>(orderDto);
-		order.ClientId = clientId;
-		order.OrderStatusId = OrderStatuses.Processing.Id;
-		order.Time = DateTime.UtcNow;
-		
-		foreach (var p in order.Payloads)
-		{
-			p.PayloadTypeId = p.PayloadType!.Id;
-			p.PayloadType = null;
-		}
+        var order = _mapper.Map<DataAccess.Entities.Order.Order>(orderDto);
+        order.ClientId = clientId;
+        order.OrderStatusId = OrderStatuses.Processing.Id;
+        order.Time = DateTime.UtcNow;
+        
+        foreach (var p in order.Payloads)
+        {
+            p.PayloadTypeId = p.PayloadType!.Id;
+            p.PayloadType = null;
+        }
 
-		order = await _orderRepository.CreateAsync(order, cancellationToken);
-		await _orderRepository.SaveChangesAsync(cancellationToken);
-		
-		return _mapper.Map<GetOrderDto>(order);
-	}
+        order = await _orderRepository.CreateAsync(order, cancellationToken);
+        await _orderRepository.SaveChangesAsync(cancellationToken);
+        
+        return _mapper.Map<GetOrderDto>(order);
+    }
 
-	public async Task DeleteAsync(long id, ClaimsPrincipal user, CancellationToken cancellationToken)
-	{
-		var role = user.FindFirst(ClaimTypes.Role)!.Value;
+    public async Task DeleteAsync(long id, ClaimsPrincipal user, CancellationToken cancellationToken)
+    {
+        var role = user.FindFirst(ClaimTypes.Role)!.Value;
 
-		var userId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        var userId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-		var order = await _orderRepository.GetByIdAsync(id, cancellationToken);
-		
-		if (order is null)
-		{
-			throw new ApiException(Messages.OrderIsNotFound, ApiException.NotFound);	
-		}
+        var order = await _orderRepository.GetByIdAsync(id, cancellationToken);
+        
+        if (order is null)
+        {
+            throw new ApiException(Messages.OrderIsNotFound, ApiException.NotFound);	
+        }
 
-		if (!(role == Roles.Admin || role == Roles.Manager || userId == order.ClientId))
-		{
-			throw new ApiException(Messages.NoPermission, ApiException.Forbidden);
-		}
-			
+        if (!(role == Roles.Admin || role == Roles.Manager || userId == order.ClientId))
+        {
+            throw new ApiException(Messages.NoPermission, ApiException.Forbidden);
+        }
+            
 
-		_orderRepository.Delete(order);
-		await _orderRepository.SaveChangesAsync(cancellationToken);
-	}
+        _orderRepository.Delete(order);
+        await _orderRepository.SaveChangesAsync(cancellationToken);
+    }
 
-	public async Task<IEnumerable<GetOrderInfoDto>> GetAllAsync(CancellationToken cancellationToken)
-	{
-		var orders = await _orderRepository.GetAllAsync(cancellationToken);
+    public async Task<IEnumerable<GetOrderInfoDto>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        var orders = await _orderRepository.GetAllAsync(cancellationToken);
 
-		return _mapper.Map<IEnumerable<GetOrderInfoDto>>(orders);
-	}
+        return _mapper.Map<IEnumerable<GetOrderInfoDto>>(orders);
+    }
 
-	public async Task<GetOrderInfoDto> GetByIdAsync(long id, ClaimsPrincipal user, CancellationToken cancellationToken)
-	{
-		var role = user.FindFirst(ClaimTypes.Role)!.Value;
-		var userId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+    public async Task<GetOrderInfoDto> GetByIdAsync(long id, ClaimsPrincipal user, CancellationToken cancellationToken)
+    {
+        var role = user.FindFirst(ClaimTypes.Role)!.Value;
+        var userId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-		var order = await _orderRepository.GetByIdAsync(id, cancellationToken);
-		
-		if (order is null)
-		{
-			throw new ApiException(Messages.OrderIsNotFound, ApiException.NotFound);
-		}			
-			
-		if (!(role == Roles.Admin || role == Roles.Manager || userId == order.ClientId))
-		{
-			throw new ApiException(Messages.NoPermission, ApiException.Forbidden);
-		}
+        var order = await _orderRepository.GetByIdAsync(id, cancellationToken);
+        
+        if (order is null)
+        {
+            throw new ApiException(Messages.OrderIsNotFound, ApiException.NotFound);
+        }			
+            
+        if (!(role == Roles.Admin || role == Roles.Manager || userId == order.ClientId))
+        {
+            throw new ApiException(Messages.NoPermission, ApiException.Forbidden);
+        }
 
-		return _mapper.Map<GetOrderInfoDto>(order);
-	}
+        return _mapper.Map<GetOrderInfoDto>(order);
+    }
 
-	public async Task<GetOrderDto> SetStatusAsync(long id, string status, ClaimsPrincipal user, CancellationToken cancellationToken)
-	{
-		var role = user.FindFirst(ClaimTypes.Role)!.Value;
+    public async Task<GetOrderDto> SetStatusAsync(long id, string status, ClaimsPrincipal user, CancellationToken cancellationToken)
+    {
+        var role = user.FindFirst(ClaimTypes.Role)!.Value;
 
-		if (!(role == Roles.Admin || role == Roles.Manager))
-		{
-			throw new ApiException(Messages.NoPermission, ApiException.Forbidden);
-		}
+        if (!(role == Roles.Admin || role == Roles.Manager))
+        {
+            throw new ApiException(Messages.NoPermission, ApiException.Forbidden);
+        }
 
-		var order = await _orderRepository.GetByIdAsync(id, cancellationToken)
-			?? throw new ApiException(Messages.OrderIsNotFound, ApiException.NotFound);
+        var order = await _orderRepository.GetByIdAsync(id, cancellationToken)
+            ?? throw new ApiException(Messages.OrderIsNotFound, ApiException.NotFound);
 
-		order = await _orderRepository.SetStatusAsync(order, status.ToLower(), cancellationToken)
-			?? throw new ApiException(Messages.IncorrectOrderStatus, ApiException.BadRequest);
+        order = await _orderRepository.SetStatusAsync(order, status.ToLower(), cancellationToken)
+            ?? throw new ApiException(Messages.IncorrectOrderStatus, ApiException.BadRequest);
 
-		if (status.Equals(OrderStatuses.Accepted.Name))
-		{
-			order.AcceptTime = DateTime.UtcNow;
+        if (status.Equals(OrderStatuses.Accepted.Name))
+        {
+            order.AcceptTime = DateTime.UtcNow;
 
-			order = _orderRepository.Update(order);
-		}
+            order = _orderRepository.Update(order);
+        }
 
-		await _orderRepository.SaveChangesAsync(cancellationToken);
+        await _orderRepository.SaveChangesAsync(cancellationToken);
 
-		return _mapper.Map<GetOrderDto>(order);
-	}
+        return _mapper.Map<GetOrderDto>(order);
+    }
 
-	public async Task<GetOrderDto> UpdateAsync(long id, ClaimsPrincipal user, UpdateOrderDto orderDto, CancellationToken cancellationToken)
-	{
-		var role = user.FindFirst(ClaimTypes.Role)!.Value;
-		var userId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+    public async Task<GetOrderDto> UpdateAsync(long id, ClaimsPrincipal user, UpdateOrderDto orderDto, CancellationToken cancellationToken)
+    {
+        var role = user.FindFirst(ClaimTypes.Role)!.Value;
+        var userId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-		var order = await _orderRepository.GetByIdAsync(id, cancellationToken)
-			?? throw new ApiException(Messages.OrderIsNotFound, ApiException.NotFound);
+        var order = await _orderRepository.GetByIdAsync(id, cancellationToken)
+            ?? throw new ApiException(Messages.OrderIsNotFound, ApiException.NotFound);
 
-		if (!(role == Roles.Admin || role == Roles.Manager || userId == order.ClientId))
-		{
-			throw new ApiException(Messages.NoPermission, ApiException.Forbidden);
-		}
+        if (!(role == Roles.Admin || role == Roles.Manager || userId == order.ClientId))
+        {
+            throw new ApiException(Messages.NoPermission, ApiException.Forbidden);
+        }
 
-		order = _mapper.Map(orderDto, order);
-		order = _orderRepository.Update(order);
-		await _orderRepository.SaveChangesAsync(cancellationToken);
+        order = _mapper.Map(orderDto, order);
+        order = _orderRepository.Update(order);
+        await _orderRepository.SaveChangesAsync(cancellationToken);
 
-		return _mapper.Map<GetOrderDto>(order);
-	}
+        return _mapper.Map<GetOrderDto>(order);
+    }
 
-	public async Task<GetOrderInfoDto> UpdatePayloadListAsync(long id, ClaimsPrincipal user, IEnumerable<UpdatePayloadDto> payloadDtos, CancellationToken cancellationToken)
-	{
-		var role = user.FindFirst(ClaimTypes.Role)!.Value;
-		var userId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+    public async Task<GetOrderInfoDto> UpdatePayloadListAsync(long id, ClaimsPrincipal user, IEnumerable<UpdatePayloadDto> payloadDtos, CancellationToken cancellationToken)
+    {
+        var role = user.FindFirst(ClaimTypes.Role)!.Value;
+        var userId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-		var order = await _orderRepository.GetByIdAsync(id, cancellationToken)
-			?? throw new ApiException(Messages.OrderIsNotFound, ApiException.NotFound);
+        var order = await _orderRepository.GetByIdAsync(id, cancellationToken)
+            ?? throw new ApiException(Messages.OrderIsNotFound, ApiException.NotFound);
 
-		if (!(role == Roles.Admin || role == Roles.Manager || userId == order.ClientId))
-		{
-			throw new ApiException(Messages.NoPermission, ApiException.Forbidden);
-		}
+        if (!(role == Roles.Admin || role == Roles.Manager || userId == order.ClientId))
+        {
+            throw new ApiException(Messages.NoPermission, ApiException.Forbidden);
+        }
 
-		_orderRepository.ClearPayloadList(order);
-		var payloads = _mapper.Map<IEnumerable<Payload>>(payloadDtos);
-		
-		foreach(var payload in payloads)
-		{
-			payload.OrderId = id;
-		}
+        _orderRepository.ClearPayloadList(order);
+        var payloads = _mapper.Map<IEnumerable<Payload>>(payloadDtos);
+        
+        foreach(var payload in payloads)
+        {
+            payload.OrderId = id;
+        }
 
-		await _payloadRepository.CreateManyAsync(payloads, cancellationToken);		
-		await _orderRepository.SaveChangesAsync(cancellationToken);
-		
-		order = await _orderRepository.GetByIdAsync(id, cancellationToken);
+        await _payloadRepository.CreateManyAsync(payloads, cancellationToken);		
+        await _orderRepository.SaveChangesAsync(cancellationToken);
+        
+        order = await _orderRepository.GetByIdAsync(id, cancellationToken);
 
-		return _mapper.Map<GetOrderInfoDto>(order);
-	}
+        return _mapper.Map<GetOrderInfoDto>(order);
+    }
 }

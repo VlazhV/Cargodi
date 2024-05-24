@@ -13,6 +13,14 @@ public class CarRepository : RepositoryBase<Car, int>, ICarRepository
     {
     }
 
+    public override Task<Car?> GetByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        return _db.Cars
+            .AsNoTracking()
+            .Where(c => c.Id == id)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<bool> DoesItExistAsync(int id, CancellationToken cancellationToken)
     {
        return await _db.Cars
@@ -26,6 +34,23 @@ public class CarRepository : RepositoryBase<Car, int>, ICarRepository
             .AsNoTracking()
             .AnyAsync(c => c.LicenseNumber.Equals(licenseNumber), cancellationToken);
     }
+
+    public async Task<IEnumerable<Car>> GetAllCarsFullInfoAsync(CancellationToken cancellationToken)
+    {
+        return await _db.Cars
+            .AsNoTracking()
+            .Include(c => c.CarType)
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<Car?> GetCarFullInfoByIdAsync(int carId, CancellationToken cancellationToken)
+    {
+        return _db.Cars
+            .AsNoTracking()
+            .Include(c => c.CarType)
+            .FirstOrDefaultAsync(c => c.Id == carId);
+    }
+
 
     public async Task<IEnumerable<Car>> GetCarsOfTypeAsync(CarType carType, CancellationToken cancellationToken)
     {
@@ -70,4 +95,13 @@ public class CarRepository : RepositoryBase<Car, int>, ICarRepository
                 .OrderBy(car => car.Capacity()).ThenBy(car => car.Carrying)
             .ToListAsync(cancellationToken);
     }
+
+    public Task<Car?> GetByLicenseNumberAsync(string licenseNumber, CancellationToken cancellationToken)
+    {
+        return _db.Cars
+            .AsNoTracking()
+            .Where(c => c.LicenseNumber.Equals(licenseNumber))
+            .FirstOrDefaultAsync();
+    }
+
 }

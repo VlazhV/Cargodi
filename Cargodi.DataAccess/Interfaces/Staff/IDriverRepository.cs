@@ -4,5 +4,8 @@ namespace Cargodi.DataAccess.Interfaces.Staff;
 
 public interface IDriverRepository : IRepository<Driver, int>
 {
-	Task<IEnumerable<Driver>> GetSuitableDriversAsync(IEnumerable<Category> categories, CancellationToken cancellationToken);
+    Task<IEnumerable<Driver>> GetSuitableDriversAsync(IEnumerable<Category> categories, CancellationToken cancellationToken);
+    Task<Driver?> GetDriverByUserIdAsync(long userId, CancellationToken cancellationToken);
+
+    Task<Driver?> CreateDriverAsync(Driver driver, CancellationToken cancellationToken);
 }

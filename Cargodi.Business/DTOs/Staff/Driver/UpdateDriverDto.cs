@@ -1,16 +1,12 @@
-using Cargodi.Business.DTOs.Autopark.Autopark;
-
 namespace Cargodi.Business.DTOs.Staff.Driver;
 
-public class GetDriverDto 
+public class UpdateDriverDto
 {
-    public int Id { get; set; }
-
     public string License { get; set; } = null!;
     public string SecondName { get; set; } = null!;
     public string FirstName { get; set; } = null!;
     public string? MiddleName { get; set; }
-    
-    public DateTime EmployDate { get; set; }
-    public DateTime? FireDate { get; set; }
+    public int AutoparkId { get; set; }
+    public int ActualAutoparkId { get; set; }
+
 }

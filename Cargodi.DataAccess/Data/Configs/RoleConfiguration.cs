@@ -17,5 +17,4 @@ public class RoleConfiguration : IEntityTypeConfiguration<IdentityRole<long>>
             new IdentityRole<long> { Id = 4, Name = Roles.Driver, NormalizedName = Roles.Driver.ToUpper() }
         );
     }
-
 }
