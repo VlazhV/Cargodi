@@ -19,7 +19,7 @@ public class TrailerService : ITrailerService
 	public TrailerService
 		(ITrailerRepository trailerRepository, 
 		IAutoparkRepository autoparkRepository,
-    IMapper mapper)
+	IMapper mapper)
 	{
 		_trailerRepository = trailerRepository;
 		_autoparkRepository = autoparkRepository;	
@@ -28,18 +28,20 @@ public class TrailerService : ITrailerService
 	
 	public async Task<GetTrailerDto> CreateAsync(UpdateTrailerDto trailerDto, CancellationToken cancellationToken)
 	{
-        await ValidateRequest(trailerDto, cancellationToken);
+		await ValidateRequest(trailerDto, cancellationToken);
 
-        if (await _trailerRepository.DoesItExistAsync(trailerDto.LicenseNumber!, cancellationToken))
+		if (await _trailerRepository.DoesItExistAsync(trailerDto.LicenseNumber!, cancellationToken))
 		{
 			throw new ApiException("License number is reserved", ApiException.BadRequest);
 		}
 
-        var trailer = _mapper.Map<Trailer>(trailerDto);
+		var trailer = _mapper.Map<Trailer>(trailerDto);
 		trailer = await _trailerRepository.CreateAsync(trailer, cancellationToken);
-        await _trailerRepository.SaveChangesAsync(cancellationToken);
+		await _trailerRepository.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<GetTrailerDto>(trailer);
+		trailer = await _trailerRepository.GetTrailerFullInfoByIdAsync(trailer.Id, cancellationToken);
+
+		return _mapper.Map<GetTrailerDto>(trailer);
 	}
 
 	public async Task DeleteAsync(int id, CancellationToken cancellationToken)
@@ -70,45 +72,47 @@ public class TrailerService : ITrailerService
 	{
 		await ValidateRequest(trailerDto, cancellationToken);
 
-        if (! await _trailerRepository.DoesItExistAsync(id, cancellationToken))
+		if (! await _trailerRepository.DoesItExistAsync(id, cancellationToken))
 		{
 			throw new ApiException("Trailer not found", ApiException.NotFound);
-        }
+		}
 
-        var carEntityWithLicenseNumber
-        = await _trailerRepository.GetByLicenseNumberAsync(trailerDto.LicenseNumber, cancellationToken);
+		var carEntityWithLicenseNumber
+		= await _trailerRepository.GetByLicenseNumberAsync(trailerDto.LicenseNumber, cancellationToken);
 
-        if (carEntityWithLicenseNumber == null || !carEntityWithLicenseNumber.LicenseNumber.Equals(trailerDto.LicenseNumber))
-        {
-            throw new ApiException("Trailer with such license number exists", ApiException.BadRequest);
-        }
+		if (carEntityWithLicenseNumber != null || !carEntityWithLicenseNumber.LicenseNumber.Equals(trailerDto.LicenseNumber))
+		{
+			throw new ApiException("Trailer with such license number exists", ApiException.BadRequest);
+		}
 
-        var trailer = _mapper.Map<Trailer>(trailerDto);
+		var trailer = _mapper.Map<Trailer>(trailerDto);
 		trailer.Id = id;
 
 		trailer = _trailerRepository.Update(trailer);
 		await _trailerRepository.SaveChangesAsync(cancellationToken);
+
+		trailer = await _trailerRepository.GetTrailerFullInfoByIdAsync(id, cancellationToken);
 		
 		return _mapper.Map<GetTrailerDto>(trailer);
 	}
 
-    private async Task ValidateRequest(UpdateTrailerDto trailerDto, CancellationToken cancellationToken)
-    {
-        if (!(await _autoparkRepository.DoesItExistAsync(trailerDto.ActualAutoparkId, cancellationToken)))
-        {
-            throw new ApiException("autopark doesn't exist", ApiException.BadRequest);
-        }
+	private async Task ValidateRequest(UpdateTrailerDto trailerDto, CancellationToken cancellationToken)
+	{
+		if (!(await _autoparkRepository.DoesItExistAsync(trailerDto.ActualAutoparkId, cancellationToken)))
+		{
+			throw new ApiException("autopark doesn't exist", ApiException.BadRequest);
+		}
 
-        if (!(await _autoparkRepository.DoesItExistAsync(trailerDto.AutoparkId, cancellationToken)))
-        {
-            throw new ApiException("autopark doesn't exist", ApiException.BadRequest);
-        }
+		if (!(await _autoparkRepository.DoesItExistAsync(trailerDto.AutoparkId, cancellationToken)))
+		{
+			throw new ApiException("autopark doesn't exist", ApiException.BadRequest);
+		}
 
-        if (!(TrailerTypes.Cistern.Id == trailerDto.TrailerTypeId
-            || TrailerTypes.Bulker.Id == trailerDto.TrailerTypeId
-            || TrailerTypes.VanTrailer.Id == trailerDto.TrailerTypeId
-        ))
-            throw new ApiException("invalid trailer type", ApiException.BadRequest);
-    }
+		if (!(TrailerTypes.Cistern.Id == trailerDto.TrailerTypeId
+			|| TrailerTypes.Bulker.Id == trailerDto.TrailerTypeId
+			|| TrailerTypes.VanTrailer.Id == trailerDto.TrailerTypeId
+		))
+			throw new ApiException("invalid trailer type", ApiException.BadRequest);
+	}
 
 }
