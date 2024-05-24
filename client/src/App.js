@@ -15,6 +15,7 @@ import AutoparksPage from './Pages/AutoparksPage';
 import { YMapComponentsProvider } from 'ymap3-components'
 import AutoparkPage from './Pages/AutoparkPage';
 import CarPage from './Pages/CarPage';
+import TrailerPage from './Pages/TrailerPage';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
                 <Route path="/autoparks/" element={<AutoparksPage />} />
                 <Route path="/autopark/:parkId" element={<AutoparkPage />} />
                 <Route path="/car/:carId" element={<CarPage />} />
+                <Route path="/trailer/:trailerId" element={<TrailerPage />} />
               </Route>
             </Routes>
           </BrowserRouter>

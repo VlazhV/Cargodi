@@ -48,7 +48,7 @@ export default function AutoparkPage() {
         capacityWidth: 0, //mm	
         capacityHeight: 0, //mm
 
-        carTypeId: 0,
+        carTypeId: 1,
         autoparkId: parkId,
         actualAutoparkId: parkId,
     })
@@ -60,7 +60,7 @@ export default function AutoparkPage() {
         capacityWidth: 0, //mm	
         capacityHeight: 0, //mm
 
-        trailerTypeId: 0,
+        trailerTypeId: 1,
         autoparkId: parkId,
         actualAutoparkId: parkId,
     })
@@ -292,9 +292,9 @@ export default function AutoparkPage() {
                                             <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
                                                 <strong>Прицеп №{trailerData.id}</strong>
                                             </h6>
-                                            {/* <h5 className="item-title mbr-fonts-style mb-0 display-7">
+                                            <h5 className="item-title mbr-fonts-style mb-0 display-7">
                                                 <strong>Тип: </strong> {trailerTypes.find(v => v.id == trailerData.trailerType.id).name}
-                                            </h5> */}
+                                            </h5>
                                         </div>
 
                                         <div className="mbr-section-btn item-footer">
