@@ -29,9 +29,12 @@ public class CarService : ICarService
     {
         await ValidateRequest(carDto, cancellationToken);
         
-        if (await _carRepository.DoesItExistAsync(carDto.LicenseNumber!, cancellationToken))
+        var carEntityWithLicenseNumber
+            = await _carRepository.GetByLicenseNumberAsync(carDto.LicenseNumber, cancellationToken);
+            
+        if (carEntityWithLicenseNumber != null && !carEntityWithLicenseNumber.LicenseNumber.Equals(carDto.LicenseNumber))
         {
-            throw new ApiException("license number is reserved", ApiException.BadRequest);
+            throw new ApiException("Car with such license number exists", ApiException.BadRequest);
         }
                         
         var car = _mapper.Map<Car>(carDto);
@@ -80,7 +83,7 @@ public class CarService : ICarService
         var carEntityWithLicenseNumber
             = await _carRepository.GetByLicenseNumberAsync(carDto.LicenseNumber, cancellationToken);
             
-        if (carEntityWithLicenseNumber != null || !carEntityWithLicenseNumber.LicenseNumber.Equals(carDto.LicenseNumber))
+        if (carEntityWithLicenseNumber != null && !carEntityWithLicenseNumber.LicenseNumber.Equals(carDto.LicenseNumber))
         {
             throw new ApiException("Car with such license number exists", ApiException.BadRequest);
         }
