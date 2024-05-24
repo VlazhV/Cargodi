@@ -10,8 +10,8 @@ export default class AuthService {
         const userData = await api.post('/register', { userName, email, phoneNumber, role })
         return userData
     }
-    static async SignUp(userName, password, email, phoneNumber) {
-        const tokenData = await api.post('/sign-up', { userName, password, email, phoneNumber })
+    static async SignUp(userName, password, email, phoneNumber, client) {
+        const tokenData = await api.post('/sign-up', { userName, password, email, phoneNumber, client })
         localStorage.setItem('accessToken', tokenData.data.accessToken)
         return tokenData
     }

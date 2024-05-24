@@ -8,7 +8,10 @@ function RegisterPage(props) {
         userName: undefined,
         password: undefined,
         phoneNumber: undefined,
-        email: undefined
+        email: undefined,
+        client: {
+            name: undefined
+        }
     })
 
     const { loading, error, dispatch } = useContext(AuthContext)
@@ -19,12 +22,17 @@ function RegisterPage(props) {
         setCredentials(prev => ({ ...prev, [e.target.id]: e.target.value }))
     }
 
+    const handleNameChange = (e) => {
+        e.preventDefault()
+        setCredentials(prev => ({ ...prev, client: { name: e.target.value } }))
+    }
+
     const handleClick = async (e) => {
         e.preventDefault()
         if (credentials.email && credentials.userName && credentials.password && credentials.phoneNumber) {
             dispatch({ type: "LOGIN_START" })
             try {
-                const res = await AuthService.SignUp(credentials.userName, credentials.password, credentials.email, credentials.phoneNumber)
+                const res = await AuthService.SignUp(credentials.userName, credentials.password, credentials.email, credentials.phoneNumber, credentials.client)
                 dispatch({ type: "LOGIN_SUCCESS", payload: res.data })
                 navigate("/")
             } catch (err) {
@@ -38,8 +46,6 @@ function RegisterPage(props) {
     return (
         <div>
             <section data-bs-version="5.1" className="form5 cid-ud3KesHTYC" id="contact-form-2-ud3KesHTYC">
-
-
                 <div className="container">
                     <div className="row justify-content-center">
                         <div className="col-12 content-head">
@@ -75,6 +81,10 @@ function RegisterPage(props) {
                                     <div className="col-12 form-group mb-3" data-for="input">
                                         <input name="input" placeholder="Номер телефона" data-form-field="input"
                                             className="form-control" id="phoneNumber" onChange={handleChange}></input>
+                                    </div>
+                                    <div className="col-12 form-group mb-3" data-for="input">
+                                        <input name="input" placeholder="Имя" data-form-field="input"
+                                            className="form-control" id="name" onChange={handleNameChange}></input>
                                     </div>
                                     <div className="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
                                         <button className="btn btn-primary display-7" onClick={handleClick}>Зарегестрироваться</button>

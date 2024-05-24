@@ -8,12 +8,7 @@ export default function Header() {
             <nav className="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
                 <div className="container">
                     <div className="navbar-brand">
-                        <span className="navbar-logo">
-                            <Link to={"/"}>
-                                <img src="assets/images/photo-1623486175858-81e03b95b677.jpeg"
-                                    alt="Mobirise Website Builder" style={{ height: "4.3rem" }} />
-                            </Link>
-                        </span>
+
                         <span className="navbar-caption-wrap"><Link className="navbar-caption text-black display-4"
                             to={"/"}>CARGODI</Link></span>
                     </div>
