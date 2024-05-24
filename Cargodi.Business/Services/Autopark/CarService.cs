@@ -80,7 +80,7 @@ public class CarService : ICarService
         var carEntityWithLicenseNumber
             = await _carRepository.GetByLicenseNumberAsync(carDto.LicenseNumber, cancellationToken);
             
-        if (carEntityWithLicenseNumber == null || !carEntityWithLicenseNumber.LicenseNumber.Equals(carDto.LicenseNumber))
+        if (carEntityWithLicenseNumber != null || !carEntityWithLicenseNumber.LicenseNumber.Equals(carDto.LicenseNumber))
         {
             throw new ApiException("Car with such license number exists", ApiException.BadRequest);
         }
