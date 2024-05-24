@@ -48,4 +48,13 @@ public class TrailerRepository : RepositoryBase<Trailer, int>, ITrailerRepositor
             .ToListAsync(cancellationToken);
     }
 
+    public Task<Trailer?> GetByLicenseNumberAsync(string licenseNumber, CancellationToken cancellationToken)
+    {
+        return _db.Trailers
+            .AsNoTracking()
+            .Where(c => c.LicenseNumber.Equals(licenseNumber))
+            .FirstOrDefaultAsync();
+    }
+
+
 }

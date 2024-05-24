@@ -10,4 +10,5 @@ public interface ITrailerRepository: IRepository<Trailer, int>
     
 	Task<IEnumerable<Trailer>> GetFreeTrailersAsync(CancellationToken cancellationToken);
 	Task<IEnumerable<Trailer>> GetSuitableTrailersOrderedAsync(int weight, int volume, int biggestLinearSize, int autoparkStartId, CancellationToken cancellationToken);
+	Task<Trailer?> GetByLicenseNumberAsync(string licenseNumber, CancellationToken cancellationToken);
 }

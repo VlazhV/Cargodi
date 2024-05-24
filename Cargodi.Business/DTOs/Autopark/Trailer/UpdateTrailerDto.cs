@@ -11,4 +11,5 @@ public class UpdateTrailerDto
 	public int Carrying { get; set; }
 	public int AutoparkId { get; set; }
 	public int ActualAutoparkId { get; set; }
+	public int TrailerTypeId { get; set; }
 }

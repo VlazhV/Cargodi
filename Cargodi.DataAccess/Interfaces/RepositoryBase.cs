@@ -15,9 +15,9 @@ protected readonly DatabaseContext _db;
 	
 	public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken)
 	{
-		var entry = await _db.AddAsync(entity!, cancellationToken);
-
-		return entry.Entity;
+        var entry = await _db.AddAsync(entity!, cancellationToken);
+       
+        return entry.Entity;
 	}
 
 	public T Delete(T entity)

@@ -95,6 +95,7 @@ public class IdentityService : IIdentityService
         return userDto;
     }
 
+
     public async Task<TokenDto> SignUpAsync(SignupDto signupDto, CancellationToken cancellationToken)
     {
         await ValidateSignupRequest(signupDto, cancellationToken);
