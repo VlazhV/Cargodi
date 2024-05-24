@@ -14,6 +14,7 @@ public class AutoparkProfile: Profile
     public AutoparkProfile()
     {
         CreateMap<CarType, CarTypeDto>();
+        CreateMap<TrailerType, TrailerTypeDto>();
         
         CreateMap<Address, GetAddressDto>();
         CreateMap<UpdateAddressDto, Address>();

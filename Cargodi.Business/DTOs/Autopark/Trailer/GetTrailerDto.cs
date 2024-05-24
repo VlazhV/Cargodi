@@ -13,4 +13,6 @@ public class GetTrailerDto
     
     public int AutoparkId { get; set; }
     public int ActualAutoparkId { get; set; }
+
+    public TrailerTypeDto TrailerType { get; set; } = null!;
 }
