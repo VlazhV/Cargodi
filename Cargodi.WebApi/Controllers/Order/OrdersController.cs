@@ -1,6 +1,7 @@
 using Cargodi.Business.DTOs.Order.Order;
 using Cargodi.Business.DTOs.Order.Payload;
 using Cargodi.Business.Interfaces.Order;
+using Cargodi.DataAccess.Constants;
 using Cargodi.WebApi.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,11 +20,19 @@ public class OrdersController: ControllerBase
 		_orderService = orderService;
 	}
 	
-	[HttpGet]
-	[AuthorizeAdminManager]
+	[HttpGet] 
 	public async Task<ActionResult<IEnumerable<GetOrderInfoDto>>> GetAllAsync(CancellationToken cancellationToken)
 	{
+		if (!User.IsInRole(Roles.Admin) && !User.IsInRole(Roles.Manager))
+			return NotFound();
+			
 		return Ok(await _orderService.GetAllAsync(cancellationToken));
+	}
+	
+	[HttpGet("my")]
+	public async Task<ActionResult<IEnumerable<GetOrderInfoDto>>> GetAllOfClientAsync(long userId, CancellationToken cancellationToken)
+	{        
+		return Ok(await _orderService.GetAllOfClientAsync(userId, cancellationToken));
 	}
 	
 	[HttpGet("{id}")]

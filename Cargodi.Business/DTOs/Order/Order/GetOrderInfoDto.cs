@@ -19,7 +19,7 @@ public class GetOrderInfoDto
 	public GetClientDto Client { get; set; } = null!;
 	public long ClientId { get; set; } 
 
-	public string OrderStatus { get; set; } = null!;
+	public OrderStatusDto OrderStatus { get; set; } = null!;
 	
 	public GetOperatorDto? Operator { get; set; } 
 }

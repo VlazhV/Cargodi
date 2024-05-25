@@ -107,6 +107,13 @@ public class OrderService : IOrderService
         return _mapper.Map<IEnumerable<GetOrderInfoDto>>(orders);
     }
 
+    public async Task<IEnumerable<GetOrderInfoDto>> GetAllOfClientAsync(long userId, CancellationToken cancellationToken)
+    {
+        var orders = await _orderRepository.GetAllOfClientAsync(userId, cancellationToken);
+
+        return _mapper.Map<IEnumerable<GetOrderInfoDto>>(orders);
+    }
+
     public async Task<GetOrderInfoDto> GetByIdAsync(long id, ClaimsPrincipal user, CancellationToken cancellationToken)
     {
         var role = user.FindFirst(ClaimTypes.Role)!.Value;
