@@ -34,7 +34,7 @@ public class OrderSeeds : IEntityTypeConfiguration<Order>
                 AcceptTime = accessTime,
                 LoadAddressId = i + 2,
                 DeliverAddressId = i + 2 + 5,
-                ClientId = Generator.GenerateRandomNumber(1, 3),
+                ClientId = Generator.GenerateRandomNumber(1, 2),
                 OrderStatusId = status.Id
             });
         }

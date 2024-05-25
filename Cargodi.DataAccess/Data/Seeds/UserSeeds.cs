@@ -18,7 +18,7 @@ public class UserSeeds : IEntityTypeConfiguration<User>
                 NormalizedUserName = "ADMIN",
                 Email = "admin@",
                 NormalizedEmail = "ADMIN@MAIL.RU",
-                PasswordHash = "Admin1!",
+                PasswordHash = "AQAAAAIAAYagAAAAEPY7WVyiuYib5RDDYNF3XssipR4zfeSYWmJCBMUK0QRuLHmIlcIYuWqdt5eYK3kF3A==",
                 ConcurrencyStamp = "1ce8f54c-8405-4d82-a3aa-797ab2b45550",
                 PhoneNumber = "+375441114488"
             },
