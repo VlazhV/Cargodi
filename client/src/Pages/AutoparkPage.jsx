@@ -160,9 +160,7 @@ export default function AutoparkPage() {
         switch (showList) {
             case 'showCars':
                 return <>
-                    <h1 className="mbr-section-title mbr-fonts-style my-4 display-5">
-                        <strong>Машины</strong> <span>(Кол-во: {autoparkData.cars.length})</span>
-                    </h1>
+
                     <div className="justify-content-center d-flex flex-row">
                         <div className="">
                             <div className="col-12 form-group mb-3" data-for="textarea">
@@ -212,39 +210,76 @@ export default function AutoparkPage() {
                     <div className="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
                         <button className="btn btn-primary display-7" onClick={handleCarCreate}>Добавить машину</button>
                     </div>
-                    <div className="row w-100">
+                    <div className='w-100 d-flex flex-row'>
+                        <div className='w-50 border-end border-5 p-4'>
+                            <h2 className="mbr-section-title mbr-fonts-style my-4 ">
+                                <strong>Текущие машины</strong> <span>(Кол-во: {autoparkData.actualCars.length})</span>
+                            </h2>
+                            <div className="row w-100">
 
-                        {
-                            autoparkData.cars.map(carData =>
-                                <div className="item features-without-image col-14 col-md-6 col-lg-4 item-mb active border rounded rounded-4" key={autoparkData.id}>
-                                    <div className="item-wrapper">
-                                        <div className="item-head">
-                                            <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
-                                                <strong>Машина №{carData.id}</strong>
-                                            </h6>
-                                            <h5 className="item-title mbr-fonts-style mb-0 display-7">
-                                                <strong>Марка: </strong> {carData.mark}
-                                            </h5>
-                                            <h5 className="item-title mbr-fonts-style mb-0 display-7">
-                                                <strong>Тип: </strong> {carTypes.find(v => v.id == carData.carType.id).name}
-                                            </h5>
+                                {
+                                    autoparkData.actualCars.map(carData =>
+                                        <div className="item features-without-image col-14 col-md-6 col-lg-4 item-mb active border rounded rounded-4" key={autoparkData.id}>
+                                            <div className="item-wrapper">
+                                                <div className="item-head">
+                                                    <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
+                                                        <strong>Машина №{carData.id}</strong>
+                                                    </h6>
+                                                    <h5 className="item-title mbr-fonts-style mb-0 display-7">
+                                                        <strong>Марка: </strong> {carData.mark}
+                                                    </h5>
+                                                    <h5 className="item-title mbr-fonts-style mb-0 display-7">
+                                                        <strong>Тип: </strong> {carTypes.find(v => v.id == carData.carType.id).name}
+                                                    </h5>
+                                                </div>
+
+                                                <div className="mbr-section-btn item-footer">
+                                                    <Link to={"/car/" + carData.id} className="btn item-btn btn-primary">Подробнее</Link>
+                                                </div>
+                                            </div>
                                         </div>
+                                    )
+                                }
 
-                                        <div className="mbr-section-btn item-footer">
-                                            <Link to={"/car/" + carData.id} className="btn item-btn btn-primary display-7">Подробнее</Link>
+                            </div>
+                        </div>
+                        <div className='w-50 p-4'>
+                            <h2 className="mbr-section-title mbr-fonts-style my-4 ">
+                                <strong>Прописанные машины</strong> <span>(Кол-во: {autoparkData.cars.length})</span>
+                            </h2>
+                            <div className="row w-100">
+
+                                {
+                                    autoparkData.cars.map(carData =>
+                                        <div className="item features-without-image col-14 col-md-6 col-lg-4 item-mb active border rounded rounded-4" key={autoparkData.id}>
+                                            <div className="item-wrapper">
+                                                <div className="item-head">
+                                                    <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
+                                                        <strong>Машина №{carData.id}</strong>
+                                                    </h6>
+                                                    <h5 className="item-title mbr-fonts-style mb-0 display-7">
+                                                        <strong>Марка: </strong> {carData.mark}
+                                                    </h5>
+                                                    <h5 className="item-title mbr-fonts-style mb-0 display-7">
+                                                        <strong>Тип: </strong> {carTypes.find(v => v.id == carData.carType.id).name}
+                                                    </h5>
+                                                </div>
+
+                                                <div className="mbr-section-btn item-footer">
+                                                    <Link to={"/car/" + carData.id} className="btn item-btn btn-primary">Подробнее</Link>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            )
-                        }
+                                    )
+                                }
 
+                            </div>
+                        </div>
                     </div>
                 </>
             case 'showTrailers':
                 return <>
-                    <h1 className="mbr-section-title mbr-fonts-style my-4 display-5">
-                        <strong>Прицепы</strong> <span>(Кол-во: {autoparkData.trailers.length})</span>
-                    </h1>
+
                     <div className="justify-content-center d-flex flex-row">
                         <div className="">
                             <div className="col-12 form-group mb-3" data-for="textarea">
@@ -282,29 +317,63 @@ export default function AutoparkPage() {
                     <div className="col-lg-12 col-md-12 col-sm-12 align-center mbr-section-btn">
                         <button className="btn btn-primary display-7" onClick={handleTrailerCreate}>Добавить прицеп</button>
                     </div>
-                    <div className="row w-100">
+                    <div className='w-100 d-flex flex-row'>
+                        <div className='w-50 border-end border-5 p-4'>
+                            <h2 className="mbr-section-title mbr-fonts-style my-4">
+                                <strong>Текущие прицепы</strong> <span>(Кол-во: {autoparkData.actualTrailers.length})</span>
+                            </h2>
+                            <div className="row w-100">
 
-                        {
-                            autoparkData.trailers.map(trailerData =>
-                                <div className="item features-without-image col-14 col-md-6 col-lg-4 item-mb active border rounded rounded-4" key={autoparkData.id}>
-                                    <div className="item-wrapper">
-                                        <div className="item-head">
-                                            <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
-                                                <strong>Прицеп №{trailerData.id}</strong>
-                                            </h6>
-                                            <h5 className="item-title mbr-fonts-style mb-0 display-7">
-                                                <strong>Тип: </strong> {trailerTypes.find(v => v.id == trailerData.trailerType.id).name}
-                                            </h5>
+                                {
+                                    autoparkData.actualTrailers.map(trailerData =>
+                                        <div className="item features-without-image col-14 col-md-6 col-lg-4 item-mb active border rounded rounded-4" key={autoparkData.id}>
+                                            <div className="item-wrapper">
+                                                <div className="item-head">
+                                                    <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
+                                                        <strong>Прицеп №{trailerData.id}</strong>
+                                                    </h6>
+                                                    <h5 className="item-title mbr-fonts-style mb-0 display-7">
+                                                        <strong>Тип: </strong> {trailerTypes.find(v => v.id == trailerData.trailerType.id).name}
+                                                    </h5>
+                                                </div>
+
+                                                <div className="mbr-section-btn item-footer">
+                                                    <Link to={"/trailer/" + trailerData.id} className="btn item-btn btn-primary">Подробнее</Link>
+                                                </div>
+                                            </div>
                                         </div>
+                                    )
+                                }
+                            </div>
+                        </div>
+                        <div className='w-50 p-4'>
+                            <h2 className="mbr-section-title mbr-fonts-style my-4">
+                                <strong>Прописанные прицепы</strong> <span>(Кол-во: {autoparkData.trailers.length})</span>
+                            </h2>
+                            <div className="row w-100">
 
-                                        <div className="mbr-section-btn item-footer">
-                                            <Link to={"/trailer/" + trailerData.id} className="btn item-btn btn-primary display-7">Подробнее</Link>
+                                {
+                                    autoparkData.trailers.map(trailerData =>
+                                        <div className="item features-without-image col-14 col-md-6 col-lg-4 item-mb active border rounded rounded-4" key={autoparkData.id}>
+                                            <div className="item-wrapper">
+                                                <div className="item-head">
+                                                    <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
+                                                        <strong>Прицеп №{trailerData.id}</strong>
+                                                    </h6>
+                                                    <h5 className="item-title mbr-fonts-style mb-0 display-7">
+                                                        <strong>Тип: </strong> {trailerTypes.find(v => v.id == trailerData.trailerType.id).name}
+                                                    </h5>
+                                                </div>
+
+                                                <div className="mbr-section-btn item-footer">
+                                                    <Link to={"/trailer/" + trailerData.id} className="btn item-btn btn-primary">Подробнее</Link>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            )
-                        }
-
+                                    )
+                                }
+                            </div>
+                        </div>
                     </div>
                 </>
             case 'showDrivers':
