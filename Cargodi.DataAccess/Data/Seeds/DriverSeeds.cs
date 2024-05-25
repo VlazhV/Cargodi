@@ -24,7 +24,7 @@ public class DriverSeeds : IEntityTypeConfiguration<Driver>
                     Generator.GenerateRandomNumber(1, 28)
                 ),
                 License = Generator.GenerateLicense(),
-                UserId = 6,
+                UserId = 5,
                 ActualAutoparkId = 1,
                 AutoparkId = 1,
                 DriverStatusId = DriverStatuses.Works.Id
@@ -60,7 +60,7 @@ public class DriverSeeds : IEntityTypeConfiguration<Driver>
                     Generator.GenerateRandomNumber(1, 28)
                 ),
                 License = Generator.GenerateLicense(),
-                UserId = 8,
+                UserId = 6,
                 ActualAutoparkId = 1,
                 AutoparkId = 1,
                 DriverStatusId = DriverStatuses.Works.Id

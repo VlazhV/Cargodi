@@ -40,21 +40,6 @@ public class OperatorSeeds : IEntityTypeConfiguration<Operator>
                     Generator.GenerateRandomNumber(1, 28)
                 )
             },
-            new Operator
-            {
-                Id = 3,
-                UserId = 3,
-                FirstName = "Александра",
-                SecondName = "Костюченко",
-                MiddleName = "Ивановна",
-                AutoparkId = 2,
-                FireDate = null,
-                EmployDate = new DateTime(
-                    Generator.GenerateRandomNumber(2020, 2023),
-                    Generator.GenerateRandomNumber(1, 12),
-                    Generator.GenerateRandomNumber(1, 28)
-                )
-            },
         };
 
         builder.HasData(operators);

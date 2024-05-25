@@ -21,13 +21,7 @@ public class ClientSeeds : IEntityTypeConfiguration<Client>
                 Id = 2,
                 UserId = 4,
                 Name = "Валерий"
-            },
-            new Client
-            {
-                Id = 3,
-                UserId = 5,
-                Name = "Наталья"
-            },
+            }
         };
 
         builder.HasData(clients);
