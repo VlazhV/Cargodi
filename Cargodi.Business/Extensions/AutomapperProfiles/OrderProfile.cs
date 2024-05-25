@@ -11,7 +11,7 @@ public class OrderProfile: Profile
 	public OrderProfile()
 	{
         CreateMap<OrderStatus, OrderStatusDto>();
-		CreateMap<Order, GetOrderDto>()						
+        CreateMap<Order, GetOrderDto>();						
 		CreateMap<Payload, GetPayloadDto>();
 		
 		CreateMap<Order, GetOrderInfoDto>()

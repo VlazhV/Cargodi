@@ -234,5 +234,7 @@ public class ShipService : IShipService
     public async Task<IEnumerable<GetShipDto>> GetAllOfDriverAsync(long userId, CancellationToken cancellationToken)
     {
         var ships = await _shipRepository.GetShipsFullInfoOfDriverAsync(userId, cancellationToken);
+
+        return _mapper.Map<IEnumerable<GetShipDto>>(ships);
     }
 }

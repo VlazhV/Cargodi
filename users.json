@@ -6,7 +6,15 @@
   {
     "userName": "superadmin1",
     "password": "SUPER-admin1"
+  },
+
+  {
+    "userName": "client02",
+    "password": "client02_CLIENT_123",
+    "email": "client02@mail.ru",
+    "phoneNumber": "+375447000123",
+    "client": {
+      "name": "Иван"
+    }
   }
-
-
 ]
