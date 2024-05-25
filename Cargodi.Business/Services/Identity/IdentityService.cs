@@ -212,7 +212,7 @@ public class IdentityService : IIdentityService
                 break;
                 
             case Roles.Client:
-                if (!(registerDto.Client != null && registerDto.Driver == null && registerDto.Operator != null))
+                if (!(registerDto.Client != null && registerDto.Driver == null && registerDto.Operator == null))
                 {
                     throw new ApiException("Invalid request", ApiException.BadRequest);
                 }

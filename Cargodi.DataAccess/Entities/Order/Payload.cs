@@ -13,7 +13,7 @@ public class Payload
 
 	public Order Order { get; set; } = null!;
 	public long OrderId { get; set; }
-	
-	public required PayloadType PayloadType { get; set; } 
+
+    public PayloadType PayloadType { get; set; } = null!;
 	public int PayloadTypeId { get; set; }
 }

@@ -6,6 +6,7 @@ using Cargodi.Business.DTOs.Order.Payload;
 using Cargodi.Business.Exceptions;
 using Cargodi.Business.Interfaces.Order;
 using Cargodi.DataAccess.Constants;
+using Cargodi.DataAccess.Entities;
 using Cargodi.DataAccess.Entities.Order;
 using Cargodi.DataAccess.Interfaces.Common;
 using Cargodi.DataAccess.Interfaces.Order;
@@ -37,7 +38,7 @@ public class OrderService : IOrderService
     
     public async Task<GetOrderDto> CreateAsync(long? customerId, ClaimsPrincipal user, UpdateOrderPayloadsDto orderDto, CancellationToken cancellationToken)
     {
-        long clientId;
+        long clientId = 0;
 
         if (customerId.HasValue)
         {
@@ -52,25 +53,30 @@ public class OrderService : IOrderService
         }
         else
         {
-            clientId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var userId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var client = await _clientRepository.GetClientByUserIdAsync(userId, cancellationToken);
+
+            if (client == null)
+                throw new ApiException(Messages.UserIsNotFound, ApiException.NotFound);
+             
+            clientId = client.Id;
         }
 
-        if (! await _clientRepository.DoesItExistAsync(clientId, cancellationToken))
-        {
-            throw new ApiException(Messages.UserIsNotFound, ApiException.NotFound);
-        }
 
         var order = _mapper.Map<DataAccess.Entities.Order.Order>(orderDto);
         order.ClientId = clientId;
         order.OrderStatusId = OrderStatuses.Processing.Id;
         order.Time = DateTime.UtcNow;
-        
-        foreach (var p in order.Payloads)
-        {
-            p.PayloadTypeId = p.PayloadType!.Id;
-            p.PayloadType = null;
-        }
 
+        var payloads = order.Payloads;
+        order.Payloads = null;
+
+        order.DeliverAddressId = await ProcessAddressAsync(order.DeliverAddress, cancellationToken);
+        order.DeliverAddress = null;
+        
+        order.LoadAddressId = await ProcessAddressAsync(order.LoadAddress, cancellationToken);
+        order.LoadAddress = null;
+        
         order = await _orderRepository.CreateAsync(order, cancellationToken);
         await _orderRepository.SaveChangesAsync(cancellationToken);
         
@@ -103,6 +109,13 @@ public class OrderService : IOrderService
     public async Task<IEnumerable<GetOrderInfoDto>> GetAllAsync(CancellationToken cancellationToken)
     {
         var orders = await _orderRepository.GetAllAsync(cancellationToken);
+
+        return _mapper.Map<IEnumerable<GetOrderInfoDto>>(orders);
+    }
+
+    public async Task<IEnumerable<GetOrderInfoDto>> GetAllOfClientAsync(long userId, CancellationToken cancellationToken)
+    {
+        var orders = await _orderRepository.GetAllOfClientAsync(userId, cancellationToken);
 
         return _mapper.Map<IEnumerable<GetOrderInfoDto>>(orders);
     }
@@ -201,5 +214,36 @@ public class OrderService : IOrderService
         order = await _orderRepository.GetByIdAsync(id, cancellationToken);
 
         return _mapper.Map<GetOrderInfoDto>(order);
+    }
+    
+    private async Task<long> ProcessAddressAsync(Address address, CancellationToken cancellationToken)
+    {
+        var addressEntity = await _addressRepository.GetIfExistsAsync(address, cancellationToken);
+        
+        if (addressEntity == null)
+        {
+            addressEntity = await _addressRepository.CreateAsync(address, cancellationToken);
+            await _addressRepository.SaveChangesAsync(cancellationToken);
+        }
+
+        return addressEntity.Id;
+    }
+
+    private async Task CreatePayloadsAsync(long orderId, List<Payload> payloads, CancellationToken cancellationToken)
+    {
+        bool valid = payloads.All(p =>
+            p.PayloadTypeId == PayloadTypes.Bulk.Id ||
+            p.PayloadTypeId == PayloadTypes.Liquid.Id ||
+            p.PayloadTypeId == PayloadTypes.Item.Id
+            );
+
+        payloads.ForEach(p => {
+            p.PayloadTypeId = p.PayloadType.Id;
+            p.PayloadType = null;
+            p.OrderId = orderId;
+        });
+
+        await _payloadRepository.CreateManyAsync(payloads, cancellationToken);
+        await _payloadRepository.SaveChangesAsync(cancellationToken);
     }
 }

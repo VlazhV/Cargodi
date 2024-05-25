@@ -16,8 +16,8 @@ public class Trailer: ICarrier
 
 	public Autopark Autopark { get; set; } = null!;
 	public int AutoparkId { get; set; }
-	
-	public required TrailerType TrailerType { get; set; }
+
+    public TrailerType TrailerType { get; set; } = null!;
 	public int TrailerTypeId { get; set; }
 
 	public ICollection<Ship.Ship>? Ships { get; set; }

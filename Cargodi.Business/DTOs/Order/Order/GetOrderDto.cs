@@ -10,5 +10,5 @@ public class GetOrderDto
 	public string LoadAddress { get; set; } = null!;
 	public string DeliverAddress { get; set; } = null!;
 
-	public string OrderStatus { get; set; } = null!;
+	public OrderStatusDto OrderStatus { get; set; } = null!;
 }

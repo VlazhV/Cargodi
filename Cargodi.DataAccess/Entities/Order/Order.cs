@@ -8,7 +8,7 @@ public class Order
 	public long Id { get; set; }
 
 	public DateTime Time { get; set; }
-	public DateTime AcceptTime { get; set; }
+	public DateTime? AcceptTime { get; set; }
 
 	public Address LoadAddress { get; set; } = null!;
 	public long LoadAddressId { get; set; }
@@ -25,7 +25,7 @@ public class Order
 	public ushort OrderStatusId { get; set; }
 	
 	public Operator? Operator { get; set; }
-	public int OperatorId { get; set; }
+	public int? OperatorId { get; set; }
 
 	public ICollection<Stop> Stops { get; set; } = null!;
 }

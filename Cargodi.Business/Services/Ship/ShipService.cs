@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using AutoMapper;
 using Cargodi.Business.Constants;
 using Cargodi.Business.DTOs.Ship.Ship;
@@ -10,6 +11,7 @@ using Cargodi.DataAccess.Entities.Ship;
 using Cargodi.DataAccess.Interfaces.Autopark;
 using Cargodi.DataAccess.Interfaces.Ship;
 using Cargodi.DataAccess.Interfaces.Staff;
+using Microsoft.AspNetCore.Server.IIS.Core;
 
 namespace Cargodi.Business.Services.Ship;
 
@@ -57,14 +59,32 @@ public class ShipService : IShipService
         return _mapper.Map<GetShipDto>(ship);
     }
 
-    public async Task<GetShipDto> MarkAsync(int shipId, CancellationToken cancellationToken)
-    {
-        var ship = await _shipRepository.GetByIdAsync(shipId, cancellationToken)
+    public async Task<GetShipDto> MarkAsync(int shipId, ClaimsPrincipal user, CancellationToken cancellationToken)
+    {    
+        var ship = await _shipRepository.GetShipFullInfoByIdAsync(shipId, cancellationToken)
             ?? throw new ApiException(Messages.UserIsNotFound, ApiException.NotFound);
+
+        var driverUserIds = ship.Drivers.Select(x => x.UserId);
+        
+        if (user.IsInRole(Roles.Driver))
+        {
+            var driverId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            if (!driverUserIds.Contains(driverId))
+            {
+                throw new ApiException("you have no rights", ApiException.Forbidden);
+            }
+        }
+        
             
         if (ship.Start == null)
         {
-            ship.Start = DateTime.UtcNow;
+            ship.Start = DateTime.UtcNow;            
+            _shipRepository.Update(ship);
+            await _shipRepository.SaveChangesAsync(cancellationToken);
+            ship = await _shipRepository.GetShipFullInfoByIdAsync(shipId, cancellationToken);
+
+            return _mapper.Map<GetShipDto>(ship);
         }
         else if (ship.Finish != null)
         {
@@ -196,5 +216,25 @@ public class ShipService : IShipService
                 throw new ApiException("invalid route", ApiException.BadRequest);
             }
         }
+    }
+
+    public async Task DeleteAsync(int id, CancellationToken cancellationToken)
+    {
+        var ship = await _shipRepository.GetByIdAsync(id, cancellationToken);
+        
+        if (ship == null)
+        {
+            throw new ApiException(Messages.ShipIsNotFound, ApiException.NotFound);
+        }
+
+        _shipRepository.Delete(ship);
+        await _shipRepository.SaveChangesAsync(cancellationToken);        
+    }
+
+    public async Task<IEnumerable<GetShipDto>> GetAllOfDriverAsync(long userId, CancellationToken cancellationToken)
+    {
+        var ships = await _shipRepository.GetShipsFullInfoOfDriverAsync(userId, cancellationToken);
+
+        return _mapper.Map<IEnumerable<GetShipDto>>(ships);
     }
 }
