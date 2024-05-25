@@ -5,6 +5,7 @@ import userRoles from '../Data/UserRoles.json'
 import { useNavigate, useParams } from 'react-router'
 import CarService from '../Services/CarService'
 import carTypes from '../Data/CarTypes.json'
+import AutoparkEdit from '../Components/AutoparkEdit'
 
 export default function CarPage() {
 
@@ -33,7 +34,7 @@ export default function CarPage() {
 
     const navigate = useNavigate()
 
-    const [fetch, loading, error] = useFetching(async (type) => {
+    const [fetch, loading, error] = useFetching(async (type, data) => {
         switch (type) {
             case "get":
                 {
@@ -70,9 +71,49 @@ export default function CarPage() {
                     setEditing(false)
                 }
                 break;
+            case "updateAutopark":
+                {
+                    let updateCarData = carData
+                    updateCarData.autoparkId = data
+
+                    const res = await CarService.Update(carId, updateCarData)
+
+                    let tempCarData = res.data
+                    let typeCarIt = carTypes.find(v => v.id == tempCarData.carType.id)
+
+                    tempCarData.carTypeName = typeCarIt ? typeCarIt.name : ''
+                    tempCarData.carTypeId = tempCarData.carType.id
+
+                    setCarData(res.data)
+                }
+                break;
+            case "updateActualAutopark":
+                {
+                    let updateCarData = carData
+                    updateCarData.actualAutoparkId = data
+
+                    const res = await CarService.Update(carId, updateCarData)
+
+                    let tempCarData = res.data
+                    let typeCarIt = carTypes.find(v => v.id == tempCarData.carType.id)
+
+                    tempCarData.carTypeName = typeCarIt ? typeCarIt.name : ''
+                    tempCarData.carTypeId = tempCarData.carType.id
+
+                    setCarData(res.data)
+                }
+                break;
         }
 
     })
+
+    const handleAutoparkChange = (newAutoparkId) => {
+        fetch("updateAutopark", newAutoparkId)
+    }
+
+    const handleActualAutoparkChange = (newAutoparkId) => {
+        fetch("updateActualAutopark", newAutoparkId)
+    }
 
     const handleDeleteClick = (e) => {
         e.preventDefault()
@@ -150,6 +191,12 @@ export default function CarPage() {
                             </h1>
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
                                 <strong>Тип:</strong> <span>{carData.carTypeName}</span>
+                            </h1>
+                            <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                <strong>Прописка:</strong> <span>Автопарк №{carData.autoparkId}</span>
+                            </h1>
+                            <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                <strong>Текущий автопарк:</strong> <span>Автопарк №{carData.actualAutoparkId}</span>
                             </h1>
                         </div>
                     </div>
@@ -233,8 +280,14 @@ export default function CarPage() {
                 <>
                     <div className="btn btn-primary display-3" onClick={handleEditingStart}>Изменить</div>
                     <div className="btn btn-danger display-3" onClick={handleDeleteClick}>Удалить</div>
+                    <button type="button" className="btn btn-primary display-3"
+                        data-bs-toggle="modal" data-bs-target="#carAutoparkId">Назначить прописку</button>
+                    <button type="button" className="btn btn-primary display-3"
+                        data-bs-toggle="modal" data-bs-target="#carActualAutoparkId">Назначить текущий автопарк</button>
                 </>
             }
+            <AutoparkEdit id="carAutoparkId" onSelectAutopark={handleAutoparkChange} />
+            <AutoparkEdit id="carActualAutoparkId" onSelectAutopark={handleActualAutoparkChange} />
             {
                 editing &&
                 <>

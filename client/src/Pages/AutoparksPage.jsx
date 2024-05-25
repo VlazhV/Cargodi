@@ -30,7 +30,6 @@ export default function AutoparksPage() {
                 break;
             case "create":
                 {
-                    console.log(newParkData)
                     const res = await AutoparkService.Create(newParkData.address, newParkData.capacity)
                     fetch("get")
                 }
@@ -100,7 +99,7 @@ export default function AutoparksPage() {
                                         <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
                                             <strong>Автопарк №{autoparkData.id}</strong>
                                         </h6>
-                                        <h5 className="item-title mbr-fonts-style mb-0 display-5">
+                                        <h5 className="item-title mbr-fonts-style mb-0 display-7">
                                             <strong>Адресс:</strong> {autoparkData.address.name}
                                         </h5>
                                         <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
