@@ -67,7 +67,7 @@ export default function UsersPage() {
             {
                 error &&
                 <div className="border border-danger border rounded-4 p-2 px-4 mt-2">
-                    <span className="text-danger text-center h3">{toString(error)}</span>
+                    <span className="text-danger text-center h3">{typeof error === 'string' ? error : toString(error)}</span>
                 </div>
             }
         </div>

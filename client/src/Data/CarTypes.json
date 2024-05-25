@@ -1,0 +1,17 @@
+[
+    {
+        "value": "Truck",
+        "id": 1,
+        "name": "Грузовик"
+    },
+    {
+        "value": "Van",
+        "id": 2,
+        "name": "Фургон"
+    },
+    {
+        "value": "Passenger Car",
+        "id": 3,
+        "name": "Легковая"
+    }
+]

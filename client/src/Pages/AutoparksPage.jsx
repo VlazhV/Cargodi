@@ -3,6 +3,7 @@ import { useFetching } from '../Hooks/useFetching'
 import { Link } from 'react-router-dom'
 import AutoparkService from '../Services/AutoparkService'
 import Map from '../Components/Map'
+import AddressEdit from '../Components/AddressEdit'
 
 export default function AutoparksPage() {
 
@@ -41,9 +42,8 @@ export default function AutoparksPage() {
         fetch("get")
     }, [])
 
-    const handleAddressChange = (e) => {
-        e.preventDefault()
-        setNewParkData(oldValue => { return { capacity: oldValue.capacity, address: { ...oldValue.address, [e.target.id]: e.target.value } } })
+    const handleAddressChange = (newAddress) => {
+        setNewParkData(oldValue => { return { capacity: oldValue.capacity, address: newAddress } })
     }
 
     const handleCapacityChange = (e) => {
@@ -68,49 +68,8 @@ export default function AutoparksPage() {
                         </div>
                     </div>
                 </div>
-                <Map>
-
-                </Map>
                 <div className="justify-content-center d-flex flex-row">
-                    <div className="" >
-                        <div className="mbr-section-head mb-2">
-                            <h6 className="align-center mb-0 display-6">
-                                <strong>Адресс</strong>
-                            </h6>
-                        </div>
-                        <div className="col-12 form-group mb-3" data-for="textarea">
-                            <input name="input" placeholder="Название" type="text" data-form-field="input"
-                                className="form-control" id="name" onChange={handleAddressChange}></input>
-                        </div>
-
-                        <div className="col-12 form-group mb-3" data-for="textarea">
-                            <input name="input" placeholder="Широта" type='text' data-form-field="input"
-                                className="form-control" id="latitude" onChange={handleAddressChange}></input>
-                        </div>
-
-                        <div className="col-12 form-group mb-3" data-for="input">
-                            <input name="input" placeholder="Долгота" type='text' data-form-field="input"
-                                className="form-control" id="longitude" onChange={handleAddressChange}></input>
-                        </div>
-
-                        <div className='px-4 display-4'>
-                            <div className="col-12 form-check mb-3" data-for="input">
-                                <input name="input" type='checkbox' data-form-field="input"
-                                    className="form-check-input" id="isWest" onChange={handleAddressChange}></input>
-                                <label className='form-check-label' >Запад</label>
-                            </div>
-                        </div>
-
-                        <div className='px-4 display-4'>
-                            <div className="col-12 form-check mb-3" data-for="input">
-                                <input name="input" type='checkbox' data-form-field="input"
-                                    className="form-check-input" id="isNorth" onChange={handleAddressChange}></input>
-                                <label className='form-check-label' >Север</label>
-                            </div>
-                        </div>
-
-
-                    </div>
+                    <AddressEdit address={newParkData.address} onAddressChange={handleAddressChange} />
                     <div className="">
                         <div className="col-12 form-group mb-3" data-for="textarea">
                             <input name="input" placeholder="Вместимость" type="number" data-form-field="input"
@@ -127,7 +86,7 @@ export default function AutoparksPage() {
                 {
                     error &&
                     <div className="border border-danger border rounded-4 p-2 px-4 mt-2">
-                        <span className="text-danger text-center h3">{toString(error)}</span>
+                        <span className="text-danger text-center h3">{typeof error === 'string' ? error : toString(error)}</span>
                     </div>
                 }
                 <div className="row">
@@ -140,8 +99,8 @@ export default function AutoparksPage() {
                                         <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
                                             <strong>Автопарк №{autoparkData.id}</strong>
                                         </h6>
-                                        <h5 className="item-title mbr-fonts-style mb-0 display-5">
-                                            <strong>Адресс:</strong> {autoparkData.address.name}
+                                        <h5 className="item-title mbr-fonts-style mb-0 display-7">
+                                            <strong>Адрес:</strong> {autoparkData.address.name}
                                         </h5>
                                         <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
                                             <strong>Вместимость:</strong> {autoparkData.capacity}
@@ -158,8 +117,6 @@ export default function AutoparksPage() {
 
                 </div>
             </div>
-
-
         </div>
     )
 }

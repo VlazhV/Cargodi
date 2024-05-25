@@ -1,0 +1,17 @@
+[
+    {
+        "value": "Cistem",
+        "id": 1,
+        "name": "Цистерна"
+    },
+    {
+        "value": "Bulker",
+        "id": 2,
+        "name": "Балкер"
+    },
+    {
+        "value": "Van Trailer",
+        "id": 3,
+        "name": "Прицеп фургона"
+    }
+]
