@@ -3,6 +3,7 @@ import React from 'react'
 export default function AddressEdit(props) {
     const onAddressChange = props.onAddressChange ? props.onAddressChange : (newAddres) => { }
     const address = props.address ? props.address : {}
+    const name = props.name ? props.name : 'Адрес'
 
     const handleAddressChange = (e) => {
         e.preventDefault()
@@ -17,7 +18,7 @@ export default function AddressEdit(props) {
         <div className="" >
             <div className="mbr-section-head mb-2">
                 <h6 className="align-center mb-0 display-6">
-                    <strong>Адресс</strong>
+                    <strong>{name}</strong>
                 </h6>
             </div>
             <div className="col-12 form-group mb-3" data-for="textarea">

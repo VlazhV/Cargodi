@@ -100,7 +100,7 @@ export default function AutoparksPage() {
                                             <strong>Автопарк №{autoparkData.id}</strong>
                                         </h6>
                                         <h5 className="item-title mbr-fonts-style mb-0 display-7">
-                                            <strong>Адресс:</strong> {autoparkData.address.name}
+                                            <strong>Адрес:</strong> {autoparkData.address.name}
                                         </h5>
                                         <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
                                             <strong>Вместимость:</strong> {autoparkData.capacity}
@@ -117,8 +117,6 @@ export default function AutoparksPage() {
 
                 </div>
             </div>
-
-
         </div>
     )
 }

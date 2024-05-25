@@ -7,7 +7,7 @@ export default function AddressView(props) {
         <div className="" >
             <div className="mbr-section-head mb-2">
                 <h6 className="align-center mb-0 display-6">
-                    <strong>Адресс</strong>
+                    <strong>Адрес</strong>
                 </h6>
             </div>
             <div className="text-wrapper align-left">

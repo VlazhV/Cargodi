@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 export default function Header() {
     return (
-        <section data-bs-version="5.1" className="menu menu2 cid-ud3KesCX8K" id="menu-5-ud3KesCX8K">
+        <section className="menu menu2 cid-ud3KesCX8K">
 
             <nav className="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
                 <div className="container">
@@ -43,12 +43,19 @@ export default function Header() {
                             <li className="nav-item">
                                 <Link className="nav-link link text-black display-4" aria-expanded="false" to={"/autoparks"}>Автопарки</Link>
                             </li>
+                            <li className="nav-item">
+                                <Link className="nav-link link text-black display-4" aria-expanded="false" to={"/orders/create"}>Сделать заказ</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link link text-black display-4" aria-expanded="false" to={"/orders/operator"}>Заказы</Link>
+                            </li>
 
 
                         </ul>
 
-                        <div className="navbar-buttons mbr-section-btn"><Link to={"/profile"} className="btn btn-primary display-4"
-                        >Профиль</Link></div>
+                        <div className="navbar-buttons mbr-section-btn mx-2">
+                            <Link to={"/profile"} className="btn btn-primary w-100">Профиль</Link>
+                        </div>
                     </div>
                 </div>
             </nav>

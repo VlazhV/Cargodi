@@ -43,7 +43,7 @@ export default function AutoparkEdit(props) {
                                 return <button className='btn btn-outline-primary w-100' data-bs-dismiss="modal" key={autoparkData.id} id={autoparkData.id} onClick={handleSelectAutopark}>
                                     Автопарк №{autoparkData.id}
                                     <br />
-                                    Адресс: {autoparkData.address.name}
+                                    Адрес: {autoparkData.address.name}
                                 </button>
                             })
                         }

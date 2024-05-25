@@ -16,10 +16,10 @@ export default class OrderService {
     static async Update(id, orderData) {
         return await api.put('/orders/' + id, orderData)
     }
-    static async UpdatePayloadList(payloadsData) {
+    static async UpdatePayloadList(id, payloadsData) {
         return await api.patch('/orders/' + id, payloadsData)
     }
-    static async SetStatus(status) {
+    static async SetStatus(id, status) {
         return await api.patch('/orders/' + id + '/status', status)
     }
 }

@@ -1,0 +1,17 @@
+[
+    {
+        "value": "processing",
+        "id": 1,
+        "name": "В обработке"
+    },
+    {
+        "value": "accepted",
+        "id": 2,
+        "name": "Принято"
+    },
+    {
+        "value": "declined",
+        "id": 3,
+        "name": "Отклонено"
+    }
+]   
