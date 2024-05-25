@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Cargodi.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class Role_Uncomment2 : Migration
+    public partial class Init_with_seeds : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -505,12 +505,12 @@ namespace Cargodi.DataAccess.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Time = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AcceptTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AcceptTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LoadAddressId = table.Column<long>(type: "bigint", nullable: false),
                     DeliverAddressId = table.Column<long>(type: "bigint", nullable: false),
                     ClientId = table.Column<long>(type: "bigint", nullable: false),
                     OrderStatusId = table.Column<int>(type: "int", nullable: false),
-                    OperatorId = table.Column<int>(type: "int", nullable: false)
+                    OperatorId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -673,6 +673,25 @@ namespace Cargodi.DataAccess.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Addresses",
+                columns: new[] { "Id", "IsNorth", "IsWest", "Latitude", "Longitude", "Name" },
+                values: new object[,]
+                {
+                    { 1L, true, false, 53.935541000000001, 27.626106, "г. Минск, ул. Светлая, 23" },
+                    { 2L, true, false, 53.945487, 27.094536000000002, "Минск р-н, ул. Родниковая, 2" },
+                    { 3L, true, false, 53.825226999999998, 27.536000000000001, "Минск р-н, Сеница, Слуцкая улица, 37А" },
+                    { 4L, true, false, 53.873240000000003, 27.625467, "г. Минск, ул. Народная, 29" },
+                    { 5L, true, false, 53.913356999999998, 27.525995999999999, "г. Минск, ул. Москвина, 1" },
+                    { 6L, true, false, 53.950822000000002, 27.569049, "г. Минск, улица Стефании Станюты, 17" },
+                    { 7L, true, false, 53.903579000000001, 27.554373999999999, "Минск, площадь Свободы, 11" },
+                    { 8L, true, false, 53.916353000000001, 27.549897000000001, "г. Минск, проспект Машерова, 35А" },
+                    { 9L, true, false, 53.976832000000002, 27.544625, "р-н Минск, Якубовичи, Луговая улица, 26" },
+                    { 10L, true, false, 53.990738, 27.627642000000002, "Любимая улица, 2, деревня Дроздово, Боровлянский сельсовет, Минский район" },
+                    { 11L, true, false, 53.955250999999997, 27.776284, "Минская улица, 7, агрогородок Колодищи, Минский район" },
+                    { 12L, true, false, 53.746403999999998, 27.566379000000001, "Парковая улица, 65, агрогородок Чуриловичи, Михановичский сельсовет, Минский район" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
@@ -681,6 +700,19 @@ namespace Cargodi.DataAccess.Migrations
                     { 2L, null, "manager", "MANAGER" },
                     { 3L, null, "admin", "ADMIN" },
                     { 4L, null, "driver", "DRIVER" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[,]
+                {
+                    { 1L, 0, "1ce8f54c-8405-4d82-a3aa-797ab2b45550", "admin@", false, false, null, "ADMIN@MAIL.RU", "ADMIN", "AQAAAAIAAYagAAAAEPY7WVyiuYib5RDDYNF3XssipR4zfeSYWmJCBMUK0QRuLHmIlcIYuWqdt5eYK3kF3A==", "+375441114488", false, null, false, "admin" },
+                    { 2L, 0, "2586ec42-77b4-47f3-b8f4-7b636dd678d3", "operator1@mail.ru", false, false, null, "OPERATOR1@MAIL.RU", "OPERATOR1", "AQAAAAIAAYagAAAAEH/G2ct0XwgOoXaRTJgWkU46UKxDqXUiRQvfn4x00qh/zkq5V1XNx4ChedR0p63gDA==", "+375445114488", false, null, false, "operator1" },
+                    { 3L, 0, "bb3c7e16-3044-432e-a2f0-3fb528cfd048", "client1@mail.ru", false, false, null, "CLIENT1@MAIL.RU", "CLIENT1", "AQAAAAIAAYagAAAAELYjdYNv1Bu8vDEoo2K88b9JlZ5nnKaj0mWHfnpsLNxVbhgr2sI38TT+OeybjlQQTQ==", "+375442114488", false, null, false, "client1" },
+                    { 4L, 0, "0747c06e-9ea8-4716-8c1c-facd90a2684b", "client2@mail.ru", false, false, null, "CLIENT3@MAIL.RU", "CLIENT2", "AQAAAAIAAYagAAAAECnMN9e0UKaIefkZrStZ+cLcg3tnXmByAVeP1EAFT5/klg1w5sbWtIBftabugKpg5Q==", "+375443114488", false, null, false, "client2" },
+                    { 5L, 0, "9dc1d642-115f-4eb6-8c68-059c55b715c1", "driver1@mail.ru", false, false, null, "DRIVER1@MAIL.RU", "DRIVER1", "AQAAAAIAAYagAAAAEH4egC8xBaRAzXjWavUWB3vBXn4asC7mzChJRWRYUSZIu8hg0DWadayXzCGY/+crjg==", "+375447114488", false, null, false, "driver1" },
+                    { 6L, 0, "c2f7b8e0-6e77-44b9-8761-7f4a4167ceaa", "driver2@mail.ru", false, false, null, "DRIVER2@MAIL.RU", "DRIVER2", "AQAAAAIAAYagAAAAEDb0E7W3P+NIVtSt3hKKYig8Qnu3IXDQFxlnjCE+OHyeP0vhjLNimpFMxY9rDJoixQ==", "+375448114488", false, null, false, "driver2" }
                 });
 
             migrationBuilder.InsertData(
@@ -745,6 +777,28 @@ namespace Cargodi.DataAccess.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[,]
+                {
+                    { 3L, 1L },
+                    { 2L, 2L },
+                    { 1L, 3L },
+                    { 1L, 4L },
+                    { 4L, 5L },
+                    { 4L, 6L }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Autoparks",
+                columns: new[] { "Id", "AddressId", "Capacity" },
+                values: new object[,]
+                {
+                    { 1, 1L, 250 },
+                    { 2, 2L, 200 }
+                });
+
+            migrationBuilder.InsertData(
                 table: "CarTypesCategories",
                 columns: new[] { "CarTypeId", "CategoryName" },
                 values: new object[,]
@@ -755,6 +809,94 @@ namespace Cargodi.DataAccess.Migrations
                     { 2, "C" },
                     { 3, "B" },
                     { 3, "BE" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Clients",
+                columns: new[] { "Id", "Name", "UserId" },
+                values: new object[,]
+                {
+                    { 1L, "Афанасий", 3L },
+                    { 2L, "Валерий", 4L }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Cars",
+                columns: new[] { "Id", "ActualAutoparkId", "AutoparkId", "CapacityHeight", "CapacityLength", "CapacityWidth", "CarTypeId", "Carrying", "LicenseNumber", "Mark", "Range", "TankVolume" },
+                values: new object[,]
+                {
+                    { 1, 1, 1, 1575, 6516, 1888, 3, 6002618, "CA7586", "Mercedes", 306, 78 },
+                    { 2, 2, 2, 1319, 1292, 1338, 3, 4509976, "YP2095", "Volkswagen", 952, 38 },
+                    { 3, 1, 1, 2238, 6460, 1066, 2, 6647269, "EB6567", "Volkswagen", 748, 99 },
+                    { 4, 1, 1, 1553, 1190, 1387, 3, 1837588, "KT6096", "Nissan", 513, 45 },
+                    { 5, 1, 1, 1519, 6329, 2100, 3, 2156464, "AO2408", "Ford", 482, 99 },
+                    { 6, 1, 1, 2883, 3501, 2842, 3, 3733785, "NC9615", "Honda", 509, 42 },
+                    { 7, 1, 1, 1981, 4535, 2950, 1, 1480816, "EE6163", "Ford", 523, 51 },
+                    { 8, 2, 2, 2351, 2955, 2341, 1, 5985121, "PP3625", "Mercedes", 360, 78 },
+                    { 9, 2, 2, 2286, 6899, 2558, 3, 1603531, "PY6886", "Hyundai", 131, 76 },
+                    { 10, 1, 1, 1824, 3895, 1921, 2, 2926249, "YH4938", "Mercedes", 455, 95 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Drivers",
+                columns: new[] { "Id", "ActualAutoparkId", "AutoparkId", "CarTypeId", "DriverStatusId", "EmployDate", "FireDate", "FirstName", "License", "MiddleName", "SecondName", "UserId" },
+                values: new object[,]
+                {
+                    { 1, 1, 1, null, 1, new DateTime(2024, 4, 19, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Иванов", "HE24086580", "Иванович", "Иван", 5L },
+                    { 2, 2, 2, null, 2, new DateTime(2021, 6, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Василий", "AY66995610", "Васильевич", "Васильев", 6L }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Operators",
+                columns: new[] { "Id", "AutoparkId", "EmployDate", "FireDate", "FirstName", "MiddleName", "SecondName", "UserId" },
+                values: new object[,]
+                {
+                    { 1, 1, new DateTime(2022, 2, 22, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Дмитрий", "Владимирович", "Попов", 1L },
+                    { 2, 1, new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Михаил", "Михаилович", "Шумахер", 2L }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Orders",
+                columns: new[] { "Id", "AcceptTime", "ClientId", "DeliverAddressId", "LoadAddressId", "OperatorId", "OrderStatusId", "Time" },
+                values: new object[,]
+                {
+                    { 1L, new DateTime(2024, 5, 25, 20, 49, 19, 263, DateTimeKind.Utc).AddTicks(9356), 2L, 8L, 3L, null, 2, new DateTime(2024, 2, 11, 15, 16, 13, 0, DateTimeKind.Unspecified) },
+                    { 2L, new DateTime(2024, 5, 25, 20, 49, 19, 263, DateTimeKind.Utc).AddTicks(9375), 2L, 9L, 4L, null, 2, new DateTime(2024, 3, 5, 16, 37, 44, 0, DateTimeKind.Unspecified) },
+                    { 3L, new DateTime(2024, 5, 25, 20, 49, 19, 263, DateTimeKind.Utc).AddTicks(9386), 2L, 10L, 5L, null, 2, new DateTime(2024, 2, 6, 18, 55, 30, 0, DateTimeKind.Unspecified) },
+                    { 4L, new DateTime(2024, 5, 25, 20, 49, 19, 263, DateTimeKind.Utc).AddTicks(9397), 2L, 11L, 6L, null, 2, new DateTime(2024, 2, 22, 13, 23, 30, 0, DateTimeKind.Unspecified) },
+                    { 5L, null, 2L, 12L, 7L, null, 1, new DateTime(2024, 1, 25, 17, 36, 53, 0, DateTimeKind.Unspecified) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Trailers",
+                columns: new[] { "Id", "ActualAutoparkId", "AutoparkId", "CapacityHeight", "CapacityLength", "CapacityWidth", "Carrying", "LicenseNumber", "TrailerTypeId" },
+                values: new object[,]
+                {
+                    { 1, 2, 2, 2016, 4222, 1538, 2756070, "BB1679", 2 },
+                    { 2, 2, 2, 2422, 3332, 1507, 5094253, "KE1010", 3 },
+                    { 3, 2, 2, 1050, 4318, 2100, 1343608, "ET2336", 2 },
+                    { 4, 1, 1, 1135, 3128, 1420, 3951118, "NA5607", 1 },
+                    { 5, 1, 1, 1763, 4644, 1015, 649325, "TB7979", 3 },
+                    { 6, 2, 2, 1193, 6715, 1795, 3960815, "BP5298", 2 },
+                    { 7, 1, 1, 1575, 5546, 1949, 5241592, "MC8780", 1 },
+                    { 8, 1, 1, 2138, 1910, 2820, 6786452, "BA3861", 3 },
+                    { 9, 2, 2, 2995, 2014, 2544, 4818141, "YN8685", 1 },
+                    { 10, 2, 2, 2650, 5461, 1326, 2281930, "NC4381", 3 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Payloads",
+                columns: new[] { "Id", "Description", "Height", "Length", "OrderId", "PayloadTypeId", "Weight", "Width" },
+                values: new object[,]
+                {
+                    { 1L, "", 4611, 5645, 3L, 3, 4273898, 5932 },
+                    { 2L, "", 6690, 1334, 2L, 2, 3341359, 4529 },
+                    { 3L, "", 1782, 5789, 5L, 1, 3313001, 2990 },
+                    { 4L, "", 3404, 3778, 5L, 3, 2064781, 6451 },
+                    { 5L, "", 570, 3622, 2L, 1, 3811111, 5444 },
+                    { 6L, "", 672, 4566, 5L, 2, 4580979, 1023 },
+                    { 7L, "", 5102, 3140, 3L, 1, 2883991, 3600 },
+                    { 8L, "", 1890, 6876, 3L, 1, 2506404, 3494 }
                 });
 
             migrationBuilder.CreateIndex(

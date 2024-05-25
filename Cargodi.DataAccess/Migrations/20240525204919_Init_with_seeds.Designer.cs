@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cargodi.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240523175919_Role_Uncomment2")]
-    partial class Role_Uncomment2
+    [Migration("20240525204919_Init_with_seeds")]
+    partial class Init_with_seeds
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,6 +52,116 @@ namespace Cargodi.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Addresses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            IsNorth = true,
+                            IsWest = false,
+                            Latitude = 53.935541000000001,
+                            Longitude = 27.626106,
+                            Name = "г. Минск, ул. Светлая, 23"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            IsNorth = true,
+                            IsWest = false,
+                            Latitude = 53.945487,
+                            Longitude = 27.094536000000002,
+                            Name = "Минск р-н, ул. Родниковая, 2"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            IsNorth = true,
+                            IsWest = false,
+                            Latitude = 53.825226999999998,
+                            Longitude = 27.536000000000001,
+                            Name = "Минск р-н, Сеница, Слуцкая улица, 37А"
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            IsNorth = true,
+                            IsWest = false,
+                            Latitude = 53.873240000000003,
+                            Longitude = 27.625467,
+                            Name = "г. Минск, ул. Народная, 29"
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            IsNorth = true,
+                            IsWest = false,
+                            Latitude = 53.913356999999998,
+                            Longitude = 27.525995999999999,
+                            Name = "г. Минск, ул. Москвина, 1"
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            IsNorth = true,
+                            IsWest = false,
+                            Latitude = 53.950822000000002,
+                            Longitude = 27.569049,
+                            Name = "г. Минск, улица Стефании Станюты, 17"
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            IsNorth = true,
+                            IsWest = false,
+                            Latitude = 53.903579000000001,
+                            Longitude = 27.554373999999999,
+                            Name = "Минск, площадь Свободы, 11"
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            IsNorth = true,
+                            IsWest = false,
+                            Latitude = 53.916353000000001,
+                            Longitude = 27.549897000000001,
+                            Name = "г. Минск, проспект Машерова, 35А"
+                        },
+                        new
+                        {
+                            Id = 9L,
+                            IsNorth = true,
+                            IsWest = false,
+                            Latitude = 53.976832000000002,
+                            Longitude = 27.544625,
+                            Name = "р-н Минск, Якубовичи, Луговая улица, 26"
+                        },
+                        new
+                        {
+                            Id = 10L,
+                            IsNorth = true,
+                            IsWest = false,
+                            Latitude = 53.990738,
+                            Longitude = 27.627642000000002,
+                            Name = "Любимая улица, 2, деревня Дроздово, Боровлянский сельсовет, Минский район"
+                        },
+                        new
+                        {
+                            Id = 11L,
+                            IsNorth = true,
+                            IsWest = false,
+                            Latitude = 53.955250999999997,
+                            Longitude = 27.776284,
+                            Name = "Минская улица, 7, агрогородок Колодищи, Минский район"
+                        },
+                        new
+                        {
+                            Id = 12L,
+                            IsNorth = true,
+                            IsWest = false,
+                            Latitude = 53.746403999999998,
+                            Longitude = 27.566379000000001,
+                            Name = "Парковая улица, 65, агрогородок Чуриловичи, Михановичский сельсовет, Минский район"
+                        });
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Autopark.Autopark", b =>
@@ -73,6 +183,20 @@ namespace Cargodi.DataAccess.Migrations
                     b.HasIndex("AddressId");
 
                     b.ToTable("Autoparks");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AddressId = 1L,
+                            Capacity = 250
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AddressId = 2L,
+                            Capacity = 200
+                        });
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Autopark.Car", b =>
@@ -130,6 +254,158 @@ namespace Cargodi.DataAccess.Migrations
                         .IsUnique();
 
                     b.ToTable("Cars");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ActualAutoparkId = 1,
+                            AutoparkId = 1,
+                            CapacityHeight = 1575,
+                            CapacityLength = 6516,
+                            CapacityWidth = 1888,
+                            CarTypeId = 3,
+                            Carrying = 6002618,
+                            LicenseNumber = "CA7586",
+                            Mark = "Mercedes",
+                            Range = 306,
+                            TankVolume = 78
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ActualAutoparkId = 2,
+                            AutoparkId = 2,
+                            CapacityHeight = 1319,
+                            CapacityLength = 1292,
+                            CapacityWidth = 1338,
+                            CarTypeId = 3,
+                            Carrying = 4509976,
+                            LicenseNumber = "YP2095",
+                            Mark = "Volkswagen",
+                            Range = 952,
+                            TankVolume = 38
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ActualAutoparkId = 1,
+                            AutoparkId = 1,
+                            CapacityHeight = 2238,
+                            CapacityLength = 6460,
+                            CapacityWidth = 1066,
+                            CarTypeId = 2,
+                            Carrying = 6647269,
+                            LicenseNumber = "EB6567",
+                            Mark = "Volkswagen",
+                            Range = 748,
+                            TankVolume = 99
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ActualAutoparkId = 1,
+                            AutoparkId = 1,
+                            CapacityHeight = 1553,
+                            CapacityLength = 1190,
+                            CapacityWidth = 1387,
+                            CarTypeId = 3,
+                            Carrying = 1837588,
+                            LicenseNumber = "KT6096",
+                            Mark = "Nissan",
+                            Range = 513,
+                            TankVolume = 45
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ActualAutoparkId = 1,
+                            AutoparkId = 1,
+                            CapacityHeight = 1519,
+                            CapacityLength = 6329,
+                            CapacityWidth = 2100,
+                            CarTypeId = 3,
+                            Carrying = 2156464,
+                            LicenseNumber = "AO2408",
+                            Mark = "Ford",
+                            Range = 482,
+                            TankVolume = 99
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ActualAutoparkId = 1,
+                            AutoparkId = 1,
+                            CapacityHeight = 2883,
+                            CapacityLength = 3501,
+                            CapacityWidth = 2842,
+                            CarTypeId = 3,
+                            Carrying = 3733785,
+                            LicenseNumber = "NC9615",
+                            Mark = "Honda",
+                            Range = 509,
+                            TankVolume = 42
+                        },
+                        new
+                        {
+                            Id = 7,
+                            ActualAutoparkId = 1,
+                            AutoparkId = 1,
+                            CapacityHeight = 1981,
+                            CapacityLength = 4535,
+                            CapacityWidth = 2950,
+                            CarTypeId = 1,
+                            Carrying = 1480816,
+                            LicenseNumber = "EE6163",
+                            Mark = "Ford",
+                            Range = 523,
+                            TankVolume = 51
+                        },
+                        new
+                        {
+                            Id = 8,
+                            ActualAutoparkId = 2,
+                            AutoparkId = 2,
+                            CapacityHeight = 2351,
+                            CapacityLength = 2955,
+                            CapacityWidth = 2341,
+                            CarTypeId = 1,
+                            Carrying = 5985121,
+                            LicenseNumber = "PP3625",
+                            Mark = "Mercedes",
+                            Range = 360,
+                            TankVolume = 78
+                        },
+                        new
+                        {
+                            Id = 9,
+                            ActualAutoparkId = 2,
+                            AutoparkId = 2,
+                            CapacityHeight = 2286,
+                            CapacityLength = 6899,
+                            CapacityWidth = 2558,
+                            CarTypeId = 3,
+                            Carrying = 1603531,
+                            LicenseNumber = "PY6886",
+                            Mark = "Hyundai",
+                            Range = 131,
+                            TankVolume = 76
+                        },
+                        new
+                        {
+                            Id = 10,
+                            ActualAutoparkId = 1,
+                            AutoparkId = 1,
+                            CapacityHeight = 1824,
+                            CapacityLength = 3895,
+                            CapacityWidth = 1921,
+                            CarTypeId = 2,
+                            Carrying = 2926249,
+                            LicenseNumber = "YH4938",
+                            Mark = "Mercedes",
+                            Range = 455,
+                            TankVolume = 95
+                        });
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Autopark.CarType", b =>
@@ -258,6 +534,128 @@ namespace Cargodi.DataAccess.Migrations
                     b.HasIndex("TrailerTypeId");
 
                     b.ToTable("Trailers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ActualAutoparkId = 2,
+                            AutoparkId = 2,
+                            CapacityHeight = 2016,
+                            CapacityLength = 4222,
+                            CapacityWidth = 1538,
+                            Carrying = 2756070,
+                            LicenseNumber = "BB1679",
+                            TrailerTypeId = 2
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ActualAutoparkId = 2,
+                            AutoparkId = 2,
+                            CapacityHeight = 2422,
+                            CapacityLength = 3332,
+                            CapacityWidth = 1507,
+                            Carrying = 5094253,
+                            LicenseNumber = "KE1010",
+                            TrailerTypeId = 3
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ActualAutoparkId = 2,
+                            AutoparkId = 2,
+                            CapacityHeight = 1050,
+                            CapacityLength = 4318,
+                            CapacityWidth = 2100,
+                            Carrying = 1343608,
+                            LicenseNumber = "ET2336",
+                            TrailerTypeId = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ActualAutoparkId = 1,
+                            AutoparkId = 1,
+                            CapacityHeight = 1135,
+                            CapacityLength = 3128,
+                            CapacityWidth = 1420,
+                            Carrying = 3951118,
+                            LicenseNumber = "NA5607",
+                            TrailerTypeId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ActualAutoparkId = 1,
+                            AutoparkId = 1,
+                            CapacityHeight = 1763,
+                            CapacityLength = 4644,
+                            CapacityWidth = 1015,
+                            Carrying = 649325,
+                            LicenseNumber = "TB7979",
+                            TrailerTypeId = 3
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ActualAutoparkId = 2,
+                            AutoparkId = 2,
+                            CapacityHeight = 1193,
+                            CapacityLength = 6715,
+                            CapacityWidth = 1795,
+                            Carrying = 3960815,
+                            LicenseNumber = "BP5298",
+                            TrailerTypeId = 2
+                        },
+                        new
+                        {
+                            Id = 7,
+                            ActualAutoparkId = 1,
+                            AutoparkId = 1,
+                            CapacityHeight = 1575,
+                            CapacityLength = 5546,
+                            CapacityWidth = 1949,
+                            Carrying = 5241592,
+                            LicenseNumber = "MC8780",
+                            TrailerTypeId = 1
+                        },
+                        new
+                        {
+                            Id = 8,
+                            ActualAutoparkId = 1,
+                            AutoparkId = 1,
+                            CapacityHeight = 2138,
+                            CapacityLength = 1910,
+                            CapacityWidth = 2820,
+                            Carrying = 6786452,
+                            LicenseNumber = "BA3861",
+                            TrailerTypeId = 3
+                        },
+                        new
+                        {
+                            Id = 9,
+                            ActualAutoparkId = 2,
+                            AutoparkId = 2,
+                            CapacityHeight = 2995,
+                            CapacityLength = 2014,
+                            CapacityWidth = 2544,
+                            Carrying = 4818141,
+                            LicenseNumber = "YN8685",
+                            TrailerTypeId = 1
+                        },
+                        new
+                        {
+                            Id = 10,
+                            ActualAutoparkId = 2,
+                            AutoparkId = 2,
+                            CapacityHeight = 2650,
+                            CapacityLength = 5461,
+                            CapacityWidth = 1326,
+                            Carrying = 2281930,
+                            LicenseNumber = "NC4381",
+                            TrailerTypeId = 3
+                        });
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Autopark.TrailerType", b =>
@@ -302,7 +700,7 @@ namespace Cargodi.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime>("AcceptTime")
+                    b.Property<DateTime?>("AcceptTime")
                         .HasColumnType("datetime2");
 
                     b.Property<long>("ClientId")
@@ -314,7 +712,7 @@ namespace Cargodi.DataAccess.Migrations
                     b.Property<long>("LoadAddressId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("OperatorId")
+                    b.Property<int?>("OperatorId")
                         .HasColumnType("int");
 
                     b.Property<int>("OrderStatusId")
@@ -336,6 +734,57 @@ namespace Cargodi.DataAccess.Migrations
                     b.HasIndex("OrderStatusId");
 
                     b.ToTable("Orders");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            AcceptTime = new DateTime(2024, 5, 25, 20, 49, 19, 263, DateTimeKind.Utc).AddTicks(9356),
+                            ClientId = 2L,
+                            DeliverAddressId = 8L,
+                            LoadAddressId = 3L,
+                            OrderStatusId = 2,
+                            Time = new DateTime(2024, 2, 11, 15, 16, 13, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            AcceptTime = new DateTime(2024, 5, 25, 20, 49, 19, 263, DateTimeKind.Utc).AddTicks(9375),
+                            ClientId = 2L,
+                            DeliverAddressId = 9L,
+                            LoadAddressId = 4L,
+                            OrderStatusId = 2,
+                            Time = new DateTime(2024, 3, 5, 16, 37, 44, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            AcceptTime = new DateTime(2024, 5, 25, 20, 49, 19, 263, DateTimeKind.Utc).AddTicks(9386),
+                            ClientId = 2L,
+                            DeliverAddressId = 10L,
+                            LoadAddressId = 5L,
+                            OrderStatusId = 2,
+                            Time = new DateTime(2024, 2, 6, 18, 55, 30, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            AcceptTime = new DateTime(2024, 5, 25, 20, 49, 19, 263, DateTimeKind.Utc).AddTicks(9397),
+                            ClientId = 2L,
+                            DeliverAddressId = 11L,
+                            LoadAddressId = 6L,
+                            OrderStatusId = 2,
+                            Time = new DateTime(2024, 2, 22, 13, 23, 30, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            ClientId = 2L,
+                            DeliverAddressId = 12L,
+                            LoadAddressId = 7L,
+                            OrderStatusId = 1,
+                            Time = new DateTime(2024, 1, 25, 17, 36, 53, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Order.OrderStatus", b =>
@@ -408,6 +857,96 @@ namespace Cargodi.DataAccess.Migrations
                     b.HasIndex("PayloadTypeId");
 
                     b.ToTable("Payloads");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Description = "",
+                            Height = 4611,
+                            Length = 5645,
+                            OrderId = 3L,
+                            PayloadTypeId = 3,
+                            Weight = 4273898,
+                            Width = 5932
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Description = "",
+                            Height = 6690,
+                            Length = 1334,
+                            OrderId = 2L,
+                            PayloadTypeId = 2,
+                            Weight = 3341359,
+                            Width = 4529
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Description = "",
+                            Height = 1782,
+                            Length = 5789,
+                            OrderId = 5L,
+                            PayloadTypeId = 1,
+                            Weight = 3313001,
+                            Width = 2990
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Description = "",
+                            Height = 3404,
+                            Length = 3778,
+                            OrderId = 5L,
+                            PayloadTypeId = 3,
+                            Weight = 2064781,
+                            Width = 6451
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            Description = "",
+                            Height = 570,
+                            Length = 3622,
+                            OrderId = 2L,
+                            PayloadTypeId = 1,
+                            Weight = 3811111,
+                            Width = 5444
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            Description = "",
+                            Height = 672,
+                            Length = 4566,
+                            OrderId = 5L,
+                            PayloadTypeId = 2,
+                            Weight = 4580979,
+                            Width = 1023
+                        },
+                        new
+                        {
+                            Id = 7L,
+                            Description = "",
+                            Height = 5102,
+                            Length = 3140,
+                            OrderId = 3L,
+                            PayloadTypeId = 1,
+                            Weight = 2883991,
+                            Width = 3600
+                        },
+                        new
+                        {
+                            Id = 8L,
+                            Description = "",
+                            Height = 1890,
+                            Length = 6876,
+                            OrderId = 3L,
+                            PayloadTypeId = 1,
+                            Weight = 2506404,
+                            Width = 3494
+                        });
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Order.PayloadType", b =>
@@ -566,6 +1105,20 @@ namespace Cargodi.DataAccess.Migrations
                         .IsUnique();
 
                     b.ToTable("Clients");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Name = "Афанасий",
+                            UserId = 3L
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Name = "Валерий",
+                            UserId = 4L
+                        });
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Staff.Driver", b =>
@@ -626,6 +1179,34 @@ namespace Cargodi.DataAccess.Migrations
                         .IsUnique();
 
                     b.ToTable("Drivers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ActualAutoparkId = 1,
+                            AutoparkId = 1,
+                            DriverStatusId = 1,
+                            EmployDate = new DateTime(2024, 4, 19, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Иванов",
+                            License = "HE24086580",
+                            MiddleName = "Иванович",
+                            SecondName = "Иван",
+                            UserId = 5L
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ActualAutoparkId = 2,
+                            AutoparkId = 2,
+                            DriverStatusId = 2,
+                            EmployDate = new DateTime(2021, 6, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Василий",
+                            License = "AY66995610",
+                            MiddleName = "Васильевич",
+                            SecondName = "Васильев",
+                            UserId = 6L
+                        });
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.Staff.DriverStatus", b =>
@@ -701,6 +1282,28 @@ namespace Cargodi.DataAccess.Migrations
                         .IsUnique();
 
                     b.ToTable("Operators");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AutoparkId = 1,
+                            EmployDate = new DateTime(2022, 2, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Дмитрий",
+                            MiddleName = "Владимирович",
+                            SecondName = "Попов",
+                            UserId = 1L
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AutoparkId = 1,
+                            EmployDate = new DateTime(2023, 10, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Михаил",
+                            MiddleName = "Михаилович",
+                            SecondName = "Шумахер",
+                            UserId = 2L
+                        });
                 });
 
             modelBuilder.Entity("Cargodi.DataAccess.Entities.User", b =>
@@ -769,6 +1372,104 @@ namespace Cargodi.DataAccess.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "1ce8f54c-8405-4d82-a3aa-797ab2b45550",
+                            Email = "admin@",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@MAIL.RU",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPY7WVyiuYib5RDDYNF3XssipR4zfeSYWmJCBMUK0QRuLHmIlcIYuWqdt5eYK3kF3A==",
+                            PhoneNumber = "+375441114488",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "2586ec42-77b4-47f3-b8f4-7b636dd678d3",
+                            Email = "operator1@mail.ru",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "OPERATOR1@MAIL.RU",
+                            NormalizedUserName = "OPERATOR1",
+                            PasswordHash = "AQAAAAIAAYagAAAAEH/G2ct0XwgOoXaRTJgWkU46UKxDqXUiRQvfn4x00qh/zkq5V1XNx4ChedR0p63gDA==",
+                            PhoneNumber = "+375445114488",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "operator1"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "bb3c7e16-3044-432e-a2f0-3fb528cfd048",
+                            Email = "client1@mail.ru",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "CLIENT1@MAIL.RU",
+                            NormalizedUserName = "CLIENT1",
+                            PasswordHash = "AQAAAAIAAYagAAAAELYjdYNv1Bu8vDEoo2K88b9JlZ5nnKaj0mWHfnpsLNxVbhgr2sI38TT+OeybjlQQTQ==",
+                            PhoneNumber = "+375442114488",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "client1"
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "0747c06e-9ea8-4716-8c1c-facd90a2684b",
+                            Email = "client2@mail.ru",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "CLIENT3@MAIL.RU",
+                            NormalizedUserName = "CLIENT2",
+                            PasswordHash = "AQAAAAIAAYagAAAAECnMN9e0UKaIefkZrStZ+cLcg3tnXmByAVeP1EAFT5/klg1w5sbWtIBftabugKpg5Q==",
+                            PhoneNumber = "+375443114488",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "client2"
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "9dc1d642-115f-4eb6-8c68-059c55b715c1",
+                            Email = "driver1@mail.ru",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "DRIVER1@MAIL.RU",
+                            NormalizedUserName = "DRIVER1",
+                            PasswordHash = "AQAAAAIAAYagAAAAEH4egC8xBaRAzXjWavUWB3vBXn4asC7mzChJRWRYUSZIu8hg0DWadayXzCGY/+crjg==",
+                            PhoneNumber = "+375447114488",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "driver1"
+                        },
+                        new
+                        {
+                            Id = 6L,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "c2f7b8e0-6e77-44b9-8761-7f4a4167ceaa",
+                            Email = "driver2@mail.ru",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "DRIVER2@MAIL.RU",
+                            NormalizedUserName = "DRIVER2",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDb0E7W3P+NIVtSt3hKKYig8Qnu3IXDQFxlnjCE+OHyeP0vhjLNimpFMxY9rDJoixQ==",
+                            PhoneNumber = "+375448114488",
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            UserName = "driver2"
+                        });
                 });
 
             modelBuilder.Entity("CategoryDriver", b =>
@@ -939,6 +1640,38 @@ namespace Cargodi.DataAccess.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1L,
+                            RoleId = 3L
+                        },
+                        new
+                        {
+                            UserId = 2L,
+                            RoleId = 2L
+                        },
+                        new
+                        {
+                            UserId = 3L,
+                            RoleId = 1L
+                        },
+                        new
+                        {
+                            UserId = 4L,
+                            RoleId = 1L
+                        },
+                        new
+                        {
+                            UserId = 5L,
+                            RoleId = 4L
+                        },
+                        new
+                        {
+                            UserId = 6L,
+                            RoleId = 4L
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<long>", b =>
@@ -1067,8 +1800,7 @@ namespace Cargodi.DataAccess.Migrations
                     b.HasOne("Cargodi.DataAccess.Entities.Staff.Operator", "Operator")
                         .WithMany("Orders")
                         .HasForeignKey("OperatorId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Cargodi.DataAccess.Entities.Order.OrderStatus", "OrderStatus")
                         .WithMany("Orders")
