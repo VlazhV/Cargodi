@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useFetching } from '../Hooks/useFetching'
 import { Link } from 'react-router-dom'
-import AutoparkService from '../Services/AutoparkService'
-import AddressEdit from '../Components/AddressEdit'
 import orderStatuses from '../Data/OrderStatuses.json'
+import OrderService from '../Services/OrderService'
 
 export default function OrdersPage() {
 
@@ -46,8 +45,8 @@ export default function OrdersPage() {
         switch (type) {
             case "get":
                 {
-                    const res = await OrdersPage.GetAll()
-                    //setOrdersData(res.data)
+                    const res = await OrderService.GetAll()
+                    setOrdersData(res.data)
                 }
                 break;
         }
@@ -96,10 +95,10 @@ export default function OrdersPage() {
                                             <strong>Адрес доставки:</strong> {orderData.deliverAddress}
                                         </h6>
                                         <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
-                                            <strong>Клиент:</strong> {orderData.client.name}
+                                            <strong>Клиент:</strong> {orderData.client?.name}
                                         </h6>
                                         <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
-                                            <strong>Статус:</strong> {orderStatuses.find(v => v.value == orderData.orderStatus).name}
+                                            <strong>Статус:</strong> {orderStatuses.find(v => v.value == orderData.orderStatus)?.name}
                                         </h6>
                                     </div>
 
