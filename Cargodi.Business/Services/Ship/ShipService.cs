@@ -138,7 +138,7 @@ public class ShipService : IShipService
         ship.TrailerId = shipRequest.TrailerId;
 
         // update drivers
-
+        ship.Drivers = (await _driverRepository.GetDriversByIdsAsync(shipDto.DriverIds, cancellationToken)).ToList();
 
         // update stops
 

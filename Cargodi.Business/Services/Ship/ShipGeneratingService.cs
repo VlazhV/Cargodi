@@ -2,8 +2,10 @@ using AutoMapper;
 using Cargodi.Business.DTOs.Ship.Ship;
 using Cargodi.Business.Interfaces.Ship;
 using Cargodi.DataAccess.Constants;
+using Cargodi.DataAccess.Entities;
 using Cargodi.DataAccess.Entities.Autopark;
 using Cargodi.DataAccess.Entities.Order;
+using Cargodi.DataAccess.Entities.Ship;
 using Cargodi.DataAccess.Entities.Staff;
 using Cargodi.DataAccess.Interfaces.Autopark;
 using Cargodi.DataAccess.Interfaces.Order;
@@ -40,10 +42,31 @@ public class ShipGeneratingService : IShipGeneratingService
 		_mapper = mapper;
 	}
 
-	// public async Task<IEnumerable<GetShipDto>> BuildRouteAsync(CancellationToken cancellationToken)
+	// public async Task<IEnumerable<DataAccess.Entities.Ship.Ship>> BuildRoutesAsync(CancellationToken cancellationToken)
 	// {
-	// 	var orders = await _orderRepository.GetOrdersWithPayloadsAsync(cancellationToken);
-	// 	var autoparks = await _autoparkRepository.GetAutoparksWithAddressesAsync(cancellationToken);
+	//     var orders = (await _orderRepository.GetOrdersWithPayloadsAsync(cancellationToken)).ToList();
+	//     var autoparks = await _autoparkRepository.GetAutoparksWithAddressesVehicleAsync(cancellationToken);
+
+	//     int nOrders = orders.Count;
+	  
+	//     var routes = new List<ListNode>();
+	//     var distanceMap = new double[nOrders * 2, nOrders * 2];
+		
+	//     var orderStarts = orders.ConvertAll(o => o.LoadAddress);
+	//     var orderFinishes = orders.ConvertAll(o => o.DeliverAddress);
+		
+	//     FillDistanceMap(ref distanceMap, orderStarts, orderFinishes, nOrders);
+
+	//     var pointAvailability = new bool[2 * nOrders];
+		
+	//     for (int i = 0; i < 2 * nOrders; i++)
+	//     {
+	//         pointAvailability[i] = i < nOrders;
+	//     }
+
+	//     var distanceMapCopy = new double[nOrders, nOrders];
+	//     Array.Copy(distanceMap, distanceMapCopy, 2 * nOrders);
+		
 	// }
 
 	public async Task<IEnumerable<Driver>> SelectDriversAsync(Car car, CancellationToken cancellationToken)
@@ -51,7 +74,7 @@ public class ShipGeneratingService : IShipGeneratingService
 		var categoriesToDrive = await _carRepository.GetCategoriesToDriveAsync(car, cancellationToken);
 		var drivers = await _driverRepository.GetSuitableDriversAsync(categoriesToDrive, cancellationToken);
 
-        return drivers;
+		return drivers;
 	}
 	
 	public async Task<IEnumerable<ICarrier>> SelectVehicleAsync(DataAccess.Entities.Ship.Ship ship, CancellationToken cancellationToken)
@@ -82,7 +105,7 @@ public class ShipGeneratingService : IShipGeneratingService
 		carriers.AddRange(cars);
 		carriers.AddRange(trailers);
 
-        return carriers;
+		return carriers;
 	}
 	
 	private static int FindMaxValue(List<DataAccess.Entities.Order.Order> orders, ValueType valueType)
@@ -134,10 +157,67 @@ public class ShipGeneratingService : IShipGeneratingService
 
 		return maxValue;
 	}
+	
+	private double CountDistance(Address from, Address to)
+	{
+		var deltaLatitude = ToRadians(Math.Abs(from.Latitude - to.Latitude));
+		var deltaLongitude = ToRadians(Math.Abs(from.Longitude - to.Longitude));
+		
+		var sin2Lat = Math.Pow(Math.Sin(deltaLatitude / 2), 2);
+		var sin2Long = Math.Pow(Math.Sin(deltaLongitude/ 2), 2);
+
+		var a = sin2Lat + Math.Cos(ToRadians(from.Latitude)) * Math.Cos(ToRadians(to.Latitude)) * sin2Long;
+
+		var distance = 2 * Math.Atan(Math.Sqrt(a) / (1 - Math.Sqrt(a)));
+		return distance;
+	}
+	
+	private double ToRadians(double degrees)
+	{
+		return degrees * Math.PI / 180;
+	}
+	
+	private void FillDistanceMap(ref double[,] distanceMap, List<Address> orderStarts, List<Address> orderFinishes, int nOrders)
+	{
+		for (int i = 0; i < 2 * nOrders; i++)
+		{
+			for (int j = 0; j < i; j++)
+			{
+				if (i == j)
+				{
+					distanceMap[i, j] = double.PositiveInfinity; 
+				}
+				else 
+				{
+					Address address2 = i < nOrders ? orderStarts[i] : orderFinishes[i % nOrders];
+					Address address1 = j < nOrders ? orderStarts[j] : orderFinishes[j % nOrders];
+
+					var distance = CountDistance(address1, address2);
+					distanceMap[j, i] = distance;
+					
+					if (i == j + nOrders)
+					{
+						distanceMap[i, j] = double.PositiveInfinity;
+					}
+					else 
+					{
+						distanceMap[i, j] = distance;
+					}
+				}
+			}
+		}
+	}
 }
+
 
 public enum ValueType
 {
 	Weight,
 	Volume
+}
+
+public class ListNode
+{
+	public Stop Stop { get; set; }
+	public ListNode Next { get; set; }
 }

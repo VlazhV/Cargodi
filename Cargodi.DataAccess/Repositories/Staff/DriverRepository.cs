@@ -34,5 +34,12 @@ public class DriverRepository : RepositoryBase<Driver, int>, IDriverRepository
             .Where(d => d.Categories.Intersect(categories).Any())
             .ToListAsync(cancellationToken);
     }
+    
+    public async Task<IEnumerable<Driver>> GetDriversByIdsAsync(IEnumerable<int> ids, CancellationToken cancellationToken)
+    {
+        return await _db.Drivers
+            .Where(d => ids.Contains(d.Id))
+            .ToListAsync(cancellationToken);
+    }
 
 }
