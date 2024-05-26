@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useFetching } from '../Hooks/useFetching'
 import { useNavigate, useParams } from 'react-router'
 import CarService from '../Services/CarService'
@@ -6,8 +6,10 @@ import OrderService from '../Services/OrderService'
 import orderStatuses from '../Data/OrderStatuses.json'
 import AddressEdit from '../Components/AddressEdit'
 import payloadTypes from '../Data/PayloadTypes.json'
+import { AuthContext } from '../Contexts/AuthContext'
 
 export default function OrderPage() {
+    const { user } = useContext(AuthContext)
 
     const emptyPayload = {
         length: null,
@@ -202,7 +204,6 @@ export default function OrderPage() {
 
     useEffect(() => {
         fetch("get")
-        setOrderData(testOrder)
     }, [orderId])
 
     return (
@@ -296,7 +297,10 @@ export default function OrderPage() {
                 !editing && !editingPayloads &&
                 <>
                     <div className="btn btn-primary display-3" onClick={handleEditingStart}>Изменить</div>
-                    <div className="btn btn-danger display-3" onClick={handleDeleteClick}>Удалить</div>
+                    {
+                        user && user.operator &&
+                        <div className="btn btn-danger display-3" onClick={handleDeleteClick}>Удалить</div>
+                    }
                 </>
             }
             {
@@ -438,8 +442,8 @@ export default function OrderPage() {
             </div>
 
             {
-                !editing && !editingPayloads &&
-                < div className='w-100 d-flex flex-row justify-content-center mt-4'>
+                !editing && !editingPayloads && user && user.operator &&
+                <div className='w-100 d-flex flex-row justify-content-center mt-4'>
                     {
                         orderData.orderStatus?.name === 'processing' &&
                         <div className="btn btn-success display-3" onClick={handleAcceptClick}>Принять</div>
@@ -451,6 +455,10 @@ export default function OrderPage() {
                     }
                 </div>
             }
+            <div className="d-flex align-items-center text-warning m-4 rounded-pill px-4 py-2 display-4 fixed-bottom bg-dark" style={{ visibility: loading ? 'visible' : 'hidden' }}>
+                <strong>Загрузка...</strong>
+                <div className="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+            </div>
         </div >
     )
 }

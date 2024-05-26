@@ -1,9 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from "../Contexts/AuthContext";
 import AuthService from "../Services/AuthService";
 import { useNavigate } from "react-router-dom";
 import userRoles from '../Data/UserRoles.json';
 import AutoparkEdit from '../Components/AutoparkEdit';
+import { useFetching } from '../Hooks/useFetching';
 
 function RegisterOtherPage(props) {
     const [credentials, setCredentials] = useState({
@@ -11,70 +12,80 @@ function RegisterOtherPage(props) {
         role: 'admin',
         phoneNumber: '',
         email: '',
-        updateClientDto:{
-            name:'',
-        } ,
-        updateDriverDto:{
-            license:'', 
-            secondName:'',
-            firstName:'', 
-            middleName:'', 
-            autoparkId:null, 
-            actualAutoparkId:null 
-        } ,
-        updateOperatorDto:{
-            secondName:'',
-            firstName:'' ,
-            middleName:'' ,
-            autoparkId:null ,
+        client: {
+            name: '',
+        },
+        driver: {
+            license: '',
+            secondName: '',
+            firstName: '',
+            middleName: '',
+            autoparkId: null,
+            actualAutoparkId: null
+        },
+        operator: {
+            secondName: '',
+            firstName: '',
+            middleName: '',
+            autoparkId: null,
         }
     })
 
-    const checkCredentials = () =>{
-       const c1 = credentials.email && credentials.userName && credentials.phoneNumber && credentials.role;
+    const checkCredentials = () => {
+        const c1 = credentials.email && credentials.userName && credentials.phoneNumber && credentials.role;
 
-       if(!c1){
+        if (!c1) {
+            return false;
+        }
+
+        const c2 = credentials.client && !credentials.driver && !credentials.operator;
+
+        if (c2) {
+            if (credentials.client.name) {
+                return true;
+            }
+        }
+
+        const c3 = !credentials.client && credentials.driver && !credentials.operator;
+
+        if (c3) {
+            if (credentials.driver.actualAutoparkId &&
+                credentials.driver.autoparkId &&
+                credentials.driver.firstName &&
+                credentials.driver.license &&
+                credentials.driver.middleName &&
+                credentials.driver.secondName
+            ) {
+                return true;
+            }
+        }
+
+        const c4 = !credentials.client && !credentials.driver && credentials.operator;
+
+        if (c4) {
+            if (credentials.operator.autoparkId &&
+                credentials.operator.firstName &&
+                credentials.operator.middleName &&
+                credentials.operator.secondName
+            ) {
+                return true;
+            }
+        }
+
         return false;
-       }
-
-       const c2 = credentials.updateClientDto && !credentials.updateDriverDto && !credentials.updateOperatorDto;
-
-       if(c2){
-            if(credentials.updateClientDto.name){
-                return true;
-            }
-       }
-
-       const c3 =!credentials.updateClientDto && credentials.updateDriverDto && !credentials.updateOperatorDto;
-
-       if(c3){
-            if( credentials.updateDriverDto.actualAutoparkId &&
-                credentials.updateDriverDto.autoparkId &&
-                credentials.updateDriverDto.firstName &&
-                credentials.updateDriverDto.license &&
-                credentials.updateDriverDto.middleName &&
-                credentials.updateDriverDto.secondName
-            ){
-                return true;
-            }
-       }
-
-       const c4 = !credentials.updateClientDto && !credentials.updateDriverDto && credentials.updateOperatorDto;
-
-       if(c4){
-            if( credentials.updateOperatorDto.autoparkId &&
-                credentials.updateOperatorDto.firstName &&
-                credentials.updateOperatorDto.middleName &&
-                credentials.updateOperatorDto.secondName
-            ){
-                return true;
-            }
-       }
-
-       return false;
     }
 
-    const { loading, error, dispatch } = useContext(AuthContext)
+    const [fetch, loading, error] = useFetching(async (type) => {
+        switch (type) {
+            case 'register':
+                {
+                    console.log(credentials)
+                    const res = await AuthService.Register(credentials)
+                    navigate("/")
+                }
+                break;
+        }
+    })
 
     const navigate = useNavigate()
 
@@ -83,96 +94,87 @@ function RegisterOtherPage(props) {
     }
 
     const handleClientChange = (e) => {
-        setCredentials(prev => ({ ...prev, updateClientDto: {...prev.updateClientDto, [e.target.id]: e.target.value } }))
+        setCredentials(prev => ({ ...prev, client: { ...prev.client, [e.target.id]: e.target.value } }))
     }
 
     const handleDriverChange = (e) => {
-        setCredentials(prev => ({ ...prev, updateDriverDto: {...prev.updateDriverDto, [e.target.id]: e.target.value } }))
+        setCredentials(prev => ({ ...prev, driver: { ...prev.driver, [e.target.id]: e.target.value } }))
     }
 
     const handleOperatorChange = (e) => {
-        setCredentials(prev => ({ ...prev, updateOperatorDto: {...prev.updateOperatorDto, [e.target.id]: e.target.value } }))
+        setCredentials(prev => ({ ...prev, operator: { ...prev.operator, [e.target.id]: e.target.value } }))
     }
 
-    const changeRole = (role)=>{
-        switch(role){
+    const changeRole = (role) => {
+        switch (role) {
             case "manager":
-            case "admin" :
-                credentials.updateClientDto = null
-                credentials.updateDriverDto = null
-                credentials.updateOperatorDto = {
-                    secondName:'',
-                    firstName:'' ,
-                    middleName:'' ,
-                    autoparkId:null ,
+            case "admin":
+                credentials.client = null
+                credentials.driver = null
+                credentials.operator = {
+                    secondName: '',
+                    firstName: '',
+                    middleName: '',
+                    autoparkId: null,
                 }
-            break;
-            case "driver": 
-                credentials.updateClientDto = null
-                credentials.updateDriverDto = {
-                    license:'', 
-                    secondName:'',
-                    firstName:'', 
-                    middleName:'', 
-                    autoparkId:null, 
-                    actualAutoparkId:null 
+                break;
+            case "driver":
+                credentials.client = null
+                credentials.driver = {
+                    license: '',
+                    secondName: '',
+                    firstName: '',
+                    middleName: '',
+                    autoparkId: null,
+                    actualAutoparkId: null
                 }
-                credentials.updateOperatorDto = null
-            break;
+                credentials.operator = null
+                break;
             case "client":
-                credentials.updateClientDto = {
-                    name:'',
+                credentials.client = {
+                    name: '',
                 }
-                credentials.updateDriverDto = null
-                credentials.updateOperatorDto = null
-            break;
+                credentials.driver = null
+                credentials.operator = null
+                break;
         }
         setCredentials(prev => ({ ...prev }))
     }
 
-    let role = credentials.role;
-    
 
     const handleChangeRole = (e) => {
-        role = e.target.value
-        changeRole(role)
-        handleChange(e)   
+        changeRole(e.target.value)
+        handleChange(e)
     }
 
     const handleOperatorAutoparkChange = (newAutoparkId) => {
-        setCredentials(prev => ({ ...prev, updateOperatorDto: {...prev.updateOperatorDto, autoparkId: newAutoparkId } }))
-        //fetch("updateAutopark", newAutoparkId)
+        setCredentials(prev => ({ ...prev, operator: { ...prev.operator, autoparkId: newAutoparkId } }))
     }
 
     const handleDriverAutoparkChange = (newAutoparkId) => {
-        setCredentials(prev => ({ ...prev, updateDriverDto: {...prev.updateDriverDto, autoparkId: newAutoparkId } }))
-        //fetch("updateAutopark", newAutoparkId)
+        setCredentials(prev => ({ ...prev, driver: { ...prev.driver, autoparkId: newAutoparkId } }))
     }
 
     const handleActualAutoparkChange = (newAutoparkId) => {
-        setCredentials(prev => ({ ...prev, updateDriverDto: {...prev.updateDriverDto, actualAutoparkId: newAutoparkId } }))
-        //fetch("updateActualAutopark", newAutoparkId)
+        setCredentials(prev => ({ ...prev, driver: { ...prev.driver, actualAutoparkId: newAutoparkId } }))
     }
 
     const handleClick = async (e) => {
         e.preventDefault()
-        console.log(credentials)
         if (checkCredentials()) {
-            try {
-                console.log(credentials)
-                const res = await AuthService.Register(credentials)
-                navigate("/")
-            } catch (err) {
-                console.log(err)
-            }
+            fetch('register')
         }
     }
 
-    const switchRole = (role) =>{
-        switch(role){
+    useEffect(() => {
+        changeRole('admin')
+    }, [])
+
+    const switchRole = (role) => {
+        switch (role) {
             case "manager":
-            case "admin" :
-                return(
+            case "admin":
+                return (
                     <div>
 
                         <div className="col-12 form-group mb-3" data-for="textarea">
@@ -190,15 +192,23 @@ function RegisterOtherPage(props) {
                                 className="form-control" id="middleName" onChange={handleOperatorChange}></input>
                         </div>
 
+                        <div>
+                            <h4>
+                                <strong>Прописка:</strong> <span>Автопарк №{credentials.operator.autoparkId}</span>
+                            </h4>
+                        </div>
+
                         <button type="button" className="btn btn-primary display-3"
-                            data-bs-toggle="modal" data-bs-target="#carAutoparkId">Назначить прописку</button>
-             
-                        <AutoparkEdit id="carAutoparkId" onSelectAutopark={handleOperatorAutoparkChange} />
+                            data-bs-toggle="modal" data-bs-target="#operatorAutoparkId">Назначить прописку</button>
+
+
+
+                        <AutoparkEdit id="operatorAutoparkId" onSelectAutopark={handleOperatorAutoparkChange} />
                     </div>
                 )
             case "driver":
-                return(
-                    
+                return (
+
                     <div>
                         <div className="col-12 form-group mb-3" data-for="textarea">
                             <input name="input" placeholder="Лицензия" type="text" data-form-field="input"
@@ -220,17 +230,28 @@ function RegisterOtherPage(props) {
                                 className="form-control" id="middleName" onChange={handleDriverChange}></input>
                         </div>
 
+                        <div>
+                            <h4>
+                                <strong>Прописка:</strong> <span>Автопарк №{credentials.driver.autoparkId}</span>
+                            </h4>
+                        </div>
+                        <div>
+                            <h4>
+                                <strong>Текущий автопарк:</strong> <span>Автопарк №{credentials.driver.actualAutoparkId}</span>
+                            </h4>
+                        </div>
+
                         <button type="button" className="btn btn-primary display-3"
-                        data-bs-toggle="modal" data-bs-target="#carAutoparkId">Назначить прописку</button>
+                            data-bs-toggle="modal" data-bs-target="#driverAutoparkId">Назначить прописку</button>
                         <button type="button" className="btn btn-primary display-3"
-                            data-bs-toggle="modal" data-bs-target="#carActualAutoparkId">Назначить текущий автопарк</button>
-             
-                        <AutoparkEdit id="carAutoparkId" onSelectAutopark={handleDriverAutoparkChange} />
-                        <AutoparkEdit id="carActualAutoparkId" onSelectAutopark={handleActualAutoparkChange} />
+                            data-bs-toggle="modal" data-bs-target="#driverActualAutoparkId">Назначить текущий автопарк</button>
+
+                        <AutoparkEdit id="driverAutoparkId" onSelectAutopark={handleDriverAutoparkChange} />
+                        <AutoparkEdit id="driverActualAutoparkId" onSelectAutopark={handleActualAutoparkChange} />
                     </div>
                 )
             case "client":
-                return(
+                return (
                     <div className="col-12 form-group mb-3" data-for="textarea">
                         <input name="input" placeholder="Имя" type="text" data-form-field="input"
                             className="form-control" id="name" onChange={handleClientChange}></input>
@@ -288,7 +309,7 @@ function RegisterOtherPage(props) {
 
                                     <div>
                                         {
-                                            switchRole(role)
+                                            switchRole(credentials.role)
                                         }
                                     </div>
 
@@ -306,6 +327,10 @@ function RegisterOtherPage(props) {
                 <div className="border border-danger border rounded-4 p-2 px-4 mt-2">
                     <span className="text-danger text-center h3">{typeof error === 'string' ? error : toString(error)}</span>
                 </div>}
+            <div className="d-flex align-items-center text-warning m-4 rounded-pill px-4 py-2 display-4 fixed-bottom bg-dark" style={{ visibility: loading ? 'visible' : 'hidden' }}>
+                <strong>Загрузка...</strong>
+                <div className="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+            </div>
         </div >
     );
 }

@@ -7,6 +7,9 @@ export default class OrderService {
     static async GetAll() {
         return await api.get('/orders')
     }
+    static async GetAllMy() {
+        return await api.get('/orders/my')
+    }
     static async Create(orderData) {
         return await api.post('/orders', orderData)
     }

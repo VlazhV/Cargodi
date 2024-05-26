@@ -464,6 +464,10 @@ export default function AutoparkPage() {
             </div>
 
             {switchRenderList()}
+            <div className="d-flex align-items-center text-warning m-4 rounded-pill px-4 py-2 display-4 fixed-bottom bg-dark" style={{ visibility: loading ? 'visible' : 'hidden' }}>
+                <strong>Загрузка...</strong>
+                <div className="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+            </div>
         </div >
     )
 }
