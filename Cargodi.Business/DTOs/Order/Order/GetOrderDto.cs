@@ -1,3 +1,5 @@
+using Cargodi.Business.DTOs.Common.AddressDtos;
+
 namespace Cargodi.Business.DTOs.Order.Order;
 
 public class GetOrderDto
@@ -7,8 +9,8 @@ public class GetOrderDto
 	public DateTime Time { get; set; }
 	public DateTime AcceptTime { get; set; }
 	
-	public string LoadAddress { get; set; } = null!;
-	public string DeliverAddress { get; set; } = null!;
+	public GetAddressDto LoadAddress { get; set; } = null!;
+	public GetAddressDto DeliverAddress { get; set; } = null!;
 
 	public OrderStatusDto OrderStatus { get; set; } = null!;
 }

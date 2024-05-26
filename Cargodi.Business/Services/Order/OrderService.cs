@@ -20,6 +20,7 @@ public class OrderService : IOrderService
     private readonly IOrderRepository _orderRepository;
     private readonly IClientRepository _clientRepository;
     private readonly IAddressRepository _addressRepository;
+    private readonly IOperatorRepository _operatorRepository;
     private readonly IMapper _mapper;
     
     public OrderService
@@ -27,16 +28,18 @@ public class OrderService : IOrderService
         IOrderRepository orderRepository,
         IClientRepository userRepository,
         IAddressRepository addressRepository,
+        IOperatorRepository operatorRepository,
         IMapper mapper)
     {
         _payloadRepository = payloadRepository;
         _orderRepository = orderRepository;
         _clientRepository = userRepository;
         _addressRepository = addressRepository;
+        _operatorRepository = operatorRepository;
         _mapper = mapper;
     }
     
-    public async Task<GetOrderDto> CreateAsync(long? customerId, ClaimsPrincipal user, UpdateOrderPayloadsDto orderDto, CancellationToken cancellationToken)
+    public async Task<GetOrderInfoDto> CreateAsync(long? customerId, ClaimsPrincipal user, UpdateOrderPayloadsDto orderDto, CancellationToken cancellationToken)
     {
         long clientId = 0;
 
@@ -62,13 +65,13 @@ public class OrderService : IOrderService
             clientId = client.Id;
         }
 
-
+        var payloads = _mapper.Map<List<Payload>>(orderDto.Payloads);
+        
         var order = _mapper.Map<DataAccess.Entities.Order.Order>(orderDto);
         order.ClientId = clientId;
         order.OrderStatusId = OrderStatuses.Processing.Id;
         order.Time = DateTime.UtcNow;
 
-        var payloads = order.Payloads;
         order.Payloads = null;
 
         order.DeliverAddressId = await ProcessAddressAsync(order.DeliverAddress, cancellationToken);
@@ -79,8 +82,12 @@ public class OrderService : IOrderService
         
         order = await _orderRepository.CreateAsync(order, cancellationToken);
         await _orderRepository.SaveChangesAsync(cancellationToken);
+
+        await CreatePayloadsWithSaveAsync(order.Id, payloads, cancellationToken);
         
-        return _mapper.Map<GetOrderDto>(order);
+       
+        order = await _orderRepository.GetByIdAsync(order.Id, cancellationToken);
+        return _mapper.Map<GetOrderInfoDto>(order);
     }
 
     public async Task DeleteAsync(long id, ClaimsPrincipal user, CancellationToken cancellationToken)
@@ -90,18 +97,17 @@ public class OrderService : IOrderService
         var userId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
         var order = await _orderRepository.GetByIdAsync(id, cancellationToken);
-        
+
         if (order is null)
         {
             throw new ApiException(Messages.OrderIsNotFound, ApiException.NotFound);	
         }
 
-        if (!(role == Roles.Admin || role == Roles.Manager || userId == order.ClientId))
+        if (!(role == Roles.Admin || role == Roles.Manager || userId == order.Client.UserId))
         {
             throw new ApiException(Messages.NoPermission, ApiException.Forbidden);
         }
-            
-
+        
         _orderRepository.Delete(order);
         await _orderRepository.SaveChangesAsync(cancellationToken);
     }
@@ -132,7 +138,7 @@ public class OrderService : IOrderService
             throw new ApiException(Messages.OrderIsNotFound, ApiException.NotFound);
         }			
             
-        if (!(role == Roles.Admin || role == Roles.Manager || userId == order.ClientId))
+        if (!(role == Roles.Admin || role == Roles.Manager || userId == order.Client.UserId))
         {
             throw new ApiException(Messages.NoPermission, ApiException.Forbidden);
         }
@@ -155,12 +161,23 @@ public class OrderService : IOrderService
         order = await _orderRepository.SetStatusAsync(order, status.ToLower(), cancellationToken)
             ?? throw new ApiException(Messages.IncorrectOrderStatus, ApiException.BadRequest);
 
+        var userId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        var @operator = await _operatorRepository.GetOperatorByUserIdAsync(userId, cancellationToken)
+            ?? throw new ApiException(Messages.UserIsNotFound, ApiException.NotFound);
+
         if (status.Equals(OrderStatuses.Accepted.Name))
         {
             order.AcceptTime = DateTime.UtcNow;
-
+            order.OperatorId = @operator.Id;
             order = _orderRepository.Update(order);
         }
+        else if (status.Equals(OrderStatuses.Declined.Name))
+        {
+            order.AcceptTime = null;
+            order.OperatorId = @operator.Id;
+            order = _orderRepository.Update(order);
+        }
+        
 
         await _orderRepository.SaveChangesAsync(cancellationToken);
 
@@ -174,10 +191,15 @@ public class OrderService : IOrderService
 
         var order = await _orderRepository.GetByIdAsync(id, cancellationToken)
             ?? throw new ApiException(Messages.OrderIsNotFound, ApiException.NotFound);
-
-        if (!(role == Roles.Admin || role == Roles.Manager || userId == order.ClientId))
+        
+        if (!(role == Roles.Admin || role == Roles.Manager || userId == order.Client.UserId))
         {
             throw new ApiException(Messages.NoPermission, ApiException.Forbidden);
+        }
+        
+        if (order.OrderStatusId != OrderStatuses.Processing.Id)
+        {
+            throw new ApiException("Order is processed", ApiException.BadRequest);
         }
 
         order = _mapper.Map(orderDto, order);
@@ -195,21 +217,17 @@ public class OrderService : IOrderService
         var order = await _orderRepository.GetByIdAsync(id, cancellationToken)
             ?? throw new ApiException(Messages.OrderIsNotFound, ApiException.NotFound);
 
-        if (!(role == Roles.Admin || role == Roles.Manager || userId == order.ClientId))
+        if (!(role == Roles.Admin || role == Roles.Manager || userId == order.Client.UserId))
         {
             throw new ApiException(Messages.NoPermission, ApiException.Forbidden);
         }
+        
+        
 
         _orderRepository.ClearPayloadList(order);
-        var payloads = _mapper.Map<IEnumerable<Payload>>(payloadDtos);
+        var payloads = _mapper.Map<List<Payload>>(payloadDtos);
         
-        foreach(var payload in payloads)
-        {
-            payload.OrderId = id;
-        }
-
-        await _payloadRepository.CreateManyAsync(payloads, cancellationToken);		
-        await _orderRepository.SaveChangesAsync(cancellationToken);
+        await CreatePayloadsWithSaveAsync(id, payloads, cancellationToken);		
         
         order = await _orderRepository.GetByIdAsync(id, cancellationToken);
 
@@ -229,13 +247,18 @@ public class OrderService : IOrderService
         return addressEntity.Id;
     }
 
-    private async Task CreatePayloadsAsync(long orderId, List<Payload> payloads, CancellationToken cancellationToken)
+    private async Task CreatePayloadsWithSaveAsync(long orderId, List<Payload> payloads, CancellationToken cancellationToken)
     {
         bool valid = payloads.All(p =>
             p.PayloadTypeId == PayloadTypes.Bulk.Id ||
             p.PayloadTypeId == PayloadTypes.Liquid.Id ||
             p.PayloadTypeId == PayloadTypes.Item.Id
             );
+            
+        if (!valid)
+        {
+            throw new ApiException("Invalid Paylod Types", ApiException.BadRequest);
+        }
 
         payloads.ForEach(p => {
             p.PayloadTypeId = p.PayloadType.Id;

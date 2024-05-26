@@ -27,6 +27,8 @@ public class OrderRepository : RepositoryBase<Entities.Order.Order, long>, IOrde
     {
         return await _db.Orders
             .AsNoTracking()
+            .Include(o => o.LoadAddress)
+            .Include(o => o.DeliverAddress)
             .Include(o => o.Client)
                 .ThenInclude(c => c.User)
             .Include(o => o.Payloads)

@@ -48,7 +48,7 @@ public class OrdersController: ControllerBase
     }
     
     [HttpPost]
-    public async Task<ActionResult<GetOrderDto>> CreateAsync([FromQuery] long? customerId, [FromBody] UpdateOrderPayloadsDto orderDto, CancellationToken cancellationToken)
+    public async Task<ActionResult<GetOrderInfoDto>> CreateAsync([FromQuery] long? customerId, [FromBody] UpdateOrderPayloadsDto orderDto, CancellationToken cancellationToken)
     {		
         return Ok(await _orderService.CreateAsync(customerId, User, orderDto, cancellationToken));
     }
