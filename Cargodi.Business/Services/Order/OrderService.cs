@@ -71,6 +71,7 @@ public class OrderService : IOrderService
         order.ClientId = clientId;
         order.OrderStatusId = OrderStatuses.Processing.Id;
         order.Time = DateTime.UtcNow;
+        order.AcceptTime = null;
 
         order.Payloads = null;
 
@@ -222,6 +223,10 @@ public class OrderService : IOrderService
             throw new ApiException(Messages.NoPermission, ApiException.Forbidden);
         }
         
+        if (order.OrderStatusId != OrderStatuses.Processing.Id)
+        {
+            throw new ApiException("Order is processed", ApiException.BadRequest);
+        }
         
 
         _orderRepository.ClearPayloadList(order);
