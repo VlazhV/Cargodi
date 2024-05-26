@@ -23,7 +23,7 @@ public class OperatorRepository : RepositoryBase<Operator, int>, IOperatorReposi
     public Task<Operator?> GetOperatorByUserIdAsync(long userId, CancellationToken cancellationToken)
     {
         return _db.Operators
-            .Include(o => o.UserId)
+            .Include(o => o.User)
             .Where(o => o.UserId == userId)
             .FirstOrDefaultAsync(cancellationToken);
     }

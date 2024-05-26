@@ -26,6 +26,7 @@ public class OrderRepository : RepositoryBase<Entities.Order.Order, long>, IOrde
     public async Task<IEnumerable<Entities.Order.Order>> GetAllOfClientAsync(long userId, CancellationToken cancellationToken)
     {
         return await _db.Orders
+            .AsNoTracking()
             .Include(o => o.Client)
                 .ThenInclude(c => c.User)
             .Include(o => o.Payloads)
@@ -38,9 +39,14 @@ public class OrderRepository : RepositoryBase<Entities.Order.Order, long>, IOrde
     public async Task<IEnumerable<Entities.Order.Order>> GetOrdersWithPayloadsAsync(CancellationToken cancellationToken)
     {
         return await _db.Orders
+            .AsNoTracking()
             .Include(o => o.LoadAddress)
             .Include(o => o.DeliverAddress)
             .Include(o => o.Payloads)
+                .ThenInclude(p => p.PayloadType)
+            .Include(o => o.Client)
+            .Include(o => o.Operator)
+            .Include(o => o.OrderStatus)
             .ToListAsync(cancellationToken);
     }
 
@@ -56,5 +62,34 @@ public class OrderRepository : RepositoryBase<Entities.Order.Order, long>, IOrde
         var entry = _db.Orders.Update(order);
 
         return entry.Entity;
+    }
+
+    public override async Task<IEnumerable<Entities.Order.Order>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await _db.Orders
+            .AsNoTracking()
+            .Include(o => o.LoadAddress)
+            .Include(o => o.DeliverAddress)
+            .Include(o => o.Payloads)
+                .ThenInclude(p => p.PayloadType)
+            .Include(o => o.Client)
+            .Include(o => o.Operator)
+            .Include(o => o.OrderStatus)
+            .ToListAsync(cancellationToken);
+    }
+
+    public override Task<Entities.Order.Order?> GetByIdAsync(long id, CancellationToken cancellationToken)
+    {
+        return _db.Orders
+            .AsNoTracking()
+            .Include(o => o.LoadAddress)
+            .Include(o => o.DeliverAddress)
+            .Include(o => o.Payloads)
+                .ThenInclude(p => p.PayloadType)
+            .Include(o => o.Client)
+            .Include(o => o.Operator)
+            .Include(o => o.OrderStatus)
+            .Where(o => o.Id == id)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }

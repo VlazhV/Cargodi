@@ -27,7 +27,7 @@ protected readonly DatabaseContext _db;
 		return entry.Entity;
 	}
 
-	public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken)
+	public virtual async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken)
 	{
 		return await _db.Set<T>().AsNoTracking().ToListAsync(cancellationToken);
 	}

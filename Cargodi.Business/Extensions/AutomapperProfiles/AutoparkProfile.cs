@@ -13,6 +13,7 @@ public class AutoparkProfile: Profile
 {
     public AutoparkProfile()
     {
+        CreateMap<Address, GetAddressDto>();
         CreateMap<CarType, CarTypeDto>();
         CreateMap<TrailerType, TrailerTypeDto>();
         

@@ -130,6 +130,7 @@ public class UserService : IUserService
         
         switch (userDto.Role)
         {
+            case Roles.Admin:
             case Roles.Manager:
                 var @operator = await _operatorRepository.GetOperatorByUserIdAsync(idLong, cancellationToken);
                 userDto.Operator = _mapper.Map<GetOperatorDto>(@operator);

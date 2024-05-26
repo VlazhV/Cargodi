@@ -1,3 +1,4 @@
+using Cargodi.Business.DTOs.Common.AddressDtos;
 using Cargodi.Business.DTOs.Order.Payload;
 using Cargodi.Business.DTOs.Staff.Client;
 using Cargodi.Business.DTOs.Staff.Operator;
@@ -11,8 +12,8 @@ public class GetOrderInfoDto
 	public DateTime Time { get; set; }
 	public DateTime AcceptTime { get; set; }
 
-    public string LoadAddress { get; set; } = null!;	
-	public string DeliverAddress { get; set; } = null!;
+    public GetAddressDto LoadAddress { get; set; } = null!;	
+	public GetAddressDto DeliverAddress { get; set; } = null!;
 
 	public List<GetPayloadDto> Payloads { get; set; } = null!;
 

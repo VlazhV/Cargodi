@@ -74,4 +74,5 @@ public static class Startup
         services.AddScoped<IShipService, ShipService>();
         services.AddScoped<IShipGeneratingService, ShipGeneratingService>();
     }
+
 }

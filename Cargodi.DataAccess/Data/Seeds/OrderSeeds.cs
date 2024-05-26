@@ -25,6 +25,10 @@ public class OrderSeeds : IEntityTypeConfiguration<Order>
 
             DateTime? accessTime = Generator.GenerateRandomNumber(0, 99) < 70 ? DateTime.UtcNow : null;
 
+            int? operatorId = accessTime.HasValue ?
+                Generator.GenerateRandomNumber(1, 2) :
+                null;
+
             var status = accessTime == null ? OrderStatuses.Processing : OrderStatuses.Accepted;
 
             orders.Add(new Order
@@ -35,7 +39,8 @@ public class OrderSeeds : IEntityTypeConfiguration<Order>
                 LoadAddressId = i + 2,
                 DeliverAddressId = i + 2 + 5,
                 ClientId = Generator.GenerateRandomNumber(1, 2),
-                OrderStatusId = status.Id
+                OrderStatusId = status.Id,
+                OperatorId = operatorId
             });
         }
 
