@@ -12,20 +12,27 @@ public class IdentityProfile: Profile
 {
     public IdentityProfile()
     {
-        CreateMap<User, UserDto>();
-        CreateMap<UserDto, User>();
-        CreateMap<SignupDto, User>();
-        CreateMap<RegisterDto, User>();
-        CreateMap<User, UserIdDto>();
-        CreateMap<LoginDto, SignupDto>().ReverseMap();
-
         CreateMap<UpdateClientDto, Client>();
         CreateMap<UpdateDriverDto, Driver>();
         CreateMap<UpdateOperatorDto, Operator>();
-
+        
         CreateMap<Client, GetClientDto>();
         CreateMap<Driver, GetDriverDto>();
         CreateMap<Operator, GetOperatorDto>();
+        
+        CreateMap<User, UserDto>();
+        CreateMap<UserDto, User>();
+        CreateMap<SignupDto, User>();
+        CreateMap<RegisterDto, User>()
+            .ForMember(dest => dest.Client, opt => opt.Ignore())
+            .ForMember(dest => dest.Driver, opt => opt.Ignore())
+            .ForMember(dest => dest.Operator, opt => opt.Ignore());
+        CreateMap<User, UserIdDto>();
+        CreateMap<LoginDto, SignupDto>().ReverseMap();
+
+        
+
+        
     }
     
 }

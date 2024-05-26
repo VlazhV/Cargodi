@@ -13,7 +13,8 @@ public class OrderStatusConfiguration : IEntityTypeConfiguration<OrderStatus>
             OrderStatuses.Processing,
             OrderStatuses.Accepted,
             OrderStatuses.Declined,
-            OrderStatuses.Completing
+            OrderStatuses.Completing,
+            OrderStatuses.Completed
         );
     }
 }
