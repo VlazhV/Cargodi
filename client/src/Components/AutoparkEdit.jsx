@@ -8,7 +8,7 @@ export default function AutoparkEdit(props) {
 
     const handleSelectAutopark = (e) => {
         e.preventDefault()
-        onSelectAutopark(e.target.id)
+        onSelectAutopark(Number(e.target.id))
     }
 
     const [autoparksData, setAutoparksData] = useState([])

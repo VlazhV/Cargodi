@@ -6,11 +6,16 @@ export default function AddressEdit(props) {
     const name = props.name ? props.name : 'Адрес'
 
     const handleAddressChange = (e) => {
-        e.preventDefault()
         let newAddress = address
-        newAddress = { ...newAddress, [e.target.id]: e.target.value }
+        if (e.target.type === 'checkbox') {
+            newAddress = { ...newAddress, [e.target.id]: !newAddress[e.target.id] }
+        }
+        else {
+            newAddress = { ...newAddress, [e.target.id]: e.target.value }
+        }
         newAddress.isWest = Boolean(newAddress.isWest)
         newAddress.isNorth = Boolean(newAddress.isNorth)
+        console.log(newAddress)
         onAddressChange(newAddress)
     }
 
@@ -39,7 +44,7 @@ export default function AddressEdit(props) {
             <div className='px-4 display-4'>
                 <div className="col-12 form-check mb-3" data-for="input">
                     <input name="input" type='checkbox' data-form-field="input"
-                        className="form-check-input" id="isWest" value={address.isWest} onChange={handleAddressChange}></input>
+                        className="form-check-input" id="isWest" checked={address.isWest} onChange={handleAddressChange}></input>
                     <label className='form-check-label' htmlFor='isWest'>Запад</label>
                 </div>
             </div>
@@ -47,7 +52,7 @@ export default function AddressEdit(props) {
             <div className='px-4 display-4'>
                 <div className="col-12 form-check mb-3" data-for="input">
                     <input name="input" type='checkbox' data-form-field="input"
-                        className="form-check-input" id="isNorth" value={address.isNorth} onChange={handleAddressChange}></input>
+                        className="form-check-input" id="isNorth" checked={address.isNorth} onChange={handleAddressChange}></input>
                     <label className='form-check-label' htmlFor='isNorth'>Север</label>
                 </div>
             </div>

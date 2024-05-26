@@ -7,6 +7,9 @@ export default class OrderService {
     static async GetAll() {
         return await api.get('/orders')
     }
+    static async GetAllMy() {
+        return await api.get('/orders/my')
+    }
     static async Create(orderData) {
         return await api.post('/orders', orderData)
     }
@@ -20,6 +23,6 @@ export default class OrderService {
         return await api.patch('/orders/' + id, payloadsData)
     }
     static async SetStatus(id, status) {
-        return await api.patch('/orders/' + id + '/status', status)
+        return await api.put('/orders/' + id + '/status', {}, { params: { status } })
     }
 }

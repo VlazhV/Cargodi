@@ -80,14 +80,16 @@ export default function UserPage() {
                 </div>
             </div>
 
-            <div className="btn btn-danger display-3" onClick={handleDeleteClick}>Удалить</div>
-
             {
                 error &&
                 <div className="border border-danger border rounded-4 p-2 px-4 mt-2">
                     <span className="text-danger text-center h3">{typeof error === 'string' ? error : toString(error)}</span>
                 </div>
             }
+            <div className="d-flex align-items-center text-warning m-4 rounded-pill px-4 py-2 display-4 fixed-bottom bg-dark" style={{ visibility: loading ? 'visible' : 'hidden' }}>
+                <strong>Загрузка...</strong>
+                <div className="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+            </div>
         </div >
     )
 }

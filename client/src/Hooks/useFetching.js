@@ -24,11 +24,26 @@ export const useFetching = (callback) => {
                     navigate('/login')
                 }
                 else {
-                    if (e.response && e.response.data) {
-                        setError(e.response.data.ErrorMessage)
+                    if (e.response) {
+                        if (e.response.data) {
+                            if (e.response.data.ErrorMessage) {
+                                setError(e.response.data.ErrorMessage)
+                            }
+                            else {
+                                setError(`Статус: ${e.response.data.status}. Ошибка: ${e.response.data.title}`)
+                            }
+                        }
+                        else {
+                            setError(`Статус: ${e.response.status}. Ошибка: ${e.response.statusText}`)
+                        }
                     }
                     else {
-                        setError(e)
+                        if (e.message) {
+                            setError(e.message)
+                        }
+                        else {
+                            setError(e)
+                        }
                     }
                 }
             } finally {
