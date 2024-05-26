@@ -139,6 +139,7 @@ public class IdentityService : IIdentityService
     {        
         switch (userDto.Role)
         {
+            case Roles.Admin:
             case Roles.Manager:
                 var @operator = await _operatorRepository.GetOperatorByUserIdAsync(id, cancellationToken);
                 userDto.Operator = _mapper.Map<GetOperatorDto>(@operator);
