@@ -8,10 +8,12 @@ export default function OrdersPage() {
 
     const testOrder = {
         id: 1,
-        time: '01-01-2024',
-        acceptTime: '01-01-2024',
-        loadAddress: 'Vileyka',
-        deliverAddress: 'Molodechno',
+        time: new Date(),
+        acceptTime: new Date(),
+        loadAddress: {
+            name: 'Vileyka'
+        },
+        deliverAddress: { name: 'Molodechno' },
         payloads: [{
             id: 1,
             length: 12,
@@ -28,17 +30,17 @@ export default function OrdersPage() {
             name: 'Максим'
         },
         clientId: 1,
-        orderStatus: 'processing',
+        orderStatus: { id: 1, name: 'processing' },
         operator: {
-            secondName: '',
-            firstName: '',
-            middleName: '',
+            secondName: 'Костень',
+            firstName: 'Костя',
+            middleName: 'Костевич',
             employDate: '12-12-2003',
             fireDate: null
         }
     }
     const [ordersData, setOrdersData] = useState([
-        testOrder, testOrder
+        testOrder
     ])
 
     const [fetch, loading, error] = useFetching(async (type) => {
@@ -46,7 +48,16 @@ export default function OrdersPage() {
             case "get":
                 {
                     const res = await OrderService.GetAll()
-                    setOrdersData(res.data)
+
+                    let orders = res.data
+                    orders.forEach(ord => {
+                        ord.time = new Date(ord.time)
+                        if (ord.acceptTime) {
+                            ord.acceptTime = new Date(ord.acceptTime)
+                        }
+                    })
+
+                    setOrdersData(orders)
                 }
                 break;
         }
@@ -86,19 +97,19 @@ export default function OrdersPage() {
                                             <strong>Заказ №{orderData.id}</strong>
                                         </h6>
                                         <h5 className="item-title mbr-fonts-style mb-0 display-7">
-                                            <strong>Время оформления:</strong> {orderData.time}
+                                            <strong>Время оформления:</strong> {orderData.time.toLocaleString()}
                                         </h5>
                                         <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
-                                            <strong>Адрес загрузки:</strong> {orderData.loadAddress}
+                                            <strong>Адрес загрузки:</strong> {orderData.loadAddress?.name}
                                         </h6>
                                         <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
-                                            <strong>Адрес доставки:</strong> {orderData.deliverAddress}
+                                            <strong>Адрес доставки:</strong> {orderData.deliverAddress?.name}
                                         </h6>
                                         <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
                                             <strong>Клиент:</strong> {orderData.client?.name}
                                         </h6>
                                         <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
-                                            <strong>Статус:</strong> {orderStatuses.find(v => v.value == orderData.orderStatus)?.name}
+                                            <strong>Статус:</strong> {orderStatuses.find(v => v.id == orderData.orderStatus?.id)?.name}
                                         </h6>
                                     </div>
 

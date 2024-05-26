@@ -35,9 +35,6 @@ export default function Header() {
                                 <Link className="nav-link link text-black display-4" aria-expanded="false" to={"/login"}>Авторизация</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link link text-black display-4" aria-expanded="false" to={"/register"}>Заказы</Link>
-                            </li>
-                            <li className="nav-item">
                                 <Link className="nav-link link text-black display-4" aria-expanded="false" to={"/users"}>Пользователи</Link>
                             </li>
                             <li className="nav-item">
