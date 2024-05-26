@@ -76,15 +76,15 @@ public class IdentityService : IIdentityService
         
         if (registerDto.Client != null)
         {
-            await CreateRoleAsync(registerDto.Client, Roles.Client, user.Id, cancellationToken);
+            await CreateRoleWithSaveAsync(registerDto.Client, Roles.Client, user.Id, cancellationToken);
         } 
         else if (registerDto.Driver != null)
         {
-            await CreateRoleAsync(registerDto.Driver, Roles.Driver, user.Id, cancellationToken);
+            await CreateRoleWithSaveAsync(registerDto.Driver, Roles.Driver, user.Id, cancellationToken);
         }
         else 
         {
-            await CreateRoleAsync(registerDto.Operator!, Roles.Manager, user.Id, cancellationToken);
+            await CreateRoleWithSaveAsync(registerDto.Operator!, Roles.Manager, user.Id, cancellationToken);
         }
         
         var userDto = _mapper.Map<UserDto>(user);
@@ -107,7 +107,7 @@ public class IdentityService : IIdentityService
         await HandleIdentityResultAsync(_userRepository.CreateAsync(user, signupDto.Password!));			
         await _userRepository.AddToRoleAsync(user, Roles.Client);
         
-        await CreateRoleAsync(signupDto.Client!, Roles.Client, user.Id, cancellationToken);
+        await CreateRoleWithSaveAsync(signupDto.Client!, Roles.Client, user.Id, cancellationToken);
        
         await _clientRepository.SaveChangesAsync(cancellationToken);
         var tokenDto = await LoginAsync(_mapper.Map<LoginDto>(signupDto), cancellationToken);
@@ -159,7 +159,7 @@ public class IdentityService : IIdentityService
         }
     }
     
-    private async Task CreateRoleAsync(object dto, string role, long userId, CancellationToken cancellationToken)
+    private async Task CreateRoleWithSaveAsync(object dto, string role, long userId, CancellationToken cancellationToken)
     {        
         switch (role)
         {
@@ -183,12 +183,15 @@ public class IdentityService : IIdentityService
                 driver.UserId = userId;
                 driver.EmployDate = DateTime.UtcNow;
                 driver.FireDate = null;
+                driver.DriverStatusId = DriverStatuses.Works.Id;
                 await _driverRepository.CreateAsync(driver, cancellationToken);
                 break;
                 
             default:
                 throw new ArgumentException();
         }
+
+        await _driverRepository.SaveChangesAsync(cancellationToken);
         
     }
     

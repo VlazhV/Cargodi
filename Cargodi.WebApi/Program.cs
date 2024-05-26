@@ -20,6 +20,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
             );
 });
 
+//builder.Configuration.ConfigureDatabase();
 
 builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(IdentityProfile)));
 

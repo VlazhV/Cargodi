@@ -75,4 +75,11 @@ public static class Startup
         services.AddScoped<IShipGeneratingService, ShipGeneratingService>();
     }
 
+
+    public static void ConfigureDatabase(this IConfiguration configuration)
+    {
+        var context = configuration.Get<DatabaseContext>()!;
+        context.Database.EnsureDeleted();
+        context.Database.EnsureCreated();
+    }
 }
