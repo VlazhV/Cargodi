@@ -8,5 +8,5 @@ public interface IDriverRepository : IRepository<Driver, int>
     Task<Driver?> GetDriverByUserIdAsync(long userId, CancellationToken cancellationToken);
 
     Task<Driver?> CreateDriverAsync(Driver driver, CancellationToken cancellationToken);
-    Task<IEnumerable<Driver>> GetDriversByIdsAsync(IEnumerable<int> ids, CancellationToken cancellationToken)
+    Task<IEnumerable<Driver>> GetDriversByIdsAsync(IEnumerable<int> ids, CancellationToken cancellationToken);
 }
