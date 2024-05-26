@@ -10,8 +10,18 @@
         "name": "Принято"
     },
     {
-        "value": "declined",
+        "value": "completing",
         "id": 3,
+        "name": "Выполняется"
+    },
+    {
+        "value": "declined",
+        "id": 4,
         "name": "Отклонено"
+    },
+    {
+        "value": "completed",
+        "id": 5,
+        "name": "Выполнен"
     }
-]   
+]

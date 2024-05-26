@@ -4,16 +4,14 @@ import { Link } from 'react-router-dom'
 import orderStatuses from '../Data/OrderStatuses.json'
 import OrderService from '../Services/OrderService'
 
-export default function OrdersPage() {
-
-
+export default function MyOrdersPage() {
     const [ordersData, setOrdersData] = useState([])
 
     const [fetch, loading, error] = useFetching(async (type) => {
         switch (type) {
             case "get":
                 {
-                    const res = await OrderService.GetAll()
+                    const res = await OrderService.GetAllMy()
 
                     let orders = res.data
                     orders.forEach(ord => {
@@ -70,9 +68,6 @@ export default function OrdersPage() {
                                         </h6>
                                         <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
                                             <strong>Адрес доставки:</strong> {orderData.deliverAddress?.name}
-                                        </h6>
-                                        <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
-                                            <strong>Клиент:</strong> {orderData.client?.name}
                                         </h6>
                                         <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
                                             <strong>Статус:</strong> {orderStatuses.find(v => v.id == orderData.orderStatus?.id)?.name}
