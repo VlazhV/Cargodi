@@ -17,6 +17,8 @@ import AutoparksPage from '../Pages/AutoparksPage';
 import MainPage from '../Pages/MainPage';
 import HeaderLayout from '../Components/HeaderLayout';
 import RegisterPage from '../Pages/RegisterPage';
+import ShipsPage from '../Pages/ShipsPage';
+import ShipPage from '../Pages/ShipPage';
 
 export default function CargodiRoutes() {
     const { user } = useContext(AuthContext)
@@ -43,6 +45,13 @@ export default function CargodiRoutes() {
                         <Route path="/trailer/:trailerId" element={<TrailerPage />} />
                         <Route path="/orders/operator" element={<OrdersPage />} />
                         <Route path="/user/:userId" element={<UserPage />} />
+                        <Route path="/ships/operator" element={<ShipsPage />} />
+                    </>
+                }
+                {
+                    user && (user.operator || user.driver) &&
+                    <>
+                        <Route path="/ship/:shipId" element={<ShipPage />} />
                     </>
                 }
                 {

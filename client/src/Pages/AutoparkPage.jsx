@@ -70,6 +70,15 @@ export default function AutoparkPage() {
             case "get":
                 {
                     const res = await AutoparkService.GetById(parkId)
+
+                    let autoparks = res.data
+                    autoparks.drivers.forEach(d => {
+                        d.employDate = new Date(d.employDate)
+                        if (d.fireDate) {
+                            d.fireDate = new Date(d.fireDate)
+                        }
+                    })
+
                     setAutoparkData(res.data)
                 }
                 break;
@@ -377,9 +386,33 @@ export default function AutoparkPage() {
                     </div>
                 </>
             case 'showDrivers':
-                return
-                <>
-                </>
+                return <div className="row w-100">
+                    {
+                        autoparkData.drivers.map(driverData =>
+                            <div className="item features-without-image col-4 item-mb active border rounded">
+                                <div className="item-wrapper">
+                                    <div className="item-head">
+                                        <h6 className="item-title mbr-fonts-style mb-0 display-7">
+                                            <strong>Водитель №{driverData.id}</strong>
+                                        </h6>
+                                        <h6 className="item-title mbr-fonts-style mb-0 display-7">
+                                            <strong>ФИО: {driverData.secondName} {driverData.firstName} {driverData.middleName}</strong>
+                                        </h6>
+                                        <h5 className="item-subtitle mbr-fonts-style mt-0 mb-1 ">
+                                            Вод. удостоверение: {driverData.license}
+                                        </h5>
+                                        <h5 className="item-subtitle mbr-fonts-style mt-0 mb-1 ">
+                                            Время нанятия: {driverData.employDate.toLocaleString()}
+                                        </h5>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        )
+                    }
+
+                </div>
         }
     }
 

@@ -61,6 +61,9 @@ export default function Header() {
                                     <li className="nav-item">
                                         <Link className="nav-link link text-black display-4" aria-expanded="false" to={"/orders/operator"}>Заказы</Link>
                                     </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link link text-black display-4" aria-expanded="false" to={"/ships/operator"}>Рейсы</Link>
+                                    </li>
                                 </>
                             }
 
