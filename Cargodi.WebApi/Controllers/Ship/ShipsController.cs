@@ -2,12 +2,14 @@ using System.Security.Claims;
 using Cargodi.Business.DTOs.Ship.Ship;
 using Cargodi.Business.Interfaces.Ship;
 using Cargodi.DataAccess.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Cargodi.WebApi.Controllers;
+namespace Cargodi.WebApi.Controllers.Ship;
 
 [ApiController]
 [Route("/api/[controller]")]
+[Authorize]
 public class ShipsController: ControllerBase
 {
     private readonly IShipService _shipService;
@@ -53,7 +55,7 @@ public class ShipsController: ControllerBase
         if (!User.IsInRole(Roles.Admin) && !User.IsInRole(Roles.Manager))
             return NotFound();
 
-        return Ok(await _shipService.GenerateAsync(cancellationToken));
+        return Ok(await _shipService.GenerateAsync(User, cancellationToken));
     }
     
     [HttpDelete("{id}")]
