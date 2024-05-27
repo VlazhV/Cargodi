@@ -20,9 +20,6 @@ export default function MainPage() {
 
                             <p className="mbr-fonts-style mbr-text mbr-white mb-4 display-7">Добро пожаловать в мир, где
                                 грузоперевозки становятся легкими и веселыми приключениями!</p>
-                            <div className="mbr-section-btn">
-                                <a className="btn btn-white-outline display-7" href="https://mobiri.se">Присоединиться сейчас</a>
-                            </div>
                         </div>
                     </div>
                 </div>

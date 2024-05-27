@@ -36,6 +36,14 @@ export default function AddressEdit(props) {
                     className="form-control" id="latitude" value={address.latitude} onChange={handleAddressChange}></input>
             </div>
 
+            <div className='px-4 display-4'>
+                <div className="col-12 form-check mb-3" data-for="input">
+                    <input name="input" type='checkbox' data-form-field="input"
+                        className="form-check-input" id="isNorth" checked={address.isNorth} onChange={handleAddressChange}></input>
+                    <label className='form-check-label' htmlFor='isNorth'>Северная</label>
+                </div>
+            </div>
+
             <div className="col-12 form-group mb-3" data-for="input">
                 <input name="input" placeholder="Долгота" type='text' data-form-field="input"
                     className="form-control" id="longitude" value={address.longitude} onChange={handleAddressChange}></input>
@@ -45,17 +53,11 @@ export default function AddressEdit(props) {
                 <div className="col-12 form-check mb-3" data-for="input">
                     <input name="input" type='checkbox' data-form-field="input"
                         className="form-check-input" id="isWest" checked={address.isWest} onChange={handleAddressChange}></input>
-                    <label className='form-check-label' htmlFor='isWest'>Запад</label>
+                    <label className='form-check-label' htmlFor='isWest'>Западная</label>
                 </div>
             </div>
 
-            <div className='px-4 display-4'>
-                <div className="col-12 form-check mb-3" data-for="input">
-                    <input name="input" type='checkbox' data-form-field="input"
-                        className="form-check-input" id="isNorth" checked={address.isNorth} onChange={handleAddressChange}></input>
-                    <label className='form-check-label' htmlFor='isNorth'>Север</label>
-                </div>
-            </div>
+            
         </div>
     )
 }

@@ -231,7 +231,7 @@ export default function ProfilePage() {
                                     userData.driver &&
                                     <>
                                         <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                                            <strong>Лицензия:</strong> <span>{userData.driver.license}</span>
+                                            <strong>Вод. удостоверение:</strong> <span>{userData.driver.license}</span>
                                         </h1>
 
                                         <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">

@@ -113,7 +113,7 @@ export default function TrailerPage() {
                             </h1>
 
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                                <strong>Номер лицензии:</strong> <span>{trailerData.licenseNumber}</span>
+                                <strong>Регистрационный номер:</strong> <span>{trailerData.licenseNumber}</span>
                             </h1>
 
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
@@ -150,7 +150,7 @@ export default function TrailerPage() {
                             </h1>
 
                             <h1 className="mb-4 input-group">
-                                <strong className='input-group-text display-7'>Номер лицензии:</strong>
+                                <strong className='input-group-text display-7'>Регистрационный номер:</strong>
                                 <input name="input" value={trailerData.licenseNumber} type='text'
                                     className="form-control mx-2" id="licenseNumber" onChange={handleCarChange}></input>
                             </h1>

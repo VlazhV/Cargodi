@@ -164,7 +164,7 @@ export default function AutoparkPage() {
                     <div className="justify-content-center d-flex flex-row">
                         <div className="">
                             <div className="col-12 form-group mb-3" data-for="textarea">
-                                <input name="input" placeholder="Номер лицензии" type="text" data-form-field="input"
+                                <input name="input" placeholder="Регистрационный номер" type="text" data-form-field="input"
                                     className="form-control" id="licenseNumber" onChange={handleCarChange} ></input>
                             </div>
                             <div className="col-12 form-group mb-3" data-for="textarea">
@@ -172,7 +172,7 @@ export default function AutoparkPage() {
                                     className="form-control" id="mark" onChange={handleCarChange} ></input>
                             </div>
                             <div className="col-12 form-group mb-3" data-for="textarea">
-                                <input name="input" placeholder="Дальность езды (км)" type="number" data-form-field="input"
+                                <input name="input" placeholder="Дальность следования (км)" type="number" data-form-field="input"
                                     className="form-control" id="range" onChange={handleCarChange} ></input>
                             </div>
                             <div className="col-12 form-group mb-3" data-for="textarea">
@@ -283,7 +283,7 @@ export default function AutoparkPage() {
                     <div className="justify-content-center d-flex flex-row">
                         <div className="">
                             <div className="col-12 form-group mb-3" data-for="textarea">
-                                <input name="input" placeholder="Номер лицензии" type="text" data-form-field="input"
+                                <input name="input" placeholder="Регистрационный номер" type="text" data-form-field="input"
                                     className="form-control" id="licenseNumber" onChange={handleTrailerChange} ></input>
                             </div>
                             <div className="col-12 form-group mb-3" data-for="textarea">

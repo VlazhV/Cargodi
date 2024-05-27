@@ -211,7 +211,7 @@ function RegisterOtherPage(props) {
 
                     <div>
                         <div className="col-12 form-group mb-3" data-for="textarea">
-                            <input name="input" placeholder="Лицензия" type="text" data-form-field="input"
+                            <input name="input" placeholder="Водительское удостоверение" type="text" data-form-field="input"
                                 className="form-control" id="license" onChange={handleDriverChange}></input>
                         </div>
 

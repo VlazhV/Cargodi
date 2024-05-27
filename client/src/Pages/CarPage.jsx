@@ -158,7 +158,7 @@ export default function CarPage() {
                             </h1>
 
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                                <strong>Номер лицензии:</strong> <span>{carData.licenseNumber}</span>
+                                <strong>Регистрационный номер:</strong> <span>{carData.licenseNumber}</span>
                             </h1>
 
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
@@ -166,7 +166,7 @@ export default function CarPage() {
                             </h1>
 
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                                <strong>Дальность езды (км):</strong> <span>{carData.range}</span>
+                                <strong>Дальность следования (км):</strong> <span>{carData.range}</span>
                             </h1>
 
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
@@ -213,7 +213,7 @@ export default function CarPage() {
                             </h1>
 
                             <h1 className="mb-4 input-group">
-                                <strong className='input-group-text display-7'>Номер лицензии:</strong>
+                                <strong className='input-group-text display-7'>Регистрационный номер:</strong>
                                 <input name="input" value={carData.licenseNumber} type='text'
                                     className="form-control mx-2" id="licenseNumber" onChange={handleCarChange}></input>
                             </h1>
@@ -225,7 +225,7 @@ export default function CarPage() {
                             </h1>
 
                             <h1 className="mb-4 input-group">
-                                <strong className='input-group-text display-7'>Дальность езды (км):</strong>
+                                <strong className='input-group-text display-7'>Дальность следования (км):</strong>
                                 <input name="input" value={carData.range} type='text'
                                     className="form-control mx-2" id="range" onChange={handleCarChange}></input>
                             </h1>
