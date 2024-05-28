@@ -7,5 +7,5 @@ public class GetClientUserDto
     public int Id { get; set; }
     public string Name { get; set; } = null!;
 
-    public UserIdDto UserInfo { get; set; } = null!;
+    public UserIdDto User { get; set; } = null!;
 }
