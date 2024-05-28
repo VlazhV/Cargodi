@@ -30,9 +30,7 @@ public class IdentityProfile: Profile
         CreateMap<User, UserIdDto>();
         CreateMap<LoginDto, SignupDto>().ReverseMap();
 
-        
-
-        
+        CreateMap<Client, GetClientUserDto>();
     }
     
 }
