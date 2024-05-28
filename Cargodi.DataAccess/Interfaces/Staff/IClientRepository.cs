@@ -9,4 +9,5 @@ public interface IClientRepository: IRepository<Client, long>
     Task<Client?> GetClientByUserIdAsync(long userId, CancellationToken cancellationToken);
 
     Task<Client?> CreateClientAsync(Client client, CancellationToken cancellationToken);
+    Task<IEnumerable<Client>> GetClientsInfoAsync(CancellationToken cancellationToken);
 }

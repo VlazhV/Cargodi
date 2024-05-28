@@ -165,4 +165,10 @@ public class UserService : IUserService
         return _mapper.Map<IEnumerable<GetDriverDto>>(drivers);
     }
 
+    public async Task<IEnumerable<GetClientUserDto>> GetAllClientsAsync(CancellationToken cancellationToken)
+    {
+        var clients = await _clientRepository.GetClientsInfoAsync(cancellationToken);
+
+        return _mapper.Map<IEnumerable<GetClientUserDto>>(clients); 
+    }
 }

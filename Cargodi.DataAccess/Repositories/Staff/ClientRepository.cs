@@ -36,4 +36,13 @@ public class ClientRepository : RepositoryBase<Client, long>, IClientRepository
             .Where(c => c.UserId == userId)
             .FirstOrDefaultAsync(cancellationToken);
     }
+
+    public Task<IEnumerable<Client>> GetClientsInfoAsync(CancellationToken cancellationToken)
+    {
+        return _db.Clients
+            .AsNoTracking()
+            .Include(c => c.User)
+            .ToListAsync();
+    }
+
 }
