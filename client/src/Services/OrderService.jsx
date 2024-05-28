@@ -10,8 +10,13 @@ export default class OrderService {
     static async GetAllMy() {
         return await api.get('/orders/my')
     }
-    static async Create(orderData) {
-        return await api.post('/orders', orderData)
+    static async Create(orderData, customerId) {
+        if (customerId) {
+            return await api.post('/orders', orderData, { params: { customerId } })
+        }
+        else {
+            return await api.post('/orders', orderData)
+        }
     }
     static async Delete(id) {
         return await api.delete('/orders/' + id)

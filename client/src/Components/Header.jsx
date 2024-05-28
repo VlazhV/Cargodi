@@ -39,7 +39,7 @@ export default function Header() {
                                 user && user.client &&
                                 <>
                                     <li className="nav-item">
-                                        <Link className="nav-link link text-black display-4" aria-expanded="false" to={"/orders/create"}>Сделать заказ</Link>
+                                        <Link className="nav-link link text-black display-4" aria-expanded="false" to={"/orders/create"}>Оформить заказ</Link>
                                     </li>
                                     <li className="nav-item">
                                         <Link className="nav-link link text-black display-4" aria-expanded="false" to={"/orders/my"}>Мои заказы</Link>
@@ -63,6 +63,9 @@ export default function Header() {
                                     </li>
                                     <li className="nav-item">
                                         <Link className="nav-link link text-black display-4" aria-expanded="false" to={"/ships/operator"}>Рейсы</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link link text-black display-4" aria-expanded="false" to={"/orders/createOther"}>Оформить заказ</Link>
                                     </li>
                                 </>
                             }

@@ -20,6 +20,7 @@ import RegisterPage from '../Pages/RegisterPage';
 import ShipsPage from '../Pages/ShipsPage';
 import ShipPage from '../Pages/ShipPage';
 import DriverShipsPage from '../Pages/DriverShipsPage';
+import CreateOtherOrderPage from '../Pages/CreateOtherOrderPage';
 
 export default function CargodiRoutes() {
     const { user } = useContext(AuthContext)
@@ -47,6 +48,7 @@ export default function CargodiRoutes() {
                         <Route path="/orders/operator" element={<OrdersPage />} />
                         <Route path="/user/:userId" element={<UserPage />} />
                         <Route path="/ships/operator" element={<ShipsPage />} />
+                        <Route path="/orders/createOther" element={<CreateOtherOrderPage />} />
                     </>
                 }
                 {
