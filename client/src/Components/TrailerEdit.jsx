@@ -1,25 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import { useFetching } from '../Hooks/useFetching'
-import AutoparkService from '../Services/AutoparkService'
+import TrailerService from '../Services/TrailerService'
+import trailerTypes from '../Data/TrailerTypes.json'
 
-export default function AutoparkEdit(props) {
+export default function TrailerEdit(props) {
     const id = props.id ? props.id : null
-    const onSelectAutopark = props.onSelectAutopark ? props.onSelectAutopark : (newAutoparkData) => { }
+    const onSelectTrailer = props.onSelectTrailer ? props.onSelectTrailer : (newTrailerData) => { }
+    const nullable = props.nullable
 
-    const [autoparksData, setAutoparksData] = useState([])
+    const [trailersData, setTrailersData] = useState([])
 
-    const handleSelectAutopark = (e) => {
+    const handleSelectTrailer = (e) => {
         e.preventDefault()
         let index = e.target.id
-        onSelectAutopark(autoparksData[index])
+        if (index == -1) {
+            onSelectTrailer(null)
+        }
+        else {
+            onSelectTrailer({ ...(trailersData[index]) })
+        }
     }
 
     const [fetch, loading, error] = useFetching(async (type) => {
         switch (type) {
             case "get":
                 {
-                    const res = await AutoparkService.GetAll()
-                    setAutoparksData(res.data)
+                    const res = await TrailerService.GetAll()
+                    setTrailersData(res.data)
                 }
                 break;
         }
@@ -34,25 +41,26 @@ export default function AutoparkEdit(props) {
         <div className="modal fade" id={id} tabIndex="-1">
             <div className="modal-dialog modal-dialog-scrollable">
                 <div className="modal-content">
-                    <div className="modal-header d-flex flex-column">
-                        <div className='w-100 d-flex flex-row align-items-center'>
-                            <h1 className="modal-title fs-5">Автопарки</h1>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-
-
+                    <div className="modal-header">
+                        <h1 className="modal-title fs-5">Прицепы</h1>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div className="modal-body  d-flex flex-column">
+                    <div className="modal-body d-flex flex-column">
                         {
-                            autoparksData.map((autoparkData, index) => {
-                                return <button className='btn btn-outline-primary' data-bs-dismiss="modal" key={autoparkData.id} id={index} onClick={handleSelectAutopark}>
-                                    Автопарк №{autoparkData.id}
+                            trailersData.map((trailerData, index) => {
+                                return <button className='btn btn-outline-primary' data-bs-dismiss="modal" key={trailerData.id} id={index} onClick={handleSelectTrailer}>
+                                    Прицеп №{trailerData.id}
                                     <br />
-                                    Адрес: {autoparkData.address.name}
+                                    {trailerData.licenseNumber}; {trailerTypes.find(v => v.id == trailerData.trailerType.id)?.name}
                                 </button>
                             })
                         }
-
+                        {
+                            nullable &&
+                            <button className='btn btn-outline-secondary' data-bs-dismiss="modal" id={-1} onClick={handleSelectTrailer}>
+                                Убрать прицеп
+                            </button>
+                        }
                     </div>
                     <div className="modal-footer">
                         <div className='w-100 h-100 d-flex flex-row'>

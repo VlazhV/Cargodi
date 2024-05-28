@@ -19,6 +19,7 @@ import HeaderLayout from '../Components/HeaderLayout';
 import RegisterPage from '../Pages/RegisterPage';
 import ShipsPage from '../Pages/ShipsPage';
 import ShipPage from '../Pages/ShipPage';
+import DriverShipsPage from '../Pages/DriverShipsPage';
 
 export default function CargodiRoutes() {
     const { user } = useContext(AuthContext)
@@ -46,6 +47,12 @@ export default function CargodiRoutes() {
                         <Route path="/orders/operator" element={<OrdersPage />} />
                         <Route path="/user/:userId" element={<UserPage />} />
                         <Route path="/ships/operator" element={<ShipsPage />} />
+                    </>
+                }
+                {
+                    user && user.driver &&
+                    <>
+                        <Route path="/ships/driver" element={<DriverShipsPage />} />
                     </>
                 }
                 {

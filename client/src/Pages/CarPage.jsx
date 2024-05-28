@@ -107,12 +107,12 @@ export default function CarPage() {
 
     })
 
-    const handleAutoparkChange = (newAutoparkId) => {
-        fetch("updateAutopark", newAutoparkId)
+    const handleAutoparkChange = (newAutoparkData) => {
+        fetch("updateAutopark", newAutoparkData.id)
     }
 
-    const handleActualAutoparkChange = (newAutoparkId) => {
-        fetch("updateActualAutopark", newAutoparkId)
+    const handleActualAutoparkChange = (newAutoparkData) => {
+        fetch("updateActualAutopark", newAutoparkData.id)
     }
 
     const handleDeleteClick = (e) => {

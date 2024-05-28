@@ -7,7 +7,7 @@ import carTypes from '../Data/CarTypes.json'
 import orderStatuses from '../Data/OrderStatuses.json'
 import trailerTypes from '../Data/TrailerTypes.json'
 
-export default function ShipsPage() {
+export default function DriverShipsPage() {
 
     const testShipData1 = {
         id: 1,
@@ -134,7 +134,7 @@ export default function ShipsPage() {
         switch (type) {
             case "get":
                 {
-                    const res = await ShipService.GetAll()
+                    const res = await ShipService.GetAllOfDriver()
 
                     let ships = res.data
                     ships.forEach(s => {
@@ -149,19 +149,9 @@ export default function ShipsPage() {
                     setShipsData(ships)
                 }
                 break;
-            case "create":
-                {
-                    const res = await ShipService.Create()
-                    fetch("get")
-                }
-                break;
         }
 
     })
-
-    const handleGenerateClick = (e) => {
-        fetch("create")
-    }
 
     useEffect(() => {
         //fetch("get")
@@ -179,9 +169,6 @@ export default function ShipsPage() {
                             </h4>
                         </div>
                     </div>
-                </div>
-                <div className="justify-content-center d-flex flex-row mb-4">
-                    <button className='btn btn-primary rounded-pill display-7' onClick={handleGenerateClick}>Сгенерировать рейсы</button>
                 </div>
                 {
                     error &&

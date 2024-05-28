@@ -147,16 +147,16 @@ function RegisterOtherPage(props) {
         handleChange(e)
     }
 
-    const handleOperatorAutoparkChange = (newAutoparkId) => {
-        setCredentials(prev => ({ ...prev, operator: { ...prev.operator, autoparkId: newAutoparkId } }))
+    const handleOperatorAutoparkChange = (newAutoparkData) => {
+        setCredentials(prev => ({ ...prev, operator: { ...prev.operator, autoparkId: newAutoparkData.id } }))
     }
 
-    const handleDriverAutoparkChange = (newAutoparkId) => {
-        setCredentials(prev => ({ ...prev, driver: { ...prev.driver, autoparkId: newAutoparkId } }))
+    const handleDriverAutoparkChange = (newAutoparkData) => {
+        setCredentials(prev => ({ ...prev, driver: { ...prev.driver, autoparkId: newAutoparkData.id } }))
     }
 
-    const handleActualAutoparkChange = (newAutoparkId) => {
-        setCredentials(prev => ({ ...prev, driver: { ...prev.driver, actualAutoparkId: newAutoparkId } }))
+    const handleActualAutoparkChange = (newAutoparkData) => {
+        setCredentials(prev => ({ ...prev, driver: { ...prev.driver, actualAutoparkId: newAutoparkData.id } }))
     }
 
     const handleClick = async (e) => {

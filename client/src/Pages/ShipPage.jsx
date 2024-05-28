@@ -9,6 +9,11 @@ import carTypes from '../Data/CarTypes.json'
 import orderStatuses from '../Data/OrderStatuses.json'
 import trailerTypes from '../Data/TrailerTypes.json'
 import { Link } from 'react-router-dom'
+import CarEdit from '../Components/CarEdit'
+import TrailerEdit from '../Components/TrailerEdit'
+import AutoparkEdit from '../Components/AutoparkEdit'
+import DriverEdit from '../Components/DriverEdit'
+import OrderEdit from '../Components/OrderEdit'
 
 export default function ShipPage() {
     const { user } = useContext(AuthContext)
@@ -16,6 +21,16 @@ export default function ShipPage() {
     const { shipId } = useParams()
 
     const [editing, setEditing] = useState(false)
+
+    const [updateShipData, setUpdateShipData] = useState({
+        id: shipId,
+        driverIds: [],
+        carId: null,
+        trailerId: null,
+        autoparkStartId: null,
+        autoparkFinishId: null,
+        stops: []
+    })
 
     const [shipData, setShipData] = useState({
         id: null,
@@ -74,6 +89,25 @@ export default function ShipPage() {
         finish: null, //?
         stops: [],
     })
+
+    const resetUpdateShipData = () => {
+        let tempUpdateShipData = {
+            id: shipId,
+            driverIds: [],
+            carId: null,
+            trailerId: null,
+            autoparkStartId: null,
+            autoparkFinishId: null,
+            stops: []
+        }
+        tempUpdateShipData.driverIds = shipData.drivers.map(dr => dr?.id)
+        tempUpdateShipData.carId = shipData.car?.id
+        tempUpdateShipData.trailerId = shipData.trailer?.id
+        tempUpdateShipData.autoparkStartId = shipData.autoparkStart?.id
+        tempUpdateShipData.autoparkFinishId = shipData.autoparkFinish?.id
+        tempUpdateShipData.stops = shipData.stops.map(st => ({ number: st?.number, orderId: st?.order?.id }))
+        setUpdateShipData(tempUpdateShipData)
+    }
 
     const testShipData1 = {
         id: 1,
@@ -224,9 +258,16 @@ export default function ShipPage() {
                 break;
             case "update":
                 {
-                    const res = await ShipService.Update(shipId, shipData)
+                    const res = await ShipService.Update(shipId, updateShipData)
                     fetch("get")
                     setEditing(false)
+                }
+                break;
+            case "mark":
+                {
+                    const res = await ShipService.Mark(shipId)
+                    fetch("get")
+
                 }
                 break;
         }
@@ -240,6 +281,7 @@ export default function ShipPage() {
 
     const handleEditingStart = (e) => {
         e.preventDefault()
+        resetUpdateShipData()
         setEditing(true)
     }
 
@@ -254,17 +296,86 @@ export default function ShipPage() {
         fetch("update")
     }
 
-    const handleShipChange = (e) => {
-        e.preventDefault()
-        setShipData(prev => ({ ...prev, [e.target.id]: e.target.value }))
+    const onCarChange = (newCarData) => {
+        setShipData(prev => ({ ...prev, car: newCarData }))
+        setUpdateShipData(prev => ({ ...prev, carId: newCarData.id }))
     }
 
-    const handleLoadAddressChange = (newAddress) => {
-        setShipData(prev => ({ ...prev, loadAddress: newAddress }))
+    const onTrailerChange = (newTrailerData) => {
+        setShipData(prev => ({ ...prev, trailer: newTrailerData }))
+        setUpdateShipData(prev => ({ ...prev, trailerId: newTrailerData ? newTrailerData.id : null }))
     }
 
-    const handleDeliverAddressChange = (newAddress) => {
-        setShipData(prev => ({ ...prev, deliverAddress: newAddress }))
+    const onStartAutoparkChange = (newAutoparkData) => {
+        setShipData(prev => ({ ...prev, autoparkStart: newAutoparkData }))
+        setUpdateShipData(prev => ({ ...prev, autoparkStartId: newAutoparkData.id }))
+    }
+
+    const onFinishAutoparkChange = (newAutoparkData) => {
+        setShipData(prev => ({ ...prev, autoparkFinish: newAutoparkData }))
+        setUpdateShipData(prev => ({ ...prev, autoparkFinishId: newAutoparkData.id }))
+    }
+
+    const handleRemoveDriver = (e) => {
+        let index = Number(e.target.id)
+        let drivers = [...(shipData.drivers)]
+        drivers.splice(index, 1)
+        setShipData(prev => ({ ...prev, drivers: drivers }))
+        setUpdateShipData(prev => ({ ...prev, driverIds: drivers.map(dr => dr?.id) }))
+    }
+
+    const onAddDriver = (newDriverData) => {
+        let drivers = [...(shipData.drivers)]
+        drivers.push(newDriverData)
+        setShipData(prev => ({ ...prev, drivers: drivers }))
+        setUpdateShipData(prev => ({ ...prev, driverIds: drivers.map(dr => dr?.id) }))
+    }
+
+    const handleRemoveStop = (e) => {
+        let index = Number(e.target.id)
+        let stops = [...(shipData.stops)]
+        stops.splice(index, 1)
+        stops.forEach((st, stIndex) => st.number = stIndex + 1)
+        setShipData(prev => ({ ...prev, stops: stops }))
+        setUpdateShipData(prev => ({ ...prev, stops: stops.map(st => ({ number: st?.number, orderId: st?.order?.id })) }))
+    }
+
+    const onAddStop = (newOrderData) => {
+        let stops = [...(shipData.stops)]
+        stops.push({ order: newOrderData, id: null, number: 0 })
+        stops.forEach((st, ordIndex) => st.number = ordIndex + 1)
+        setShipData(prev => ({ ...prev, stops: stops }))
+        setUpdateShipData(prev => ({ ...prev, stops: stops.map(st => ({ number: st?.number, orderId: st?.order?.id })) }))
+    }
+
+    const handleStopToLeft = (e) => {
+        let index = Number(e.target.id)
+        let stops = [...(shipData.stops)]
+        if (index + 1 > 1) {
+            let temp = stops[index]
+            stops[index] = stops[index - 1]
+            stops[index - 1] = temp
+        }
+        stops.forEach((st, ordIndex) => st.number = ordIndex + 1)
+        setShipData(prev => ({ ...prev, stops: stops }))
+        setUpdateShipData(prev => ({ ...prev, stops: stops.map(st => ({ number: st?.number, orderId: st?.order?.id })) }))
+    }
+
+    const handleStopToRight = (e) => {
+        let index = Number(e.target.id)
+        let stops = [...(shipData.stops)]
+        if (index + 1 < stops.length) {
+            let temp = stops[index]
+            stops[index] = stops[index + 1]
+            stops[index + 1] = temp
+        }
+        stops.forEach((st, ordIndex) => st.number = ordIndex + 1)
+        setShipData(prev => ({ ...prev, stops: stops }))
+        setUpdateShipData(prev => ({ ...prev, stops: stops.map(st => ({ number: st?.number, orderId: st?.order?.id })) }))
+    }
+
+    const handleMarkClick = (e) => {
+        fetch('mark')
     }
 
     useEffect(() => {
@@ -281,9 +392,9 @@ export default function ShipPage() {
     const switchRenderList = () => {
         switch (showList) {
             case 'showDrivers':
-                return <div className="row w-100">
+                return !editing ? <div className="row w-100">
                     {
-                        shipData.drivers.map(driverData =>
+                        shipData.drivers.map((driverData, index) =>
                             <div className="item features-without-image col-4 item-mb active border rounded">
                                 <div className="item-wrapper">
                                     <div className="item-head">
@@ -299,7 +410,6 @@ export default function ShipPage() {
                                         <h5 className="item-subtitle mbr-fonts-style mt-0 mb-1 ">
                                             Время нанятия: {driverData.employDate.toLocaleString()}
                                         </h5>
-
                                     </div>
 
                                 </div>
@@ -307,8 +417,42 @@ export default function ShipPage() {
                         )
                     }
                 </div>
+                    :
+                    <div className="row w-100">
+                        {
+                            shipData.drivers.map((driverData, index) =>
+                                <div className="item features-without-image col-4 item-mb active border rounded">
+                                    <div className="item-wrapper">
+                                        <div className="item-head">
+                                            <button className='btn btn-outline-secondary w-100' id={index} onClick={handleRemoveDriver}>
+                                                -
+                                            </button>
+                                            <h6 className="item-title mbr-fonts-style mb-0 display-7">
+                                                <strong>Водитель №{driverData.id}</strong>
+                                            </h6>
+                                            <h6 className="item-title mbr-fonts-style mb-0 display-7">
+                                                <strong>ФИО: {driverData.secondName} {driverData.firstName} {driverData.middleName}</strong>
+                                            </h6>
+                                            <h5 className="item-subtitle mbr-fonts-style mt-0 mb-1 ">
+                                                Вод. удостоверение: {driverData.license}
+                                            </h5>
+                                            <h5 className="item-subtitle mbr-fonts-style mt-0 mb-1 ">
+                                                Время нанятия: {driverData.employDate.toLocaleString()}
+                                            </h5>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            )
+                        }
+                        <button className="btn btn-outline-secondary col-4"
+                            data-bs-toggle="modal" data-bs-target="#driverId">
+                            +
+                        </button>
+                        <DriverEdit id='driverId' onSelectDriver={onAddDriver} />
+                    </div>
             case 'showStops':
-                return <div className="row w-100">
+                return !editing ? <div className="row w-100">
                     {
                         shipData.stops.map(stopData =>
                             <div className="item features-without-image col-5 item-mb active border rounded">
@@ -328,6 +472,7 @@ export default function ShipPage() {
                                                 <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
                                                     <strong>Заказ №{stopData.order.id}</strong>
                                                 </h6>
+
                                                 <h5 className="item-title mbr-fonts-style mb-0 display-7">
                                                     <strong>Время оформления:</strong> {stopData.order.time.toLocaleString()}
                                                 </h5>
@@ -357,6 +502,70 @@ export default function ShipPage() {
                         )
                     }
                 </div>
+                    :
+                    <div className="row w-100">
+                        {
+                            shipData.stops.map((stopData, index) =>
+                                <div className="item features-without-image col-5 item-mb active border rounded">
+                                    <div className="item-wrapper">
+                                        <div className="item-head">
+                                            <div className='d-flex flex-column align-items-center'>
+                                                <button className='btn btn-outline-secondary w-100' id={index} onClick={handleRemoveStop}>
+                                                    -
+                                                </button>
+                                                <div className='d-flex flex-row'>
+                                                    <button className='btn btn-outline-secondary w-100' id={index} onClick={handleStopToLeft}>
+                                                        {'<'}
+                                                    </button>
+                                                    <button className='btn btn-outline-secondary w-100' id={index} onClick={handleStopToRight}>
+                                                        {'>'}
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <h6 className="item-title mbr-fonts-style mb-0 display-7">
+                                                <strong>Остановка №{stopData.id ? stopData.id : '?'}</strong>
+                                            </h6>
+                                            <h6 className="item-title mbr-fonts-style mb-1 display-7">
+                                                <strong>Порядок: {stopData.number}</strong>
+                                            </h6>
+                                            <h5 className="item-subtitle mbr-fonts-style mt-0 mb-1 ">
+                                                Адресс: {stopData.address ? stopData.address.name : '?'}
+                                            </h5>
+                                            <div className="item-wrapper border p-4 my-4">
+                                                <div className="item-head">
+                                                    <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
+                                                        <strong>Заказ №{stopData.order.id}</strong>
+                                                    </h6>
+                                                    <h5 className="item-title mbr-fonts-style mb-0 display-7">
+                                                        <strong>Время оформления:</strong> {stopData.order.time.toLocaleString()}
+                                                    </h5>
+                                                    <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
+                                                        <strong>Адрес загрузки:</strong> {stopData.order.loadAddress?.name}
+                                                    </h6>
+                                                    <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
+                                                        <strong>Адрес доставки:</strong> {stopData.order.deliverAddress?.name}
+                                                    </h6>
+                                                    <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
+                                                        <strong>Клиент:</strong> {stopData.order.client?.name}
+                                                    </h6>
+                                                    <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
+                                                        <strong>Статус:</strong> {orderStatuses.find(v => v.id == stopData.order.orderStatus?.id)?.name}
+                                                    </h6>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                        }
+                        <button className="btn btn-outline-secondary col-4"
+                            data-bs-toggle="modal" data-bs-target="#orderId">
+                            +
+                        </button>
+                        <OrderEdit id='orderId' onSelectOrder={onAddStop} />
+                    </div>
         }
     }
 
@@ -442,50 +651,84 @@ export default function ShipPage() {
             {
                 editing &&
                 <div className="row justify-content-center mt-5">
-                    <h1 className="mbr-section-title mbr-fonts-style mb-4 display-4">
-                        <strong>Заказ №{shipData.id}</strong>
-                    </h1>
-                    <div className='d-flex flex-row w-100 m-4'>
-                        <div className='mx-4'>
-                            <AddressEdit address={shipData.loadAddress} onAddressChange={handleLoadAddressChange} name='Адрес загрузки' />
-                        </div>
-                        <div className='mx-4'>
-                            <AddressEdit address={shipData.deliverAddress} onAddressChange={handleDeliverAddressChange} name='Адрес доставки' />
-                        </div>
-                    </div>
-                    <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                        <strong>Время оформления:</strong> <span>{shipData.time?.toLocaleString()}</span>
+                    <h1 className="mbr-section-title mbr-fonts-style display-4">
+                        <strong>Рейс №{shipData.id}</strong>
                     </h1>
 
-                    <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                        <strong>Клиент:</strong> <span>{shipData.client?.name}</span>
+                    <h1 className="mbr-section-title mbr-fonts-style display-7">
+                        <button className='btn btn-primary rounded-pill display-7'
+                            data-bs-toggle="modal" data-bs-target="#carId">
+                            <strong>
+                                Машина:
+                                <span> Машина №
+                                    {shipData.car.id}; {shipData.car.mark}; {shipData.car.licenseNumber}; {carTypes.find(v => v.id == shipData.car.carType.id)?.name}
+                                </span>
+                            </strong>
+                        </button>
                     </h1>
+                    <CarEdit onSelectCar={onCarChange} id='carId' />
 
-                    <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                        <strong>Статус:</strong> <span>{orderStatuses.find(v => v.id == shipData.orderStatus?.id)?.name}</span>
+                    <h1 className="mbr-section-title mbr-fonts-style display-7">
+                        <button className='btn btn-primary rounded-pill display-7'
+                            data-bs-toggle="modal" data-bs-target="#trailerId">
+                            <strong>
+                                Прицеп:
+                                {
+                                    shipData.trailer ?
+                                        <span> Прицеп №
+                                            {shipData.trailer.id}; {shipData.trailer.licenseNumber}; {trailerTypes.find(v => v.id == shipData.trailer.trailerType.id)?.name}
+                                        </span>
+                                        :
+                                        <>-</>
+                                }
+
+                            </strong>
+                        </button>
                     </h1>
+                    <TrailerEdit onSelectTrailer={onTrailerChange} nullable={true} id='trailerId' />
 
-                    <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                        <strong>Оператор:</strong> <span>{shipData.operator
-                            ? shipData.operator.secondName + ' ' + shipData.operator.firstName
-                            + ' ' + shipData.operator.middleName : '-'}</span>
+                    <h1 className="mbr-section-title mbr-fonts-style display-7">
+                        <button className='btn btn-primary rounded-pill display-7'
+                            data-bs-toggle="modal" data-bs-target="#autoparkStartId">
+                            <strong>
+                                Отправная точка:
+                                <span> Автопарк №{shipData.autoparkStart.id}; {shipData.autoparkStart.address.name}</span>
+                            </strong>
+                        </button>
                     </h1>
+                    <AutoparkEdit onSelectAutopark={onStartAutoparkChange} id='autoparkStartId' />
 
-                    <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                        <strong>Время подтверждения:</strong> <span>{shipData.acceptTime ? shipData.acceptTime.toLocaleString() : '-'}</span>
+                    <h1 className="mbr-section-title mbr-fonts-style display-7">
+                        <button className='btn btn-primary rounded-pill display-7'
+                            data-bs-toggle="modal" data-bs-target="#autoparkFinishId">
+                            <strong>
+                                Конечная точка:
+                                <span> Автопарк №{shipData.autoparkFinish.id}; {shipData.autoparkFinish.address.name}</span>
+                            </strong>
+                        </button>
                     </h1>
-
+                    <AutoparkEdit onSelectAutopark={onFinishAutoparkChange} id='autoparkFinishId' />
                 </div>
             }
 
             {
                 !editing &&
                 <>
-                    <div className="btn btn-primary display-3" onClick={handleEditingStart}>Изменить</div>
                     {
                         user && user.operator &&
-                        <div className="btn btn-danger display-3" onClick={handleDeleteClick}>Удалить</div>
+                        <>
+                            <div className="btn btn-primary display-3" onClick={handleEditingStart}>Изменить</div>
+                            <div className="btn btn-danger display-3" onClick={handleDeleteClick}>Удалить</div>
+                        </>
                     }
+                    {
+                        user && (user.driver || user.operator) && (!shipData.start || !shipData.end) &&
+                        <button onClick={handleMarkClick} className="btn btn-success display-3">{!shipData.start ?
+                            'Принять к исполнению'
+                            :
+                            'Окончить исполение'}</button>
+                    }
+
                 </>
             }
             {

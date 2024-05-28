@@ -66,7 +66,14 @@ export default function Header() {
                                     </li>
                                 </>
                             }
-
+                            {
+                                user && user.driver &&
+                                <>
+                                    <li className="nav-item">
+                                        <Link className="nav-link link text-black display-4" aria-expanded="false" to={"/ships/driver"}>Мои рейсы</Link>
+                                    </li>
+                                </>
+                            }
                             {
                                 !user &&
                                 <>

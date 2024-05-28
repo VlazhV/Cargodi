@@ -66,16 +66,76 @@ export default function UserPage() {
                         <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
                             <strong>Роль:</strong> <span>{userData.roleName}</span>
                         </h1>
-                    </div>
-                </div>
-                <div className="col-12 col-md-12 col-lg">
-                    <div className="text-wrapper align-left">
                         <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
                             <strong>Почта:</strong> <span>{userData.email}</span>
                         </h1>
                         <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
                             <strong>Номер телефона:</strong> <span>{userData.phoneNumber}</span>
                         </h1>
+                    </div>
+                </div>
+                <div className="col-12 col-md-12 col-lg">
+                    <div className="text-wrapper align-left">
+                        {
+                            userData.client &&
+                            <>
+                                <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                    <strong>Имя:</strong> <span>{userData.client.name}</span>
+                                </h1>
+                            </>
+                        }
+                        {
+                            userData.operator &&
+                            <>
+                                <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                    <strong>Фамилия:</strong> <span>{userData.operator.secondName}</span>
+                                </h1>
+
+                                <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                    <strong>Имя:</strong> <span>{userData.operator.firstName}</span>
+                                </h1>
+
+                                <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                    <strong>Отчество:</strong> <span>{userData.operator.middleName}</span>
+                                </h1>
+
+                                <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                    <strong>Время нанятия:</strong> <span>{userData.operator.employDate?.toLocaleString()}</span>
+                                </h1>
+
+                                <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                    <strong>Время увольнения:</strong> <span>{userData.operator.fireDate ? userData.operator.fireDate.toLocaleString() : '-'}</span>
+                                </h1>
+                            </>
+                        }
+                        {
+                            userData.driver &&
+                            <>
+                                <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                    <strong>Вод. удостоверение:</strong> <span>{userData.driver.license}</span>
+                                </h1>
+
+                                <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                    <strong>Фамилия:</strong> <span>{userData.driver.secondName}</span>
+                                </h1>
+
+                                <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                    <strong>Имя:</strong> <span>{userData.driver.firstName}</span>
+                                </h1>
+
+                                <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                    <strong>Отчество:</strong> <span>{userData.driver.middleName}</span>
+                                </h1>
+
+                                <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                    <strong>Время нанятия:</strong> <span>{userData.driver.employDate?.toLocaleString()}</span>
+                                </h1>
+
+                                <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                    <strong>Время увольнения:</strong> <span>{userData.driver.fireDate ? userData.operator.fireDate.toLocaleString() : '-'}</span>
+                                </h1>
+                            </>
+                        }
                     </div>
                 </div>
             </div>
