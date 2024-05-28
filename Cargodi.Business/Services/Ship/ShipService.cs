@@ -37,8 +37,9 @@ public class ShipService : IShipService
         _mapper = mapper;
     }
 
-    public Task<IEnumerable<GetShipDto>> GenerateAsync(CancellationToken cancellationToken)
+    public async Task<IEnumerable<GetShipDto>> GenerateAsync(ClaimsPrincipal user, CancellationToken cancellationToken)
     {
+        await _shipGeneratingService.BuildRoutesAsync(user, cancellationToken);
         throw new NotImplementedException();
     }
 
