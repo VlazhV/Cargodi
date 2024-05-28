@@ -19,6 +19,7 @@ public class DriversController: ControllerBase
         _userService = userService;
     }
     
+    [HttpGet]
     public async Task<ActionResult<GetDriverDto>> GetAllAsync([FromQuery] DriverFilter driverFilter, CancellationToken cancellationToken)
     {
         if (!User.IsInRole(Roles.Admin) && !User.IsInRole(Roles.Manager))
