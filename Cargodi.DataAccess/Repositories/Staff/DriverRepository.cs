@@ -41,5 +41,25 @@ public class DriverRepository : RepositoryBase<Driver, int>, IDriverRepository
             .Where(d => ids.Contains(d.Id))
             .ToListAsync(cancellationToken);
     }
+    
+    public async Task<IEnumerable<Driver>> GetAllAsync(bool? isFree, 
+        bool? works, 
+        int? actualAutoparkId, 
+        CancellationToken cancellationToken)
+    {
+        var drivers = _db.Drivers
+            .AsNoTracking()
+            .Include(d => d.DriverStatus)
+            .Where(d => !works.HasValue || d.DriverStatusId == DriverStatuses.Works.Id)
+            .Where(d => !isFree.HasValue || d.ActualAutoparkId == actualAutoparkId!.Value);
+            
+        if (isFree.HasValue){
+            drivers = drivers
+                .Include(d => d.Ships)
+                .Where(d => d.Ships!.Last().Finish != null);
+        }
+
+        return await drivers.ToListAsync(cancellationToken);
+    }
 
 }

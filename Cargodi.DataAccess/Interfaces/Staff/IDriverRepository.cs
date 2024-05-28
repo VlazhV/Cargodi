@@ -9,4 +9,8 @@ public interface IDriverRepository : IRepository<Driver, int>
 
     Task<Driver?> CreateDriverAsync(Driver driver, CancellationToken cancellationToken);
     Task<IEnumerable<Driver>> GetDriversByIdsAsync(IEnumerable<int> ids, CancellationToken cancellationToken);
+    Task<IEnumerable<Driver>> GetAllAsync(bool? isFree,
+        bool? works,
+        int? actualAutoparkId,
+        CancellationToken cancellationToken);
 }

@@ -1,11 +1,13 @@
 using AutoMapper;
 using Cargodi.Business.DTOs.Identity;
+using Cargodi.Business.DTOs.Staff;
 using Cargodi.Business.DTOs.Staff.Client;
 using Cargodi.Business.DTOs.Staff.Driver;
 using Cargodi.Business.DTOs.Staff.Operator;
 using Cargodi.Business.Exceptions;
 using Cargodi.Business.Interfaces.Identity;
 using Cargodi.DataAccess.Constants;
+using Cargodi.DataAccess.Entities.Staff;
 using Cargodi.DataAccess.Interfaces.Staff;
 using Microsoft.AspNetCore.Identity;
 
@@ -150,4 +152,17 @@ public class UserService : IUserService
                 throw new ArgumentException();
         }
     }
+
+    public async Task<IEnumerable<GetDriverDto>> GetAllDriversAsync(DriverFilter driverFilter, CancellationToken cancellationToken)
+    {
+        var drivers = await _driverRepository.GetAllAsync(
+            driverFilter.IsFree,
+            driverFilter.IsWork,
+            driverFilter.ActualAutoparkId,
+            cancellationToken
+        );
+
+        return _mapper.Map<IEnumerable<GetDriverDto>>(drivers);
+    }
+
 }
