@@ -37,12 +37,12 @@ public class ClientRepository : RepositoryBase<Client, long>, IClientRepository
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public Task<IEnumerable<Client>> GetClientsInfoAsync(CancellationToken cancellationToken)
+    public async Task<IEnumerable<Client>> GetClientsInfoAsync(CancellationToken cancellationToken)
     {
-        return _db.Clients
+        return await _db.Clients
             .AsNoTracking()
             .Include(c => c.User)
-            .ToListAsync();
+            .ToListAsync(cancellationToken: cancellationToken);
     }
 
 }
