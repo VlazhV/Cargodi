@@ -15,6 +15,8 @@ using Cargodi.DataAccess.Entities.Order;
 using System.Linq;
 using Cargodi.DataAccess.Entities.Ship;
 using System.Security.Claims;
+using System.ComponentModel.DataAnnotations.Schema;
+using Cargodi.Business.Exceptions;
 
 namespace Cargodi.Business.Services.Ship;
 
@@ -50,6 +52,9 @@ public class ShipGeneratingService : IShipGeneratingService
 
     public async Task<IEnumerable<DataAccess.Entities.Ship.Ship>> BuildRoutesAsync(ClaimsPrincipal user, CancellationToken cancellationToken)
     {
+
+        await BuildRoutesAsync(cancellationToken);
+        
         var userId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
         //var @operator = await _operatorRepository.GetOperatorByUserIdAsync(userId, cancellationToken);
@@ -88,8 +93,10 @@ public class ShipGeneratingService : IShipGeneratingService
         }
 
         throw new NotImplementedException();
-        
     }
+    
+    
+    
 
     public async Task<IEnumerable<Driver>> SelectDriversAsync(Car car, CancellationToken cancellationToken)
     {
@@ -301,18 +308,211 @@ public class ShipGeneratingService : IShipGeneratingService
         return g;
     }
     
+    private async Task BuildRoutesAsync(CancellationToken cancellationToken)
+    {
+        var orders = (await _orderRepository.GetOrdersWithPayloadsAsync(cancellationToken)).ToList();
+        var autoparks = await _autoparkRepository.GetAutoparksWithAddressesVehicleAsync(cancellationToken);
 
+        if (autoparks.Count() == 0)
+            throw new ApiException("There is no autopark", ApiException.BadRequest);
+        
+        var singleOrderShips = GenerateSingleOrderShips(ref orders, 1); //@operator.Id);
+        
+        int nOrders = orders.Count;
+        int nAutoparks = autoparks.Count();
+
+        var routes = new List<List<Point>>();
+        var completedRoutes = new List<List<Point>>();
+        var autoparkPoints = new List<Point>();
+        var routeDistances = new List<double>();
+        
+        foreach (var o in orders)
+        {
+            routes.Add(new List<Point>
+            {
+                new Point(o.LoadAddress, PointType.Order, o.Id),
+                new Point(o.DeliverAddress, PointType.Order, o.Id)
+            });
+
+            routeDistances.Add(CountDistance(o.LoadAddress, o.DeliverAddress));
+        }
+        
+        foreach (var a in autoparks)
+        {
+            autoparkPoints.Add(new Point(a.Address, PointType.Autopark, a.Id));
+        }
+        
+        while (routes.Count > 0)
+        {
+            SortListsByDistances(ref routeDistances, ref routes);
+
+            var r = routes.First();
+            
+            var mins = new PointInfo[]
+            {
+                r.First().PointType == PointType.Order ? MinAutoparks(autoparkPoints, r.First()) : Invalid,
+                r.First().PointType == PointType.Order ? MinFromOtherLast(routes, r.First()) : Invalid,
+                r.Last().PointType == PointType.Order ? MinAutoparks(autoparkPoints, r.Last()) : Invalid,
+                r.Last().PointType == PointType.Order ? MinFromOtherFirst(routes, r.Last()) : Invalid,
+            };
+
+            var trueMin = mins.MinBy(pi => pi.Distance)!;
+
+            if (trueMin == Invalid)
+                throw new Exception();
+
+            if (trueMin.Point.PointType == PointType.Order)
+            {
+                if (trueMin.For == r.First())
+                    r = routes[trueMin.MemberOf].Concat(r).ToList();
+                else if (trueMin.For == r.Last())
+                    r = r.Concat(routes[trueMin.MemberOf]).ToList();
+                    
+                routeDistances[0] = routeDistances[0] + routeDistances[trueMin.MemberOf];
+            }
+            else 
+            {
+                if (trueMin.For == r.First())
+                    r.Insert(0, autoparkPoints[trueMin.MemberOf]);
+                else 
+                    r.Add(autoparkPoints[trueMin.MemberOf]);
+                
+                routeDistances[0] += CountDistance(autoparkPoints[trueMin.MemberOf].Address, trueMin.For.Address);
+            }
+
+            routes[0] = r;
+            
+            if (trueMin.Point.PointType == PointType.Order)
+            {
+                routes.RemoveAt(trueMin.MemberOf);
+                routeDistances.RemoveAt(trueMin.MemberOf);
+            }
+            
+            if (r.First().PointType == PointType.Autopark && r.Last().PointType == PointType.Autopark)
+            {
+                routes.RemoveAt(0);
+                routeDistances.RemoveAt(0);
+                completedRoutes.Add(r);
+            }
+        }
+
+        throw new NotImplementedException();
+    }
+    
+    private void SortListsByDistances(ref List<double> distances, ref List<List<Point>> routes)
+    {
+        for (int i = 0; i < routes.Count - 1; i++)
+        {
+            int iMin = i;
+            for (int j = i; j < routes.Count; j++)
+            {
+                if (distances[j] < distances[iMin])
+                    iMin = j;
+            }
+
+            (distances[iMin], distances[i]) = (distances[i], distances[iMin]);
+            (routes[iMin], routes[i]) = (routes[i], routes[iMin]);
+        }
+    }
+    
+    private PointInfo MinAutoparks(List<Point> autoparks, Point point)
+    {
+        if (autoparks.Count == 0)
+            return Invalid;
+            
+        Point pointmin = autoparks[0];
+        var min = CountDistance(pointmin.Address, point.Address);
+        int iMin = 0;
+        
+        for (int i = 1; i < autoparks.Count; i++)
+        {
+            var a = autoparks[i];
+                
+            var distance = CountDistance(a.Address, point.Address); 
+            if (distance < min)
+            {
+                iMin = i;
+                min = distance;
+                pointmin = a;
+            }
+            
+        }
+        return new PointInfo(pointmin, point, iMin, min);
+    }
+    
+    private PointInfo MinFromOtherLast(List<List<Point>> routes, Point point)
+    {
+        if (routes.Count < 2)
+            return Invalid;
+        
+        Point pointmin = routes[1].Last();
+        var min = CountDistance(pointmin.Address, point.Address);
+        int iMin = 1;
+        
+        for (int i = 2; i < routes.Count; i++)
+        {
+            var r = routes[i];
+                
+            var distance = CountDistance(r.Last().Address, point.Address); 
+            if (distance < min)
+            {
+                iMin = i;
+                min = distance;
+                pointmin = r.Last();
+            }
+            
+        }
+        return new PointInfo(pointmin, point, iMin, min);
+    }
+    
+    private PointInfo MinFromOtherFirst(List<List<Point>> routes, Point point)
+    {
+        if (routes.Count < 2)
+            return Invalid;
+            
+        Point pointmin = routes[1].First();
+        var min = CountDistance(pointmin.Address, point.Address);
+        int iMin = 1;
+        
+        for (int i = 2; i < routes.Count; i++)
+        {
+            var r = routes[i];
+                
+            var distance = CountDistance(r.First().Address, point.Address); 
+            if (distance < min)
+            {
+                iMin = i;
+                min = distance;
+                pointmin = r.First();
+            }
+            
+        }
+        return new PointInfo(pointmin, point, iMin, min);
+    }
+    
+    public enum ValueType
+    {
+        Weight,
+        Volume
+    }
+
+    public class ListNode<T> where T: Stop
+    {
+        public T Stop { get; set; } = null!;
+        public ListNode<T>? Next { get; set; }
+    }
+
+    public enum PointType
+    {
+        Order,
+        Autopark
+    }
+
+    public record Point(Address Address, PointType PointType, long EntityId);
+
+    public record PointInfo(Point Point, Point For, int MemberOf, double Distance);
+
+    public static PointInfo Invalid = new PointInfo(null, null, 0, double.PositiveInfinity);
 }
 
 
-public enum ValueType
-{
-    Weight,
-    Volume
-}
-
-public class ListNode<T> where T: Stop
-{
-    public T Stop { get; set; } = null!;
-    public ListNode<T>? Next { get; set; }
-}
