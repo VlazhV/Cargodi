@@ -3,8 +3,6 @@ import React from 'react'
 export default function MainPage() {
     return (
         <div>
-
-
             <section data-bs-version="5.1" className="header18 cid-ud3KesD7lM mbr-fullscreen"
                 data-bg-video="https://www.youtube.com/embed/Hjj1EXyjbw4?autoplay=1&amp;loop=1&amp;playlist=Hjj1EXyjbw4&amp;t=20&amp;mute=1&amp;playsinline=1&amp;controls=0&amp;showinfo=0&amp;autohide=1&amp;allowfullscreen=true&amp;mode=transparent"
                 id="hero-15-ud3KesD7lM">

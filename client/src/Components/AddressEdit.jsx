@@ -1,22 +1,33 @@
 import React from 'react'
+import MapAddressSelect from './MapAddressSelect'
 
 export default function AddressEdit(props) {
     const onAddressChange = props.onAddressChange ? props.onAddressChange : (newAddres) => { }
     const address = props.address ? props.address : {}
     const name = props.name ? props.name : 'Адрес'
 
-    const handleAddressChange = (e) => {
+    const onAddressSelect = (newMapAddress) => {
         let newAddress = address
-        if (e.target.type === 'checkbox') {
-            newAddress = { ...newAddress, [e.target.id]: !newAddress[e.target.id] }
-        }
-        else {
-            newAddress = { ...newAddress, [e.target.id]: e.target.value }
-        }
-        newAddress.isWest = Boolean(newAddress.isWest)
-        newAddress.isNorth = Boolean(newAddress.isNorth)
-        console.log(newAddress)
+        let longitude = newMapAddress.geometry.coordinates[0]
+        let latitude = newMapAddress.geometry.coordinates[1]
+
+        newAddress.longitude = Math.abs(longitude)
+        newAddress.latitude = Math.abs(latitude)
+        newAddress.isNorth = latitude > 0
+        newAddress.isWest = longitude < 0
+        newAddress.name = newMapAddress.properties.name
         onAddressChange(newAddress)
+    }
+
+    let mapAddress = null
+    if (address && address.name) {
+        let longitude = address.isWest ? -address.longitude : address.longitude
+        let latitude = address.isNorth ? address.latitude : -address.latitude
+
+        mapAddress = {
+            properties: { name: address.name },
+            geometry: { coordinates: [longitude, latitude] }
+        }
     }
 
     return (
@@ -26,38 +37,7 @@ export default function AddressEdit(props) {
                     <strong>{name}</strong>
                 </h6>
             </div>
-            <div className="col-12 form-group mb-3" data-for="textarea">
-                <input name="input" placeholder="Название" type="text" data-form-field="input"
-                    className="form-control" id="name" value={address.name} onChange={handleAddressChange}></input>
-            </div>
-
-            <div className="col-12 form-group mb-3" data-for="textarea">
-                <input name="input" placeholder="Широта" type='text' data-form-field="input"
-                    className="form-control" id="latitude" value={address.latitude} onChange={handleAddressChange}></input>
-            </div>
-
-            <div className='px-4 display-4'>
-                <div className="col-12 form-check mb-3" data-for="input">
-                    <input name="input" type='checkbox' data-form-field="input"
-                        className="form-check-input" id="isNorth" checked={address.isNorth} onChange={handleAddressChange}></input>
-                    <label className='form-check-label' htmlFor='isNorth'>Северная</label>
-                </div>
-            </div>
-
-            <div className="col-12 form-group mb-3" data-for="input">
-                <input name="input" placeholder="Долгота" type='text' data-form-field="input"
-                    className="form-control" id="longitude" value={address.longitude} onChange={handleAddressChange}></input>
-            </div>
-
-            <div className='px-4 display-4'>
-                <div className="col-12 form-check mb-3" data-for="input">
-                    <input name="input" type='checkbox' data-form-field="input"
-                        className="form-check-input" id="isWest" checked={address.isWest} onChange={handleAddressChange}></input>
-                    <label className='form-check-label' htmlFor='isWest'>Западная</label>
-                </div>
-            </div>
-
-            
+            <MapAddressSelect mapAddress={mapAddress} onMapAddressSelect={onAddressSelect} />
         </div>
     )
 }
