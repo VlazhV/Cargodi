@@ -76,14 +76,14 @@ export default function MapTwoAddressSelect(props) {
                 onTextChange={onAddressFromTextChange}
                 onSelect={onAddressFromSelect}
                 getName={(option) => option?.properties?.name}
-                placeholder='Адресс загрузки' />
+                placeholder='Адрес загрузки' />
             <div className='m-2'></div>
             <InputDropdown options={searchToResponse}
                 value={selectedAddressTo?.properties?.name}
                 onTextChange={onAddressToTextChange}
                 onSelect={onAddressToSelect}
                 getName={(option) => option?.properties?.name}
-                placeholder='Адресс разгрузки' />
+                placeholder='Адрес разгрузки' />
             <div className='YMap mt-2'>
                 <YMap key="map"
                     ref={(ymap) => setYmap(ymap)}

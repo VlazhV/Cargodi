@@ -195,7 +195,7 @@ export default function AutoparkPage() {
                         </div>
                         <div className="">
                             <div className="col-12 form-group mb-3" data-for="textarea">
-                                <input name="input" placeholder="Длинна вместимости (см)" type="number" data-form-field="input"
+                                <input name="input" placeholder="Длина вместимости (см)" type="number" data-form-field="input"
                                     className="form-control" id="capacityLength" onChange={handleCarChange} ></input>
                             </div>
                             <div className="col-12 form-group mb-3" data-for="textarea">
@@ -302,7 +302,7 @@ export default function AutoparkPage() {
                         </div>
                         <div className="">
                             <div className="col-12 form-group mb-3" data-for="textarea">
-                                <input name="input" placeholder="Длинна вместимости (см)" type="number" data-form-field="input"
+                                <input name="input" placeholder="Длина вместимости (см)" type="number" data-form-field="input"
                                     className="form-control" id="capacityLength" onChange={handleTrailerChange} ></input>
                             </div>
                             <div className="col-12 form-group mb-3" data-for="textarea">

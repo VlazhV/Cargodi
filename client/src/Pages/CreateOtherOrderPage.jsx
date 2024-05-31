@@ -152,7 +152,7 @@ export default function CreateOtherOrderPage() {
                                     -
                                 </div>
                                 <div className="col-12 form-group mb-3" data-for="textarea">
-                                    <input name="input" placeholder="Длинна" type="number" data-form-field="input"
+                                    <input name="input" placeholder="Длина" type="number" data-form-field="input"
                                         className="form-control" id="length" onChange={handleChangePayload}></input>
                                 </div>
                                 <div className="col-12 form-group mb-3" data-for="textarea">

@@ -345,7 +345,7 @@ export default function OrderPage() {
                                     </h4>
 
                                     <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                                        <strong>Длинна (см):</strong> <span>{payloadData.length}</span>
+                                        <strong>Длина (см):</strong> <span>{payloadData.length}</span>
                                     </h1>
                                     <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
                                         <strong>Ширина (см):</strong> <span>{payloadData.width}</span>
@@ -408,7 +408,7 @@ export default function OrderPage() {
                                     -
                                 </div>
                                 <div className="col-12 form-group mb-3" data-for="textarea">
-                                    <input name="input" placeholder="Длинна" type="number" data-form-field="input"
+                                    <input name="input" placeholder="Длина" type="number" data-form-field="input"
                                         className="form-control" id="length" value={payloadData.length} onChange={handleChangePayload}></input>
                                 </div>
                                 <div className="col-12 form-group mb-3" data-for="textarea">

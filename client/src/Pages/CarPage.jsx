@@ -181,7 +181,7 @@ export default function CarPage() {
                     <div className="col-12 col-md-12 col-lg">
                         <div className="text-wrapper align-left">
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                                <strong>Длинна вместимости (см):</strong> <span>{carData.capacityLength}</span>
+                                <strong>Длина вместимости (см):</strong> <span>{carData.capacityLength}</span>
                             </h1>
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
                                 <strong>Ширина вместимости (см):</strong> <span>{carData.capacityWidth}</span>
@@ -246,7 +246,7 @@ export default function CarPage() {
                     <div className="col-12 col-md-12 col-lg">
                         <div className="text-wrapper align-left">
                             <h1 className="mb-4 input-group">
-                                <strong className='input-group-text display-7'>Длинна вместимости (см):</strong>
+                                <strong className='input-group-text display-7'>Длина вместимости (см):</strong>
                                 <input name="input" value={carData.capacityLength} type='text'
                                     className="form-control mx-2" id="capacityLength" onChange={handleCarChange}></input>
                             </h1>
