@@ -5,6 +5,7 @@ import OrderService from '../Services/OrderService'
 import AddressEdit from '../Components/AddressEdit';
 import payloadTypes from '../Data/PayloadTypes.json'
 import ClientEdit from '../Components/ClientEdit';
+import AddressTwoEdit from '../Components/AddressTwoEdit';
 
 export default function CreateOtherOrderPage() {
     const navigate = useNavigate()
@@ -100,10 +101,11 @@ export default function CreateOtherOrderPage() {
                 <ClientEdit id="clientId" onSelectClient={onCustomerChange} />
                 <div className="justify-content-center d-flex flex-row">
                     <div className='border rounded mx-2 p-2'>
-                        <AddressEdit address={newOrderData.loadAddress} name='Адрес загрузки' onAddressChange={handleLoadAddressChange} />
-                    </div>
-                    <div className='border rounded mx-2 p-2'>
-                        <AddressEdit address={newOrderData.deliverAddress} name='Адрес доставки' onAddressChange={handleDeliverAddressChange} />
+                        <AddressTwoEdit addressFrom={newOrderData.loadAddress}
+                            addressTo={newOrderData.deliverAddress}
+                            onAddressFromChange={handleLoadAddressChange}
+                            onAddressToChange={handleLoadAddressChange}
+                            name='Адреса загрузки и выгрузки' />
                     </div>
                 </div>
                 <div>
@@ -125,7 +127,6 @@ export default function CreateOtherOrderPage() {
                                     editNewOrderData.payloads[index] = { ...newOrderData.payloads[index], [e.target.id]: e.target.value }
                                 }
                                 setNewOrderData(editNewOrderData)
-                                console.log(editNewOrderData)
                             }
 
                             const handleChangePayloadType = (e) => {

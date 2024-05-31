@@ -38,7 +38,6 @@ function RegisterPage(props) {
                 dispatch({ type: "LOGIN_SUCCESS", payload: userRes.data })
                 navigate("/")
             } catch (err) {
-                console.log(err)
                 dispatch({ type: "LOGIN_FAILURE", payload: err.response ? err.response.data.ErrorMessage : err })
             }
         }
