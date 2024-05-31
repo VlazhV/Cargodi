@@ -1,25 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import { useFetching } from '../Hooks/useFetching'
-import AutoparkService from '../Services/AutoparkService'
+import CarService from '../Services/CarService'
+import carTypes from '../Data/CarTypes.json'
+import ClientService from '../Services/ClientService'
 
-export default function AutoparkEdit(props) {
+export default function ClientEdit(props) {
     const id = props.id ? props.id : null
-    const onSelectAutopark = props.onSelectAutopark ? props.onSelectAutopark : (newAutoparkData) => { }
+    const onSelectClient = props.onSelectClient ? props.onSelectClient : (newClientData) => { }
 
-    const [autoparksData, setAutoparksData] = useState([])
+    const [clientsData, setClientsData] = useState([])
 
-    const handleSelectAutopark = (e) => {
+    const handleSelectClient = (e) => {
         e.preventDefault()
         let index = e.target.id
-        onSelectAutopark(autoparksData[index])
+        onSelectClient({ ...(clientsData[index]) })
     }
 
     const [fetch, loading, error] = useFetching(async (type) => {
         switch (type) {
             case "get":
                 {
-                    const res = await AutoparkService.GetAll()
-                    setAutoparksData(res.data)
+                    const res = await ClientService.GetAll()
+                    setClientsData(res.data)
                 }
                 break;
         }
@@ -34,25 +36,23 @@ export default function AutoparkEdit(props) {
         <div className="modal fade" id={id} tabIndex="-1">
             <div className="modal-dialog modal-dialog-scrollable">
                 <div className="modal-content">
-                    <div className="modal-header d-flex flex-column">
-                        <div className='w-100 d-flex flex-row align-items-center'>
-                            <h1 className="modal-title fs-5">Автопарки</h1>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-
+                    <div className="modal-header">
+                        <h1 className="modal-title fs-5">Клиенты</h1>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
                     </div>
-                    <div className="modal-body  d-flex flex-column">
+                    <div className="modal-body d-flex flex-column">
                         {
-                            autoparksData.map((autoparkData, index) => {
-                                return <button className='btn btn-outline-primary' data-bs-dismiss="modal" key={autoparkData.id} id={index} onClick={handleSelectAutopark}>
-                                    Автопарк №{autoparkData.id}
+                            clientsData.map((clientData, index) => {
+                                return <button className='btn btn-outline-primary' data-bs-dismiss="modal" key={clientData.id} id={index} onClick={handleSelectClient}>
+                                    Клиент №{clientData.id}
                                     <br />
-                                    Адрес: {autoparkData.address.name}
+                                    Имя: {clientData.name}
+                                    <br />
+                                    {clientData.user.userName}; {clientData.user.email}; {clientData.user.phoneNumber}
                                 </button>
                             })
                         }
-
                     </div>
                     <div className="modal-footer">
                         <div className='w-100 h-100 d-flex flex-row'>
