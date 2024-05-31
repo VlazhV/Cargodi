@@ -15,6 +15,7 @@ using Cargodi.DataAccess.Interfaces.Staff;
 using Microsoft.AspNetCore.Server.IIS.Core;
 using System.Collections.Immutable;
 using Cargodi.DataAccess.Interfaces.Order;
+using System.Linq;
 
 namespace Cargodi.Business.Services.Ship;
 
@@ -103,19 +104,35 @@ public class ShipService : IShipService
 
     public async Task<IEnumerable<GetShipDto>> GetAllAsync(CancellationToken cancellationToken)
     {
-        var ships = await _shipRepository.GetAllShipsFullInfoAsync(cancellationToken);
+        var ships = await _shipRepository.GetAllShipsSuperFullInfoAsync(cancellationToken);
 
         return _mapper.Map<IEnumerable<GetShipDto>>(ships);
     }
 
     public async Task<GetShipDto> GetByIdAsync(int shipId, CancellationToken cancellationToken)
     {
-        var ship = await _shipRepository.GetShipFullInfoByIdAsync(shipId, cancellationToken);
+        var ship = await _shipRepository.GetShipSuperFullInfoByIdAsync(shipId, cancellationToken);
         
         if (ship == null)
             throw new ApiException(Messages.ShipIsNotFound, ApiException.NotFound);
 
-        return _mapper.Map<GetShipDto>(ship);
+        var orderIds = new List<long>();
+        var stopDtos = _mapper.Map<IEnumerable<GetStopDto>>(ship.Stops).ToList();
+
+        stopDtos.ForEach(s =>
+        {
+            if (orderIds.Contains(s.Order.Id))
+                s.Address = s.Order.DeliverAddress;
+            else
+            {
+                s.Address = s.Order.LoadAddress;
+                orderIds.Add(s.Order.Id);
+            }
+        });
+        
+        var shipDto = _mapper.Map<GetShipDto>(ship);
+        shipDto.Stops = stopDtos;
+        return shipDto;
     }
 
     public async Task<GetShipDto> MarkAsync(int shipId, ClaimsPrincipal user, CancellationToken cancellationToken)

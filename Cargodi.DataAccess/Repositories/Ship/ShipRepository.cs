@@ -83,4 +83,63 @@ public class ShipRepository : RepositoryBase<Entities.Ship.Ship, int>, IShipRepo
     {
         return _db.Ships.AddRangeAsync(ships, cancellationToken);
     }
+
+    public async Task<IEnumerable<Entities.Ship.Ship>> GetAllShipsSuperFullInfoAsync(CancellationToken cancellationToken)
+    {
+        return await _db.Ships
+            .AsNoTracking()
+            .Include(ship => ship.Stops)
+                .ThenInclude(stop => stop.Order)
+                    .ThenInclude(order => order.Payloads)
+            .Include(ship => ship.Stops)
+                .ThenInclude(stop => stop.Order)
+                    .ThenInclude(o => o.LoadAddress)
+            .Include(ship => ship.Stops)
+                .ThenInclude(stop => stop.Order)
+                    .ThenInclude(o => o.DeliverAddress)            
+            .Include(ship => ship.Drivers)
+            .Include(ship => ship.Car)
+                .ThenInclude(car => car.CarType)
+            .Include(ship => ship.Trailer)
+                .ThenInclude(trailer => trailer!.TrailerType)
+            .Include(ship => ship.AutoparkStart)
+                .ThenInclude(a => a.Address)
+            .Include(ship => ship.AutoparkFinish)
+                .ThenInclude(a => a.Address)
+            .Include(s => s.Operator)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<Entities.Ship.Ship?> GetShipSuperFullInfoByIdAsync(int id, CancellationToken cancellationToken)
+    {
+         return await _db.Ships
+            .AsNoTracking()
+            .Include(ship => ship.Stops)
+                .ThenInclude(stop => stop.Order)
+                    .ThenInclude(order => order.Payloads)
+            .Include(ship => ship.Stops)
+                .ThenInclude(stop => stop.Order)
+                    .ThenInclude(o => o.LoadAddress)
+            .Include(ship => ship.Stops)
+                .ThenInclude(stop => stop.Order)
+                    .ThenInclude(o => o.DeliverAddress)  
+            .Include(ship => ship.Stops)
+                .ThenInclude(stop => stop.Order)
+                    .ThenInclude(o => o.OrderStatus)   
+            .Include(ship => ship.Stops)
+                .ThenInclude(stop => stop.Order)
+                    .ThenInclude(o => o.Client)         
+            .Include(ship => ship.Drivers)
+            .Include(ship => ship.Car)
+                .ThenInclude(car => car.CarType)
+            .Include(ship => ship.Trailer)
+                .ThenInclude(trailer => trailer!.TrailerType)
+            .Include(ship => ship.AutoparkStart)
+                .ThenInclude(a => a.Address)
+            .Include(ship => ship.AutoparkFinish)
+                .ThenInclude(a => a.Address)
+            .Include(s => s.Operator)
+            .Where(s => s.Id == id)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
 }
