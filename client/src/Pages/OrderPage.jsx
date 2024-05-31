@@ -7,6 +7,7 @@ import orderStatuses from '../Data/OrderStatuses.json'
 import AddressEdit from '../Components/AddressEdit'
 import payloadTypes from '../Data/PayloadTypes.json'
 import { AuthContext } from '../Contexts/AuthContext'
+import AddressTwoEdit from '../Components/AddressTwoEdit'
 
 export default function OrderPage() {
     const { user } = useContext(AuthContext)
@@ -262,10 +263,11 @@ export default function OrderPage() {
                     </h1>
                     <div className='d-flex flex-row w-100 m-4'>
                         <div className='mx-4'>
-                            <AddressEdit address={orderData.loadAddress} onAddressChange={handleLoadAddressChange} name='Адрес загрузки' />
-                        </div>
-                        <div className='mx-4'>
-                            <AddressEdit address={orderData.deliverAddress} onAddressChange={handleDeliverAddressChange} name='Адрес доставки' />
+                            <AddressTwoEdit addressFrom={orderData.loadAddress}
+                                addressTo={orderData.deliverAddress}
+                                onAddressFromChange={handleLoadAddressChange}
+                                onAddressToChange={handleLoadAddressChange}
+                                name='Адреса загрузки и выгрузки' />
                         </div>
                     </div>
                     <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">

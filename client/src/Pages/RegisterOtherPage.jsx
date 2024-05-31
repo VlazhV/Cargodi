@@ -79,7 +79,6 @@ function RegisterOtherPage(props) {
         switch (type) {
             case 'register':
                 {
-                    console.log(credentials)
                     const res = await AuthService.Register(credentials)
                     navigate("/")
                 }

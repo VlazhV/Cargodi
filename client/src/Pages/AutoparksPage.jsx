@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useFetching } from '../Hooks/useFetching'
 import { Link } from 'react-router-dom'
 import AutoparkService from '../Services/AutoparkService'
-import Map from '../Components/Map'
+import Map from '../Components/MapAddressSelect'
 import AddressEdit from '../Components/AddressEdit'
+import EditYandexMap from '../Components/MapAddressSelect'
 
 export default function AutoparksPage() {
 
@@ -11,7 +12,7 @@ export default function AutoparksPage() {
 
     const [newParkData, setNewParkData] = useState({
         address: {
-            name: null,
+            name: '',
             longitude: null,
             latitude: null,
             isWest: false,

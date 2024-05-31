@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import OrderService from '../Services/OrderService'
 import AddressEdit from '../Components/AddressEdit';
 import payloadTypes from '../Data/PayloadTypes.json'
+import AddressTwoEdit from '../Components/AddressTwoEdit';
 
 export default function CreateOrderPage() {
     const navigate = useNavigate()
@@ -86,10 +87,11 @@ export default function CreateOrderPage() {
                 </div>
                 <div className="justify-content-center d-flex flex-row">
                     <div className='border rounded mx-2 p-2'>
-                        <AddressEdit address={newOrderData.loadAddress} name='Адрес загрузки' onAddressChange={handleLoadAddressChange} />
-                    </div>
-                    <div className='border rounded mx-2 p-2'>
-                        <AddressEdit address={newOrderData.deliverAddress} name='Адрес доставки' onAddressChange={handleDeliverAddressChange} />
+                        <AddressTwoEdit addressFrom={newOrderData.loadAddress}
+                            addressTo={newOrderData.deliverAddress}
+                            onAddressFromChange={handleLoadAddressChange}
+                            onAddressToChange={handleLoadAddressChange}
+                            name='Адреса загрузки и выгрузки' />
                     </div>
                 </div>
                 <div>
@@ -111,7 +113,6 @@ export default function CreateOrderPage() {
                                     editNewOrderData.payloads[index] = { ...newOrderData.payloads[index], [e.target.id]: e.target.value }
                                 }
                                 setNewOrderData(editNewOrderData)
-                                console.log(editNewOrderData)
                             }
 
                             const handleChangePayloadType = (e) => {

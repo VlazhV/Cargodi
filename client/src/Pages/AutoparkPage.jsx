@@ -228,7 +228,7 @@ export default function AutoparkPage() {
 
                                 {
                                     autoparkData.actualCars.map(carData =>
-                                        <div className="item features-without-image col-14 col-md-6 col-lg-4 item-mb active border rounded rounded-4" key={autoparkData.id}>
+                                        <div className="item features-without-image col-14 col-md-6 col-lg-4 item-mb active border rounded rounded-4" key={carData.id}>
                                             <div className="item-wrapper">
                                                 <div className="item-head">
                                                     <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
@@ -260,7 +260,7 @@ export default function AutoparkPage() {
 
                                 {
                                     autoparkData.cars.map(carData =>
-                                        <div className="item features-without-image col-14 col-md-6 col-lg-4 item-mb active border rounded rounded-4" key={autoparkData.id}>
+                                        <div className="item features-without-image col-14 col-md-6 col-lg-4 item-mb active border rounded rounded-4" key={carData.id}>
                                             <div className="item-wrapper">
                                                 <div className="item-head">
                                                     <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
@@ -335,7 +335,7 @@ export default function AutoparkPage() {
 
                                 {
                                     autoparkData.actualTrailers.map(trailerData =>
-                                        <div className="item features-without-image col-14 col-md-6 col-lg-4 item-mb active border rounded rounded-4" key={autoparkData.id}>
+                                        <div className="item features-without-image col-14 col-md-6 col-lg-4 item-mb active border rounded rounded-4" key={trailerData.id}>
                                             <div className="item-wrapper">
                                                 <div className="item-head">
                                                     <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
@@ -363,7 +363,7 @@ export default function AutoparkPage() {
 
                                 {
                                     autoparkData.trailers.map(trailerData =>
-                                        <div className="item features-without-image col-14 col-md-6 col-lg-4 item-mb active border rounded rounded-4" key={autoparkData.id}>
+                                        <div key={trailerData.id} className="item features-without-image col-14 col-md-6 col-lg-4 item-mb active border rounded rounded-4">
                                             <div className="item-wrapper">
                                                 <div className="item-head">
                                                     <h6 className="item-subtitle mbr-fonts-style mt-0 mb-0 display-7">
@@ -389,7 +389,7 @@ export default function AutoparkPage() {
                 return <div className="row w-100">
                     {
                         autoparkData.drivers.map(driverData =>
-                            <div className="item features-without-image col-4 item-mb active border rounded">
+                            <div key={driverData.id} className="item features-without-image col-4 item-mb active border rounded">
                                 <div className="item-wrapper">
                                     <div className="item-head">
                                         <h6 className="item-title mbr-fonts-style mb-0 display-7">
