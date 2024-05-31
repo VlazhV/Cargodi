@@ -38,14 +38,22 @@ public class TrailerRepository : RepositoryBase<Trailer, int>, ITrailerRepositor
 
     public async Task<IEnumerable<Trailer>> GetSuitableTrailersOrderedAsync(int weight, int volume, int biggestLinearSize, int autoparkStartId, CancellationToken cancellationToken)
     {
-        return await _db.Ships
+        var trailers = await _db.Trailers
             .AsNoTracking()
-            .Include(ship => ship.Trailer)
-            .Where(ship => ship.Start != null && ship.Finish == null)
-            .Select(ship => ship.Trailer)
-                .Where(car => car.Carrying > weight && car.Capacity() > volume && car.CanInclude(biggestLinearSize) && car.ActualAutoparkId == autoparkStartId)
-                .OrderBy(trailer => trailer.Capacity()).ThenBy(trailer => trailer.Carrying)
+            .Include(trailer => trailer.Ships)
+            .Where(trailer => 
+                trailer.Carrying > weight 
+                && trailer.CapacityHeight * trailer.CapacityLength * trailer.CapacityWidth > volume 
+                && 
+                    trailer.CapacityHeight > biggestLinearSize 
+                    || trailer.CapacityLength > biggestLinearSize 
+                    || trailer.CapacityWidth > biggestLinearSize 
+                && 
+                trailer.ActualAutoparkId == autoparkStartId)
+            .OrderBy(trailer => trailer.CapacityHeight * trailer.CapacityLength * trailer.CapacityWidth).ThenBy(trailer => trailer.Carrying)
             .ToListAsync(cancellationToken);
+
+        return trailers.Where(t => !t.Ships.Any() || t.Ships!.Last().Finish != null);
     }
 
     public Task<Trailer?> GetByLicenseNumberAsync(string licenseNumber, CancellationToken cancellationToken)

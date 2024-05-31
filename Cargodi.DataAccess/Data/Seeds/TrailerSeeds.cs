@@ -18,10 +18,10 @@ public class TrailerSeeds : IEntityTypeConfiguration<Trailer>
             {
                 Id = i,
                 LicenseNumber = Generator.GenerateLicenseNumber(),
-                Carrying = Generator.GenerateRandomNumber(500_000, 7_500_000),
-                CapacityLength = Generator.GenerateRandomNumber(1000, 7000),
-                CapacityWidth = Generator.GenerateRandomNumber(1000, 3000),
-                CapacityHeight = Generator.GenerateRandomNumber(1000, 3000),
+                Carrying = Generator.GenerateRandomNumber(500, 7_500),
+                CapacityLength = Generator.GenerateRandomNumber(100, 700),
+                CapacityWidth = Generator.GenerateRandomNumber(100, 300),
+                CapacityHeight = Generator.GenerateRandomNumber(100, 300),
                 AutoparkId = autoparkId,
                 ActualAutoparkId = autoparkId,
                 TrailerTypeId = Generator.GenerateRandomNumber(1, 3)

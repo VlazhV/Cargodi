@@ -50,12 +50,12 @@ public class ShipsController: ControllerBase
     }
     
     [HttpPost]
-    public async Task<ActionResult<IEnumerable<GetShipDto>>> CreateAsync(CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<GetShipDto>>> CreateAsync([FromQuery] int driverCount, CancellationToken cancellationToken)
     {
         if (!User.IsInRole(Roles.Admin) && !User.IsInRole(Roles.Manager))
             return NotFound();
 
-        return Ok(await _shipService.GenerateAsync(User, cancellationToken));
+        return Ok(await _shipService.GenerateAsync(User, driverCount, cancellationToken));
     }
     
     [HttpDelete("{id}")]

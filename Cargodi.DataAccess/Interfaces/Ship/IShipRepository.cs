@@ -12,4 +12,6 @@ public interface IShipRepository: IRepository<Entities.Ship.Ship, int>
     Task RemoveAllStopsOfShipAsync(int shipId, CancellationToken cancellationToken);
 
     Task<IEnumerable<Entities.Ship.Ship>> GetShipsFullInfoOfDriverAsync(long userId, CancellationToken cancellationToken);
+
+    Task CreateManyAsync(List<Entities.Ship.Ship> ships, CancellationToken cancellationToken);
 }

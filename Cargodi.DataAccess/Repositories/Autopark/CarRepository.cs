@@ -86,14 +86,22 @@ public class CarRepository : RepositoryBase<Car, int>, ICarRepository
 
     public async Task<IEnumerable<Car>> GetSuitableCarsOrderedAsync(int weight, int volume, int biggestLinearSize, int autoparkStartId, CancellationToken cancellationToken)
     {
-        return await _db.Ships
+        var cars = await _db.Cars
             .AsNoTracking()
-            .Include(ship => ship.Car)
-            .Where(ship => ship.Start != null && ship.Finish == null)
-            .Select(ship => ship.Car)
-                .Where(car => car.Carrying > weight && car.Capacity() > volume && car.CanInclude(biggestLinearSize) && car.ActualAutoparkId == autoparkStartId)
-                .OrderBy(car => car.Capacity()).ThenBy(car => car.Carrying)
+            .Include(car => car.Ships)
+            .Where(car => 
+                car.Carrying > weight 
+                && car.CapacityHeight * car.CapacityLength * car.CapacityWidth > volume 
+                && 
+                    car.CapacityHeight > biggestLinearSize 
+                    || car.CapacityLength > biggestLinearSize 
+                    || car.CapacityWidth > biggestLinearSize 
+                && 
+                car.ActualAutoparkId == autoparkStartId)
+            .OrderBy(car => car.CapacityHeight * car.CapacityLength * car.CapacityWidth).ThenBy(car => car.Carrying)
             .ToListAsync(cancellationToken);
+
+        return cars.Where(car => !car.Ships.Any() || car.Ships.Last().Finish != null);
     }
 
     public Task<Car?> GetByLicenseNumberAsync(string licenseNumber, CancellationToken cancellationToken)

@@ -27,7 +27,7 @@ public class DriverSeeds : IEntityTypeConfiguration<Driver>
                 UserId = 5,
                 ActualAutoparkId = 1,
                 AutoparkId = 1,
-                DriverStatusId = DriverStatuses.Works.Id
+                DriverStatusId = DriverStatuses.Works.Id,
             },
             new Driver
             {
@@ -45,7 +45,7 @@ public class DriverSeeds : IEntityTypeConfiguration<Driver>
                 UserId = 6,
                 ActualAutoparkId = 2,
                 AutoparkId = 2,
-                DriverStatusId = DriverStatuses.Vacations.Id
+                DriverStatusId = DriverStatuses.Vacations.Id,
             },
         };
 

@@ -78,4 +78,9 @@ public class ShipRepository : RepositoryBase<Entities.Ship.Ship, int>, IShipRepo
             .Where(ship => ship.Drivers.Select(d => d.UserId).Contains(userId))
             .ToListAsync(cancellationToken);
     }
+
+    public Task CreateManyAsync(List<Entities.Ship.Ship> ships, CancellationToken cancellationToken)
+    {
+        return _db.Ships.AddRangeAsync(ships, cancellationToken);
+    }
 }

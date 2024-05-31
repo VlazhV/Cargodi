@@ -25,7 +25,7 @@ public class Driver
 	public DateTime? FireDate { get; set; }
 	
 	public ICollection<Ship.Ship>? Ships { get; set; }
-	public ICollection<Category> Categories { get; set; } = null!;
+	public ICollection<DriverCategory> DriverCategories { get; set; } = null!;
 	
 	
 }

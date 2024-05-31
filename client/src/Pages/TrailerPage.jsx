@@ -117,20 +117,20 @@ export default function TrailerPage() {
                             </h1>
 
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                                <strong>Грузоподъёмность (г):</strong> <span>{trailerData.carrying}</span>
+                                <strong>Грузоподъёмность (кг):</strong> <span>{trailerData.carrying}</span>
                             </h1>
                         </div>
                     </div>
                     <div className="col-12 col-md-12 col-lg">
                         <div className="text-wrapper align-left">
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                                <strong>Длинна вместимости (мм):</strong> <span>{trailerData.capacityLength}</span>
+                                <strong>Длинна вместимости (см):</strong> <span>{trailerData.capacityLength}</span>
                             </h1>
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                                <strong>Ширина вместимости (мм):</strong> <span>{trailerData.capacityWidth}</span>
+                                <strong>Ширина вместимости (см):</strong> <span>{trailerData.capacityWidth}</span>
                             </h1>
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                                <strong>Высота вместимости (мм):</strong> <span>{trailerData.capacityHeight}</span>
+                                <strong>Высота вместимости (см):</strong> <span>{trailerData.capacityHeight}</span>
                             </h1>
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
                                 <strong>Тип:</strong> <span>{trailerData.trailerTypeName}</span>
@@ -156,7 +156,7 @@ export default function TrailerPage() {
                             </h1>
 
                             <h1 className="mb-4 input-group">
-                                <strong className='input-group-text display-7'>Грузоподъёмность (г):</strong>
+                                <strong className='input-group-text display-7'>Грузоподъёмность (кг):</strong>
                                 <input name="input" value={trailerData.carrying} type='text'
                                     className="form-control mx-2" id="carrying" onChange={handleCarChange}></input>
                             </h1>
@@ -165,17 +165,17 @@ export default function TrailerPage() {
                     <div className="col-12 col-md-12 col-lg">
                         <div className="text-wrapper align-left">
                             <h1 className="mb-4 input-group">
-                                <strong className='input-group-text display-7'>Длинна вместимости (мм):</strong>
+                                <strong className='input-group-text display-7'>Длинна вместимости (см):</strong>
                                 <input name="input" value={trailerData.capacityLength} type='text'
                                     className="form-control mx-2" id="capacityLength" onChange={handleCarChange}></input>
                             </h1>
                             <h1 className="mb-4 input-group">
-                                <strong className='input-group-text display-7'>Ширина вместимости (мм):</strong>
+                                <strong className='input-group-text display-7'>Ширина вместимости (см):</strong>
                                 <input name="input" value={trailerData.capacityWidth} type='text'
                                     className="form-control mx-2" id="capacityWidth" onChange={handleCarChange}></input>
                             </h1>
                             <h1 className="mb-4 input-group">
-                                <strong className='input-group-text display-7'>Высота вместимости (мм):</strong>
+                                <strong className='input-group-text display-7'>Высота вместимости (см):</strong>
                                 <input name="input" value={trailerData.capacityHeight} type='text'
                                     className="form-control mx-2" id="capacityHeight" onChange={handleCarChange}></input>
                             </h1>

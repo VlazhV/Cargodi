@@ -8,6 +8,6 @@ public class Category
 {
 	[Key]
 	public string Name { get; set; } = null!;
-	public ICollection<Driver>? Drivers { get; set; }
+	public ICollection<DriverCategory> DriverCategories { get; set; }
 	public List<CarTypeCategory> CarTypeCategories { get; set; } = null!;
 }

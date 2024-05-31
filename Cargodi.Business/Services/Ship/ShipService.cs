@@ -7,11 +7,14 @@ using Cargodi.Business.Exceptions;
 using Cargodi.Business.Interfaces.Ship;
 using Cargodi.DataAccess.Constants;
 using Cargodi.DataAccess.Entities.Autopark;
-using Cargodi.DataAccess.Entities.Ship;
+using ShipSpace = Cargodi.DataAccess.Entities.Ship;
+using Cargodi.DataAccess.Entities.Staff;
 using Cargodi.DataAccess.Interfaces.Autopark;
 using Cargodi.DataAccess.Interfaces.Ship;
 using Cargodi.DataAccess.Interfaces.Staff;
 using Microsoft.AspNetCore.Server.IIS.Core;
+using System.Collections.Immutable;
+using Cargodi.DataAccess.Interfaces.Order;
 
 namespace Cargodi.Business.Services.Ship;
 
@@ -22,25 +25,80 @@ public class ShipService : IShipService
     private readonly IShipRepository _shipRepository;
     private readonly IDriverRepository _driverRepository;
     private readonly IShipGeneratingService _shipGeneratingService;
+    private readonly IOperatorRepository _operatorRepository;
+    private readonly IOrderRepository _orderRepository;
     private readonly IMapper _mapper;
     
     
     public ShipService(ICarRepository carRepository, ITrailerRepository trailerRepository, 
         IShipRepository shipRepository, IDriverRepository driverRepository, 
-        IShipGeneratingService shipGeneratingService, IMapper mapper)
+        IShipGeneratingService shipGeneratingService, IOperatorRepository operatorRepository,
+        IOrderRepository orderRepository,
+        IMapper mapper)
     {
         _carRepository = carRepository;
         _trailerRepository = trailerRepository;
         _shipRepository = shipRepository;
         _driverRepository = driverRepository;
         _shipGeneratingService = shipGeneratingService;
+        _operatorRepository = operatorRepository;
+        _orderRepository = orderRepository;
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<GetShipDto>> GenerateAsync(ClaimsPrincipal user, CancellationToken cancellationToken)
+    public async Task<IEnumerable<GetShipDto>> GenerateAsync(ClaimsPrincipal user, int driversCount, CancellationToken cancellationToken)
     {
-        await _shipGeneratingService.BuildRoutesAsync(user, cancellationToken);
-        throw new NotImplementedException();
+        var userId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+        var @operator = await _operatorRepository.GetOperatorByUserIdAsync(userId, cancellationToken)
+            ?? throw new ApiException(Messages.UserIsNotFound, ApiException.Forbidden);
+            
+        var ships = await _shipGeneratingService.BuildRoutesAsync(cancellationToken);
+        var shipsToCreate = new List<ShipSpace.Ship>();
+        
+        foreach (var ship in ships)
+        {
+            Car car;
+            Trailer? trailer = null;
+            IEnumerable<Driver> drivers; 
+            
+            var carriers = await _shipGeneratingService.SelectVehicleAsync(ship, cancellationToken);
+            if (!carriers.Any())
+                throw new ApiException("there is no suitable cars", ApiException.BadRequest);
+            
+            if (carriers.First().GetType() == typeof(Car))
+            {
+                car = (Car)carriers.First();
+            }
+            else 
+            {
+                trailer = (Trailer)carriers.First();
+                car = (await _carRepository.GetCarsOfTypeAsync(CarTypes.Truck, cancellationToken)).First();
+            }
+
+            drivers = (await _shipGeneratingService.SelectDriversAsync(car, cancellationToken)).Take(driversCount);
+
+            if (!drivers.Any())
+                throw new ApiException("there is no suitable drivers", ApiException.BadRequest);
+
+
+            ship.OperatorId = @operator.Id;
+            ship.Drivers = drivers.ToImmutableList();
+            ship.CarId = car.Id;
+            ship.TrailerId = trailer?.Id;
+            ship.Start = null;
+            ship.Finish = null;
+
+            shipsToCreate.Add(ship);
+        }
+
+        await _shipRepository.CreateManyAsync(shipsToCreate, cancellationToken);
+        _orderRepository.UpdateAcceptedOrdersToCompleting();
+        await _shipRepository.SaveChangesAsync(cancellationToken);
+
+        var shipsReturn = await _shipRepository.GetAllShipsFullInfoAsync(cancellationToken);
+
+        return _mapper.Map<IEnumerable<GetShipDto>>(shipsReturn);
     }
 
     public async Task<IEnumerable<GetShipDto>> GetAllAsync(CancellationToken cancellationToken)
@@ -96,6 +154,10 @@ public class ShipService : IShipService
 
         var shipRes = _shipRepository.Update(ship);
 
+        var orders = await _orderRepository.GetAllOfShipAsync(ship, cancellationToken);
+        orders.ForEach(o => o.OrderStatusId = OrderStatuses.Completed.Id);
+        _orderRepository.UpdateRange(orders);
+        
         var car = await _carRepository.GetByIdAsync(ship.CarId, cancellationToken);
         car!.ActualAutoparkId = ship.AutoparkFinishId;
         _carRepository.Update(car);

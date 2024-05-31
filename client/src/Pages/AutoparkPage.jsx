@@ -176,7 +176,7 @@ export default function AutoparkPage() {
                                     className="form-control" id="range" onChange={handleCarChange} ></input>
                             </div>
                             <div className="col-12 form-group mb-3" data-for="textarea">
-                                <input name="input" placeholder="Грузоподъёмность (г)" type="number" data-form-field="input"
+                                <input name="input" placeholder="Грузоподъёмность (кг)" type="number" data-form-field="input"
                                     className="form-control" id="carrying" onChange={handleCarChange} ></input>
                             </div>
                             <div className="col-12 form-group mb-3" data-for="textarea">
@@ -186,15 +186,15 @@ export default function AutoparkPage() {
                         </div>
                         <div className="">
                             <div className="col-12 form-group mb-3" data-for="textarea">
-                                <input name="input" placeholder="Длинна вместимости (мм)" type="number" data-form-field="input"
+                                <input name="input" placeholder="Длинна вместимости (см)" type="number" data-form-field="input"
                                     className="form-control" id="capacityLength" onChange={handleCarChange} ></input>
                             </div>
                             <div className="col-12 form-group mb-3" data-for="textarea">
-                                <input name="input" placeholder="Ширина вместимости (мм)" type="number" data-form-field="input"
+                                <input name="input" placeholder="Ширина вместимости (см)" type="number" data-form-field="input"
                                     className="form-control" id="capacityWidth" onChange={handleCarChange} ></input>
                             </div>
                             <div className="col-12 form-group mb-3" data-for="textarea">
-                                <input name="input" placeholder="Высота вместимости (мм)" type="number" data-form-field="input"
+                                <input name="input" placeholder="Высота вместимости (см)" type="number" data-form-field="input"
                                     className="form-control" id="capacityHeight" onChange={handleCarChange} ></input>
                             </div>
                             <div className="col-12 form-group mb-3" data-for="input">
@@ -287,21 +287,21 @@ export default function AutoparkPage() {
                                     className="form-control" id="licenseNumber" onChange={handleTrailerChange} ></input>
                             </div>
                             <div className="col-12 form-group mb-3" data-for="textarea">
-                                <input name="input" placeholder="Грузоподъёмность (г)" type="number" data-form-field="input"
+                                <input name="input" placeholder="Грузоподъёмность (кг)" type="number" data-form-field="input"
                                     className="form-control" id="carrying" onChange={handleTrailerChange} ></input>
                             </div>
                         </div>
                         <div className="">
                             <div className="col-12 form-group mb-3" data-for="textarea">
-                                <input name="input" placeholder="Длинна вместимости (мм)" type="number" data-form-field="input"
+                                <input name="input" placeholder="Длинна вместимости (см)" type="number" data-form-field="input"
                                     className="form-control" id="capacityLength" onChange={handleTrailerChange} ></input>
                             </div>
                             <div className="col-12 form-group mb-3" data-for="textarea">
-                                <input name="input" placeholder="Ширина вместимости (мм)" type="number" data-form-field="input"
+                                <input name="input" placeholder="Ширина вместимости (см)" type="number" data-form-field="input"
                                     className="form-control" id="capacityWidth" onChange={handleTrailerChange} ></input>
                             </div>
                             <div className="col-12 form-group mb-3" data-for="textarea">
-                                <input name="input" placeholder="Высота вместимости (мм)" type="number" data-form-field="input"
+                                <input name="input" placeholder="Высота вместимости (см)" type="number" data-form-field="input"
                                     className="form-control" id="capacityHeight" onChange={handleTrailerChange} ></input>
                             </div>
                             <div className="col-12 form-group mb-3" data-for="input">
