@@ -90,7 +90,7 @@ export default function CreateOrderPage() {
                         <AddressTwoEdit addressFrom={newOrderData.loadAddress}
                             addressTo={newOrderData.deliverAddress}
                             onAddressFromChange={handleLoadAddressChange}
-                            onAddressToChange={handleLoadAddressChange}
+                            onAddressToChange={handleDeliverAddressChange}
                             name='Адреса загрузки и выгрузки' />
                     </div>
                 </div>
