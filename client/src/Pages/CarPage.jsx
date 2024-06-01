@@ -170,7 +170,7 @@ export default function CarPage() {
                             </h1>
 
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                                <strong>Грузоподъёмность (г):</strong> <span>{carData.carrying}</span>
+                                <strong>Грузоподъёмность (кг):</strong> <span>{carData.carrying}</span>
                             </h1>
 
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
@@ -181,13 +181,13 @@ export default function CarPage() {
                     <div className="col-12 col-md-12 col-lg">
                         <div className="text-wrapper align-left">
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                                <strong>Длинна вместимости (мм):</strong> <span>{carData.capacityLength}</span>
+                                <strong>Длина вместимости (см):</strong> <span>{carData.capacityLength}</span>
                             </h1>
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                                <strong>Ширина вместимости (мм):</strong> <span>{carData.capacityWidth}</span>
+                                <strong>Ширина вместимости (см):</strong> <span>{carData.capacityWidth}</span>
                             </h1>
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                                <strong>Высота вместимости (мм):</strong> <span>{carData.capacityHeight}</span>
+                                <strong>Высота вместимости (см):</strong> <span>{carData.capacityHeight}</span>
                             </h1>
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
                                 <strong>Тип:</strong> <span>{carData.carTypeName}</span>
@@ -231,7 +231,7 @@ export default function CarPage() {
                             </h1>
 
                             <h1 className="mb-4 input-group">
-                                <strong className='input-group-text display-7'>Грузоподъёмность (г):</strong>
+                                <strong className='input-group-text display-7'>Грузоподъёмность (кг):</strong>
                                 <input name="input" value={carData.carrying} type='text'
                                     className="form-control mx-2" id="carrying" onChange={handleCarChange}></input>
                             </h1>
@@ -246,17 +246,17 @@ export default function CarPage() {
                     <div className="col-12 col-md-12 col-lg">
                         <div className="text-wrapper align-left">
                             <h1 className="mb-4 input-group">
-                                <strong className='input-group-text display-7'>Длинна вместимости (мм):</strong>
+                                <strong className='input-group-text display-7'>Длина вместимости (см):</strong>
                                 <input name="input" value={carData.capacityLength} type='text'
                                     className="form-control mx-2" id="capacityLength" onChange={handleCarChange}></input>
                             </h1>
                             <h1 className="mb-4 input-group">
-                                <strong className='input-group-text display-7'>Ширина вместимости (мм):</strong>
+                                <strong className='input-group-text display-7'>Ширина вместимости (см):</strong>
                                 <input name="input" value={carData.capacityWidth} type='text'
                                     className="form-control mx-2" id="capacityWidth" onChange={handleCarChange}></input>
                             </h1>
                             <h1 className="mb-4 input-group">
-                                <strong className='input-group-text display-7'>Высота вместимости (мм):</strong>
+                                <strong className='input-group-text display-7'>Высота вместимости (см):</strong>
                                 <input name="input" value={carData.capacityHeight} type='text'
                                     className="form-control mx-2" id="capacityHeight" onChange={handleCarChange}></input>
                             </h1>

@@ -379,8 +379,8 @@ export default function ShipPage() {
     }
 
     useEffect(() => {
-        //fetch("get")
-        setShipData(testShipData1)
+        fetch("get")
+        //setShipData(testShipData1)
     }, [shipId])
 
     const [showList, setShowList] = useState('showDrivers')
@@ -459,13 +459,10 @@ export default function ShipPage() {
                                 <div className="item-wrapper">
                                     <div className="item-head">
                                         <h6 className="item-title mbr-fonts-style mb-0 display-7">
-                                            <strong>Остановка №{stopData.id}</strong>
-                                        </h6>
-                                        <h6 className="item-title mbr-fonts-style mb-1 display-7">
-                                            <strong>Порядок: {stopData.number}</strong>
+                                            <strong>Остановка №{stopData.number}</strong>
                                         </h6>
                                         <h5 className="item-subtitle mbr-fonts-style mt-0 mb-1 ">
-                                            Адресс: {stopData.address.name}
+                                            Адрес: {stopData.address.name}
                                         </h5>
                                         <div className="item-wrapper border p-4 my-4">
                                             <div className="item-head">
@@ -524,13 +521,10 @@ export default function ShipPage() {
                                             </div>
 
                                             <h6 className="item-title mbr-fonts-style mb-0 display-7">
-                                                <strong>Остановка №{stopData.id ? stopData.id : '?'}</strong>
-                                            </h6>
-                                            <h6 className="item-title mbr-fonts-style mb-1 display-7">
-                                                <strong>Порядок: {stopData.number}</strong>
+                                                <strong>Остановка №{stopData.number ? stopData.number : '?'}</strong>
                                             </h6>
                                             <h5 className="item-subtitle mbr-fonts-style mt-0 mb-1 ">
-                                                Адресс: {stopData.address ? stopData.address.name : '?'}
+                                                Адрес: {stopData.address ? stopData.address.name : '?'}
                                             </h5>
                                             <div className="item-wrapper border p-4 my-4">
                                                 <div className="item-head">

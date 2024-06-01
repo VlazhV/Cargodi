@@ -1,3 +1,4 @@
+using Cargodi.DataAccess.Constants;
 using Cargodi.DataAccess.Data;
 using Cargodi.DataAccess.Interfaces;
 using Cargodi.DataAccess.Interfaces.Order;
@@ -38,7 +39,7 @@ public class OrderRepository : RepositoryBase<Entities.Order.Order, long>, IOrde
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Entities.Order.Order>> GetOrdersWithPayloadsAsync(CancellationToken cancellationToken)
+    public async Task<IEnumerable<Entities.Order.Order>> GetAcceptedOrdersWithPayloadsAsync(CancellationToken cancellationToken)
     {
         return await _db.Orders
             .AsNoTracking()
@@ -49,6 +50,7 @@ public class OrderRepository : RepositoryBase<Entities.Order.Order, long>, IOrde
             .Include(o => o.Client)
             .Include(o => o.Operator)
             .Include(o => o.OrderStatus)
+            .Where(o => o.OrderStatusId == OrderStatuses.Accepted.Id)
             .ToListAsync(cancellationToken);
     }
 
@@ -93,5 +95,35 @@ public class OrderRepository : RepositoryBase<Entities.Order.Order, long>, IOrde
             .Include(o => o.OrderStatus)
             .Where(o => o.Id == id)
             .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<List<Entities.Order.Order>> GetAllOfShipAsync(Entities.Ship.Ship ship, CancellationToken cancellationToken)
+    {
+        return _db.Orders
+            .Include(o => o.Payloads)
+                .ThenInclude(p => p.PayloadType)
+            .Where(o => ship.Stops.Select(stop => stop.OrderId).Contains(o.Id))
+            .ToListAsync(cancellationToken);
+    }
+
+    public void UpdateAcceptedOrdersToCompleting()
+    {
+        var orders = _db.Orders
+            .Include(o => o.OrderStatus)
+            .Where(o => o.OrderStatusId == OrderStatuses.Accepted.Id);
+
+        var ordersToUpdate = new List<Entities.Order.Order>();
+        
+        foreach(var o in orders)
+        {
+            o.OrderStatusId = OrderStatuses.Completing.Id;
+            ordersToUpdate.Add(o);
+        }
+        _db.Orders.UpdateRange(ordersToUpdate);
+    }
+
+    public void UpdateRange(IEnumerable<Entities.Order.Order> orders)
+    {
+        _db.Orders.UpdateRange(orders);
     }
 }

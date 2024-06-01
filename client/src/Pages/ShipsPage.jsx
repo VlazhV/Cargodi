@@ -164,8 +164,8 @@ export default function ShipsPage() {
     }
 
     useEffect(() => {
-        //fetch("get")
-        setShipsData([testShipData1])
+        fetch("get")
+        //setShipsData([testShipData1])
     }, [])
 
     return (

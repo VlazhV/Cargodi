@@ -29,10 +29,18 @@ public class DriverRepository : RepositoryBase<Driver, int>, IDriverRepository
 
     public async Task<IEnumerable<Driver>> GetSuitableDriversAsync(IEnumerable<Category> categories, CancellationToken cancellationToken)
     {
-        return await _db.Drivers
-            .Include(d => d.Categories)
-            .Where(d => d.Categories.Intersect(categories).Any())
+        var drivers = await _db.Drivers
+            .Include(d => d.DriverCategories)
+                .ThenInclude(dc => dc.Category)
             .ToListAsync(cancellationToken);
+
+        return drivers
+            .Where(d => 
+                d.DriverCategories
+                .Select(dc => dc.Category.Name)
+                .Intersect(categories.Select(c => c.Name))
+                .Any())
+            .ToList();
     }
     
     public async Task<IEnumerable<Driver>> GetDriversByIdsAsync(IEnumerable<int> ids, CancellationToken cancellationToken)
