@@ -47,7 +47,7 @@ public class ShipService : IShipService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<GetShipDto>> GenerateAsync(ClaimsPrincipal user, int driversCount, CancellationToken cancellationToken)
+    public async Task<IEnumerable<GetShipDto>> GenerateAsync(ClaimsPrincipal user, CancellationToken cancellationToken, int driversCount = 1)
     {
         var userId = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 

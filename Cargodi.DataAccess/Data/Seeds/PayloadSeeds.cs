@@ -15,10 +15,10 @@ public class PayloadSeeds : IEntityTypeConfiguration<Payload>
             payloads.Add(new Payload
             {
                 Id = i,
-                Length = Generator.GenerateRandomNumber(50, 200),
-                Width = Generator.GenerateRandomNumber(50, 200),
-                Height = Generator.GenerateRandomNumber(50, 200),
-                Weight = Generator.GenerateRandomNumber(5, 200),
+                Length = Generator.GenerateRandomNumber(5, 20),
+                Width = Generator.GenerateRandomNumber(5, 20),
+                Height = Generator.GenerateRandomNumber(5, 20),
+                Weight = Generator.GenerateRandomNumber(5, 20),
                 Description = "",
                 OrderId = Generator.GenerateRandomNumber(1, 5),
                 PayloadTypeId = 1
