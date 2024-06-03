@@ -55,7 +55,7 @@ public class ShipsController: ControllerBase
         if (!User.IsInRole(Roles.Admin) && !User.IsInRole(Roles.Manager))
             return NotFound();
 
-        return Ok(await _shipService.GenerateAsync(User, driverCount, cancellationToken));
+        return Ok(await _shipService.GenerateAsync(User, cancellationToken));
     }
     
     [HttpDelete("{id}")]

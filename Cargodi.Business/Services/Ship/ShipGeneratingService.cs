@@ -53,8 +53,8 @@ public class ShipGeneratingService : IShipGeneratingService
     public async Task<IEnumerable<Driver>> SelectDriversAsync(Car car, CancellationToken cancellationToken)
     {
         var categoriesToDrive = await _carRepository.GetCategoriesToDriveAsync(car, cancellationToken);
-        var drivers = await _driverRepository.GetSuitableDriversAsync(categoriesToDrive, cancellationToken);
-
+        var drivers = await _driverRepository.GetSuitableDriversAsync(categoriesToDrive, null, cancellationToken);
+        
         return drivers;
     }
     
@@ -76,10 +76,10 @@ public class ShipGeneratingService : IShipGeneratingService
         }
 
         var cars = await _carRepository
-            .GetSuitableCarsOrderedAsync(weight, volume, biggestLinearSize, ship.AutoparkStartId, cancellationToken);
+            .GetSuitableCarsOrderedAsync(weight, volume, biggestLinearSize, ship.AutoparkStartId, null, cancellationToken);
         
         var trailers = await _trailerRepository
-            .GetSuitableTrailersOrderedAsync(weight, volume, biggestLinearSize, ship.AutoparkStartId, cancellationToken);
+            .GetSuitableTrailersOrderedAsync(weight, volume, biggestLinearSize, ship.AutoparkStartId, null, cancellationToken);
         
         List<ICarrier> carriers = new();	
         carriers.AddRange(cars.ToList());

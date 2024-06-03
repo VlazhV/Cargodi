@@ -36,24 +36,34 @@ public class TrailerRepository : RepositoryBase<Trailer, int>, ITrailerRepositor
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Trailer>> GetSuitableTrailersOrderedAsync(int weight, int volume, int biggestLinearSize, int autoparkStartId, CancellationToken cancellationToken)
+    public async Task<IEnumerable<Trailer>> GetSuitableTrailersOrderedAsync(int weight,
+        int volume,
+        int biggestLinearSize,
+        int autoparkStartId,
+        int? shipId,
+        CancellationToken cancellationToken)
     {
         var trailers = await _db.Trailers
             .AsNoTracking()
             .Include(trailer => trailer.Ships)
-            .Where(trailer => 
-                trailer.Carrying > weight 
-                && trailer.CapacityHeight * trailer.CapacityLength * trailer.CapacityWidth > volume 
-                && 
-                    trailer.CapacityHeight > biggestLinearSize 
-                    || trailer.CapacityLength > biggestLinearSize 
-                    || trailer.CapacityWidth > biggestLinearSize 
-                && 
+            .Where(trailer =>
+                trailer.Carrying > weight
+                && trailer.CapacityHeight * trailer.CapacityLength * trailer.CapacityWidth > volume
+                &&
+                    trailer.CapacityHeight > biggestLinearSize
+                    || trailer.CapacityLength > biggestLinearSize
+                    || trailer.CapacityWidth > biggestLinearSize
+                &&
                 trailer.ActualAutoparkId == autoparkStartId)
             .OrderBy(trailer => trailer.CapacityHeight * trailer.CapacityLength * trailer.CapacityWidth).ThenBy(trailer => trailer.Carrying)
             .ToListAsync(cancellationToken);
 
-        return trailers.Where(t => !t.Ships.Any() || t.Ships!.Last().Finish != null);
+        return trailers;
+
+        // return trailers.Where(t => t.Ships == null 
+        //     || t.Ships.Count == 0 
+        //     || t.Ships!.Last().Id == shipId
+        //     || t.Ships!.Last().Finish != null);
     }
 
     public Task<Trailer?> GetByLicenseNumberAsync(string licenseNumber, CancellationToken cancellationToken)

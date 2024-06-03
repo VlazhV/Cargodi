@@ -84,7 +84,12 @@ public class CarRepository : RepositoryBase<Car, int>, ICarRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Car>> GetSuitableCarsOrderedAsync(int weight, int volume, int biggestLinearSize, int autoparkStartId, CancellationToken cancellationToken)
+    public async Task<IEnumerable<Car>> GetSuitableCarsOrderedAsync(int weight, 
+        int volume, 
+        int biggestLinearSize, 
+        int autoparkStartId, 
+        int? shipId, 
+        CancellationToken cancellationToken)
     {
         var cars = await _db.Cars
             .AsNoTracking()
@@ -101,7 +106,11 @@ public class CarRepository : RepositoryBase<Car, int>, ICarRepository
             .OrderBy(car => car.CapacityHeight * car.CapacityLength * car.CapacityWidth).ThenBy(car => car.Carrying)
             .ToListAsync(cancellationToken);
 
-        return cars.Where(car => !car.Ships.Any() || car.Ships.Last().Finish != null);
+        return cars;
+        // return cars.Where(car => car.Ships == null 
+        //         || car.Ships.Count == 0  
+        //         || car.Ships.Last().Id == shipId 
+        //         || car.Ships.Last().Finish != null);
     }
 
     public Task<Car?> GetByLicenseNumberAsync(string licenseNumber, CancellationToken cancellationToken)
