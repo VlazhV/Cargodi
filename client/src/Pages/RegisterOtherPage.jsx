@@ -193,12 +193,12 @@ function RegisterOtherPage(props) {
 
                         <div>
                             <h4>
-                                <strong>Прописка:</strong> <span>Автопарк №{credentials.operator.autoparkId}</span>
+                                <strong>Приписка:</strong> <span>Автопарк №{credentials.operator.autoparkId}</span>
                             </h4>
                         </div>
 
                         <button type="button" className="btn btn-primary display-3"
-                            data-bs-toggle="modal" data-bs-target="#operatorAutoparkId">Назначить прописку</button>
+                            data-bs-toggle="modal" data-bs-target="#operatorAutoparkId">Назначить приписку</button>
 
 
 
@@ -231,7 +231,7 @@ function RegisterOtherPage(props) {
 
                         <div>
                             <h4>
-                                <strong>Прописка:</strong> <span>Автопарк №{credentials.driver.autoparkId}</span>
+                                <strong>Приписка:</strong> <span>Автопарк №{credentials.driver.autoparkId}</span>
                             </h4>
                         </div>
                         <div>
@@ -241,7 +241,7 @@ function RegisterOtherPage(props) {
                         </div>
 
                         <button type="button" className="btn btn-primary display-3"
-                            data-bs-toggle="modal" data-bs-target="#driverAutoparkId">Назначить прописку</button>
+                            data-bs-toggle="modal" data-bs-target="#driverAutoparkId">Назначить приписку</button>
                         <button type="button" className="btn btn-primary display-3"
                             data-bs-toggle="modal" data-bs-target="#driverActualAutoparkId">Назначить текущий автопарк</button>
 

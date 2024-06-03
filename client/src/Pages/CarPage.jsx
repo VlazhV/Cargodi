@@ -193,7 +193,7 @@ export default function CarPage() {
                                 <strong>Тип:</strong> <span>{carData.carTypeName}</span>
                             </h1>
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                                <strong>Прописка:</strong> <span>Автопарк №{carData.autoparkId}</span>
+                                <strong>Приписка:</strong> <span>Автопарк №{carData.autoparkId}</span>
                             </h1>
                             <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
                                 <strong>Текущий автопарк:</strong> <span>Автопарк №{carData.actualAutoparkId}</span>
@@ -281,7 +281,7 @@ export default function CarPage() {
                     <div className="btn btn-primary display-3" onClick={handleEditingStart}>Изменить</div>
                     <div className="btn btn-danger display-3" onClick={handleDeleteClick}>Удалить</div>
                     <button type="button" className="btn btn-primary display-3"
-                        data-bs-toggle="modal" data-bs-target="#carAutoparkId">Назначить прописку</button>
+                        data-bs-toggle="modal" data-bs-target="#carAutoparkId">Назначить приписку</button>
                     <button type="button" className="btn btn-primary display-3"
                         data-bs-toggle="modal" data-bs-target="#carActualAutoparkId">Назначить текущий автопарк</button>
                 </>
