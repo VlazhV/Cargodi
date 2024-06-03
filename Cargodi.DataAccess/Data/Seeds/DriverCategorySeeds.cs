@@ -25,6 +25,11 @@ public class DriverCategorySeeds : IEntityTypeConfiguration<DriverCategory>
                 DriverId = 1,
                 CategoryName = "C"
             },
+            new()
+            {
+                DriverId = 1,
+                CategoryName = "CE"
+            },
 
             new()
             {
@@ -35,6 +40,11 @@ public class DriverCategorySeeds : IEntityTypeConfiguration<DriverCategory>
             {
                 DriverId = 2,
                 CategoryName = "BE"
+            },
+            new()
+            {
+                DriverId = 2,
+                CategoryName = "C"
             },
             new()
             {

@@ -27,20 +27,26 @@ public class DriverRepository : RepositoryBase<Driver, int>, IDriverRepository
             .FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Driver>> GetSuitableDriversAsync(IEnumerable<Category> categories, CancellationToken cancellationToken)
+    public async Task<List<Driver>> GetSuitableDriversAsync(IEnumerable<Category> categories, int? shipId, CancellationToken cancellationToken)
     {
         var drivers = await _db.Drivers
             .Include(d => d.DriverCategories)
                 .ThenInclude(dc => dc.Category)
+            .Include(d => d.Ships)
             .ToListAsync(cancellationToken);
 
-        return drivers
-            .Where(d => 
+        return drivers.Where(d =>
                 d.DriverCategories
                 .Select(dc => dc.Category.Name)
                 .Intersect(categories.Select(c => c.Name))
                 .Any())
+            // .Where(d => d.Ships == null 
+            //     || d.Ships.Count == 0 
+            //     || d.Ships.Last().Id == shipId 
+            //     || d.Ships.Last().Finish != null)
+            // .Where(d => d.DriverStatusId == DriverStatuses.Works.Id)
             .ToList();
+    
     }
     
     public async Task<IEnumerable<Driver>> GetDriversByIdsAsync(IEnumerable<int> ids, CancellationToken cancellationToken)

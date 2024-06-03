@@ -14,7 +14,12 @@ public interface ICarRepository: IRepository<Car, int>
     Task<IEnumerable<Car>> GetAllCarsFullInfoAsync(CancellationToken cancellationToken);
     
     Task<IEnumerable<Car>> GetFreeCarsAsync(CancellationToken cancellationToken);
-    Task<IEnumerable<Car>> GetSuitableCarsOrderedAsync(int weight, int volume, int totalLinearSize, int autoparkStartId, CancellationToken cancellationToken);
+    Task<IEnumerable<Car>> GetSuitableCarsOrderedAsync(int weight, 
+        int volume, 
+        int totalLinearSize, 
+        int autoparkStartId,
+        int? shipId, 
+        CancellationToken cancellationToken);
     Task<IEnumerable<Car>> GetCarsOfTypeAsync(CarType carType, CancellationToken cancellationToken);
 
     Task<IEnumerable<Category>> GetCategoriesToDriveAsync(Car car, CancellationToken cancellationToken);
