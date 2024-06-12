@@ -15,14 +15,20 @@ export default function StopMarker(props) {
     return (
         <>
             <YMapMarker coordinates={coordinates} >
+                <div className='bg-dark rounded-pill p-2 position-absolute translate-middle'
+                    style={{ width: '1rem', height: '1rem' }}></div>
                 <Link to={'/order/' + stop.order.id}>
-                    <div className='btn btn-outline-dark border border-3 p-2 border-dark rounded-pill translate-middle text-center fw-bold d-flex flex-column' style={{ width: '8rem' }}>
+                    <div className='btn btn-outline-dark 
+                    border border-3 p-2 border-dark 
+                    rounded-pill  text-center 
+                    fw-bold d-flex flex-column 
+                    position-absolute translate-middle' style={{ width: '8rem', top: '-3.6rem', left: '-0.5rem' }}>
                         <span className='text-info bg-dark rounded-pill px-4 py-1' style={{ fontSize: '1.5rem' }}>№{stop.number}</span>
                         Заказ №{stop.order.id}
                     </div>
                 </Link>
 
-            </YMapMarker>
+            </YMapMarker >
         </>
     )
 }
