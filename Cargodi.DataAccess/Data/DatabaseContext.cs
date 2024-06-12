@@ -34,6 +34,7 @@ public class DatabaseContext: IdentityDbContext<User, IdentityRole<long>, long>
     public DbSet<CarTypeCategory> CarTypesCategories { get; set; }
     public DbSet<CarType> CarTypes { get; set; }
     public DbSet<DriverCategory> DriverCategories{ get; set; }
+    public DbSet<Review> Reviews { get; set; }
     
     
     public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
