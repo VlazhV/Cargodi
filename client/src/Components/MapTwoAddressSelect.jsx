@@ -15,7 +15,7 @@ export default function MapTwoAddressSelect(props) {
     const [ymap, setYmap] = useState(null);
 
     const [currentMapLocation, setCurrentMapLocation]
-        = useState({ center: [26.915053, 54.487892], zoom: 10 })
+        = useState({ center: [27.561831, 53.902284], zoom: 10 })
 
     const onUpdate = useCallback(({ location, mapInAction }) => {
         if (!mapInAction) {
