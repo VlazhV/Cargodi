@@ -30,4 +30,10 @@ export default class OrderService {
     static async SetStatus(id, status) {
         return await api.put('/orders/' + id + '/status', {}, { params: { status } })
     }
+    static async GetReviews(id) {
+        return await api.get('/orders/' + id + '/reviews')
+    }
+    static async CreateReview(id, reviewData) {
+        return await api.post('/orders/' + id + '/reviews', reviewData)
+    }
 }
