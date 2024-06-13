@@ -208,6 +208,12 @@ public class ShipService : IShipService
 
         await ValidateVehicleAsync(shipRequest, cancellationToken);
         var car = await _carRepository.GetByIdAsync(shipDto.CarId, cancellationToken);
+
+        if (car == null)
+        {
+            throw new ApiException("Car is not found", ApiException.BadRequest);
+        }
+        
         await ValidateDrivers(shipDto.DriverIds, car!, cancellationToken);
 
         var stopsRequest = shipDto.Stops;
@@ -222,9 +228,10 @@ public class ShipService : IShipService
 
         // update stops
 
-        _shipRepository.Update(ship);
-        return _mapper.Map<GetShipDto>(ship);
+        ship = _shipRepository.Update(ship);
         
+        await _shipRepository.SaveChangesAsync(cancellationToken);
+        return _mapper.Map<GetShipDto>(ship);
     }
     
     private async Task ValidateVehicleAsync(DataAccess.Entities.Ship.Ship ship, CancellationToken cancellationToken)
@@ -280,18 +287,19 @@ public class ShipService : IShipService
             throw new ApiException("given zero stops", ApiException.BadRequest);
         }
         
-        if (stopDtos.Count() % 2 == 0)
+        if (stopDtos.Count() % 2 != 0)
         {
             throw new ApiException("invalid route: the number of stops must be even", ApiException.BadRequest);
         }
 
-        var orderIds = stopDtos.Select(stop => stop.OrderId)
-            .OrderBy(id => id)
+        var orderedStops = stopDtos
+            .OrderBy(s => s.OrderId)
+            .ThenBy(s => s.Number)
             .ToList();
         
-        for (int i = 0; i < orderIds.Count; i += 2)
+        for (int i = 0; i < orderedStops.Count; i += 2)
         {
-            if (orderIds[i] != orderIds[i+1])
+            if (orderedStops[i].OrderId != orderedStops[i+1].OrderId || orderedStops[i].Number >= orderedStops[i+1].Number)
             {
                 throw new ApiException("invalid route", ApiException.BadRequest);
             }

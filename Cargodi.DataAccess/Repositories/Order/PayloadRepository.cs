@@ -21,7 +21,7 @@ public class PayloadRepository : RepositoryBase<Payload, long>, IPayloadReposito
 	public async Task<bool> DoesItExistAsync(long id, CancellationToken cancellationToken)
 	{
 		return await _db.Payloads
-			.AsNoTracking()
+			 
 			.AnyAsync(p => p.Id == id, cancellationToken);
 	}
 

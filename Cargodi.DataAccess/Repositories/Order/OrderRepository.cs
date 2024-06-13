@@ -20,14 +20,14 @@ public class OrderRepository : RepositoryBase<Entities.Order.Order, long>, IOrde
     public async Task<bool> DoesItExistAsync(long id, CancellationToken cancellationToken)
     {
         return await _db.Orders
-            .AsNoTracking()
+             
             .AnyAsync(o => o.Id == id, cancellationToken);
     }
 
     public async Task<IEnumerable<Entities.Order.Order>> GetAllOfClientAsync(long userId, CancellationToken cancellationToken)
     {
         return await _db.Orders
-            .AsNoTracking()
+             
             .Include(o => o.LoadAddress)
             .Include(o => o.DeliverAddress)
             .Include(o => o.Client)
@@ -42,7 +42,7 @@ public class OrderRepository : RepositoryBase<Entities.Order.Order, long>, IOrde
     public async Task<IEnumerable<Entities.Order.Order>> GetAcceptedOrdersWithPayloadsAsync(CancellationToken cancellationToken)
     {
         return await _db.Orders
-            .AsNoTracking()
+             
             .Include(o => o.LoadAddress)
             .Include(o => o.DeliverAddress)
             .Include(o => o.Payloads)
@@ -71,7 +71,7 @@ public class OrderRepository : RepositoryBase<Entities.Order.Order, long>, IOrde
     public override async Task<IEnumerable<Entities.Order.Order>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _db.Orders
-            .AsNoTracking()
+             
             .Include(o => o.LoadAddress)
             .Include(o => o.DeliverAddress)
             .Include(o => o.Payloads)
@@ -85,7 +85,7 @@ public class OrderRepository : RepositoryBase<Entities.Order.Order, long>, IOrde
     public override Task<Entities.Order.Order?> GetByIdAsync(long id, CancellationToken cancellationToken)
     {
         return _db.Orders
-            .AsNoTracking()
+             
             .Include(o => o.LoadAddress)
             .Include(o => o.DeliverAddress)
             .Include(o => o.Payloads)
@@ -100,6 +100,7 @@ public class OrderRepository : RepositoryBase<Entities.Order.Order, long>, IOrde
     public Task<List<Entities.Order.Order>> GetAllOfShipAsync(Entities.Ship.Ship ship, CancellationToken cancellationToken)
     {
         return _db.Orders
+             
             .Include(o => o.Payloads)
                 .ThenInclude(p => p.PayloadType)
             .Where(o => ship.Stops.Select(stop => stop.OrderId).Contains(o.Id))

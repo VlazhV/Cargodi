@@ -29,7 +29,7 @@ protected readonly DatabaseContext _db;
 
 	public virtual async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken)
 	{
-		return await _db.Set<T>().AsNoTracking().ToListAsync(cancellationToken);
+		return await _db.Set<T>() .ToListAsync(cancellationToken);
 	}
 
     public virtual async Task<T?> GetByIdAsync(K id, CancellationToken cancellationToken)

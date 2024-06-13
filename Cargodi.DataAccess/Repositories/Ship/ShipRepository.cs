@@ -14,14 +14,13 @@ public class ShipRepository : RepositoryBase<Entities.Ship.Ship, int>, IShipRepo
     public async Task<bool> DoesItExistAsync(int id, CancellationToken cancellationToken)
     {
         return await _db.Ships
-            .AsNoTracking()
+             
             .AnyAsync(ship => ship.Id == id, cancellationToken);
     }
 
     public async Task<Entities.Ship.Ship?> GetShipFullInfoByIdAsync(int id, CancellationToken cancellationToken)
     {
         return await _db.Ships
-            .AsNoTracking()
             .Include(ship => ship.Stops)
                 .ThenInclude(stop => stop.Order)
                     .ThenInclude(order => order.Payloads)
@@ -87,7 +86,7 @@ public class ShipRepository : RepositoryBase<Entities.Ship.Ship, int>, IShipRepo
     public async Task<IEnumerable<Entities.Ship.Ship>> GetAllShipsSuperFullInfoAsync(CancellationToken cancellationToken)
     {
         return await _db.Ships
-            .AsNoTracking()
+             
             .Include(ship => ship.Stops)
                 .ThenInclude(stop => stop.Order)
                     .ThenInclude(order => order.Payloads)
@@ -113,7 +112,7 @@ public class ShipRepository : RepositoryBase<Entities.Ship.Ship, int>, IShipRepo
     public async Task<Entities.Ship.Ship?> GetShipSuperFullInfoByIdAsync(int id, CancellationToken cancellationToken)
     {
          return await _db.Ships
-            .AsNoTracking()
+             
             .Include(ship => ship.Stops)
                 .ThenInclude(stop => stop.Order)
                     .ThenInclude(order => order.Payloads)

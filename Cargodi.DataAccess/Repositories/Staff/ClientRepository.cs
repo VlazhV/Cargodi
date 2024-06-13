@@ -24,14 +24,14 @@ public class ClientRepository : RepositoryBase<Client, long>, IClientRepository
     public Task<bool> DoesItExistAsync(long id, CancellationToken cancellationToken)
     {
         return _db.Clients
-            .AsNoTracking()
+             
             .AnyAsync(c => c.Id == id, cancellationToken);
     }
 
     public Task<Client?> GetClientByUserIdAsync(long userId, CancellationToken cancellationToken)
     {
         return _db.Clients
-            .AsNoTracking()
+             
             .Include(c => c.User)
             .Where(c => c.UserId == userId)
             .FirstOrDefaultAsync(cancellationToken);
@@ -40,7 +40,7 @@ public class ClientRepository : RepositoryBase<Client, long>, IClientRepository
     public async Task<IEnumerable<Client>> GetClientsInfoAsync(CancellationToken cancellationToken)
     {
         return await _db.Clients
-            .AsNoTracking()
+             
             .Include(c => c.User)
             .ToListAsync(cancellationToken: cancellationToken);
     }

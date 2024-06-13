@@ -22,7 +22,7 @@ public class DriverRepository : RepositoryBase<Driver, int>, IDriverRepository
     public Task<Driver?> GetDriverByUserIdAsync(long userId, CancellationToken cancellationToken)
     {
         return _db.Drivers
-            .AsNoTracking()
+             
             .Where(d => d.UserId == userId)
             .FirstOrDefaultAsync(cancellationToken);
     }
@@ -30,6 +30,7 @@ public class DriverRepository : RepositoryBase<Driver, int>, IDriverRepository
     public async Task<List<Driver>> GetSuitableDriversAsync(IEnumerable<Category> categories, int? shipId, CancellationToken cancellationToken)
     {
         var drivers = await _db.Drivers
+             
             .Include(d => d.DriverCategories)
                 .ThenInclude(dc => dc.Category)
             .Include(d => d.Ships)
@@ -52,6 +53,7 @@ public class DriverRepository : RepositoryBase<Driver, int>, IDriverRepository
     public async Task<IEnumerable<Driver>> GetDriversByIdsAsync(IEnumerable<int> ids, CancellationToken cancellationToken)
     {
         return await _db.Drivers
+             
             .Where(d => ids.Contains(d.Id))
             .ToListAsync(cancellationToken);
     }
@@ -62,7 +64,7 @@ public class DriverRepository : RepositoryBase<Driver, int>, IDriverRepository
         CancellationToken cancellationToken)
     {
         var drivers = _db.Drivers
-            .AsNoTracking()
+             
             .Include(d => d.DriverStatus)
             .Where(d => !works.HasValue || d.DriverStatusId == DriverStatuses.Works.Id)
             .Where(d => !isFree.HasValue || d.ActualAutoparkId == actualAutoparkId!.Value);

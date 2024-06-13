@@ -18,6 +18,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
             sqlBuilder.MigrationsAssembly(
                 Assembly.GetAssembly(typeof(DatabaseContext))?.GetName().Name)
             );
+    options.EnableSensitiveDataLogging();
 });
 
 //builder.Configuration.ConfigureDatabase();

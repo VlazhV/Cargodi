@@ -15,21 +15,21 @@ public class TrailerRepository : RepositoryBase<Trailer, int>, ITrailerRepositor
     public async Task<bool> DoesItExistAsync(int id, CancellationToken cancellationToken)
     {
         return await _db.Trailers
-            .AsNoTracking()
+             
             .AnyAsync(t => t.Id == id, cancellationToken);
     }
 
     public async Task<bool> DoesItExistAsync(string licenseNumber, CancellationToken cancellationToken)
     {
         return await _db.Trailers
-            .AsNoTracking()
+             
             .AnyAsync(t => t.LicenseNumber.Equals(licenseNumber), cancellationToken);
     }
     
     public async Task<IEnumerable<Trailer>> GetFreeTrailersAsync(CancellationToken cancellationToken)
     {
         return await _db.Ships  
-            .AsNoTracking()
+             
             .Include(ship => ship.Trailer)
             .Where(ship => ship.Start != null && ship.Finish == null)
             .Select(ship => ship.Trailer)
@@ -44,7 +44,7 @@ public class TrailerRepository : RepositoryBase<Trailer, int>, ITrailerRepositor
         CancellationToken cancellationToken)
     {
         var trailers = await _db.Trailers
-            .AsNoTracking()
+             
             .Include(trailer => trailer.Ships)
             .Where(trailer =>
                 trailer.Carrying > weight
@@ -69,7 +69,7 @@ public class TrailerRepository : RepositoryBase<Trailer, int>, ITrailerRepositor
     public Task<Trailer?> GetByLicenseNumberAsync(string licenseNumber, CancellationToken cancellationToken)
     {
         return _db.Trailers
-            .AsNoTracking()
+             
             .Where(c => c.LicenseNumber.Equals(licenseNumber))
             .FirstOrDefaultAsync();
     }
@@ -77,7 +77,7 @@ public class TrailerRepository : RepositoryBase<Trailer, int>, ITrailerRepositor
     public Task<Trailer?> GetTrailerFullInfoByIdAsync(int id, CancellationToken cancellationToken)
     {
         return _db.Trailers
-            .AsNoTracking()
+             
             .Include(t => t.TrailerType)
             .Where(t => t.Id == id)
             .FirstOrDefaultAsync(cancellationToken);
@@ -86,7 +86,7 @@ public class TrailerRepository : RepositoryBase<Trailer, int>, ITrailerRepositor
     public async Task<IEnumerable<Trailer>> GetAllTrailersFullInfoAsync(CancellationToken cancellationToken)
     {
         return await _db.Trailers
-            .AsNoTracking()
+             
             .Include(t => t.TrailerType)
             .ToListAsync(cancellationToken);
             

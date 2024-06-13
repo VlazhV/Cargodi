@@ -14,14 +14,14 @@ public class AutoparkRepository : RepositoryBase<Entities.Autopark.Autopark, int
     public async Task<bool> DoesItExistAsync(int id, CancellationToken cancellationToken)
     {
         return await _db.Autoparks
-            .AsNoTracking()
+             
             .AnyAsync(a => a.Id == id, cancellationToken);
     }
 
     public async Task<IEnumerable<Entities.Autopark.Autopark>> GetAutoparksWithAddressesVehicleAsync(CancellationToken cancellationToken)
     {
         return await _db.Autoparks
-            .AsNoTracking()
+             
             .Include(a => a.Address)
             .Include(a => a.Cars)
                 .ThenInclude(c => c.CarType)
@@ -33,14 +33,14 @@ public class AutoparkRepository : RepositoryBase<Entities.Autopark.Autopark, int
                 .ThenInclude(t => t.TrailerType)
             .Include(a => a.Drivers)
             .Include(a => a.ActualDrivers)
-            .AsNoTracking()
+             
             .ToListAsync(cancellationToken);
     }
 
     public async Task<Entities.Autopark.Autopark?> GetAutoparkWithAddressesVehicleByIdAsync(int id, CancellationToken cancellationToken)
     {
         return await _db.Autoparks
-            .AsNoTracking()
+             
             .Include(a => a.Address)
             .Include(a => a.Cars)
                 .ThenInclude(c => c.CarType)
@@ -52,7 +52,7 @@ public class AutoparkRepository : RepositoryBase<Entities.Autopark.Autopark, int
                 .ThenInclude(t => t.TrailerType)
             .Include(a => a.Drivers)
             .Include(a => a.ActualDrivers)
-            .AsNoTracking()
+             
             .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
     }
 
