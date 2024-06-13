@@ -34,6 +34,7 @@ public static class Startup
         //Order
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IPayloadRepository, PayloadRepository>();
+        services.AddScoped<IReviewRepository, ReviewRepository>();
 
         //Ship
         services.AddScoped<IShipRepository, ShipRepository>();
@@ -69,6 +70,7 @@ public static class Startup
         //Order
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<IPayloadService, PayloadService>();
+        services.AddScoped<IReviewService, ReviewService>();
 
         //ship
         services.AddScoped<IShipService, ShipService>();
