@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Cargodi.Business.DTOs.Order.Order;
 using Cargodi.Business.DTOs.Order.Payload;
+using Cargodi.Business.DTOs.Order.Review;
 using Cargodi.Business.Interfaces.Order;
 using Cargodi.DataAccess.Constants;
 using Cargodi.WebApi.Extensions;
@@ -15,10 +16,12 @@ namespace Cargodi.WebApi.Controllers.Order;
 public class OrdersController: ControllerBase
 {
     private readonly IOrderService _orderService;
+    private readonly IReviewService _reviewService;
     
-    public OrdersController(IOrderService orderService)
+    public OrdersController(IOrderService orderService, IReviewService reviewService)
     {
         _orderService = orderService;
+        _reviewService = reviewService;
     }
     
     [HttpGet] 
@@ -78,5 +81,17 @@ public class OrdersController: ControllerBase
     public async Task<ActionResult<GetOrderDto>> SetStatusAsync(long id, [FromQuery] string status, CancellationToken cancellationToken)
     {
         return Ok(await _orderService.SetStatusAsync(id, status, User, cancellationToken));
+    }
+    
+    [HttpGet("{orderId:long}/reviews")]
+    public async Task<ActionResult<List<ReviewDto>>> GetOrderReviewsAsync(long orderId, CancellationToken cancellationToken)
+    {
+        return Ok(await _reviewService.GetOrderReviewsAsync(orderId, cancellationToken));
+    }
+    
+    [HttpPost("{orderId:long}/reviews")]
+    public async Task<ActionResult<ReviewDto>> CreateOrderReview(long orderId, ReviewDto reviewDto, CancellationToken cancellationToken)
+    {
+        return Ok(await _reviewService.CreateOrderReviewAsync(reviewDto, orderId, cancellationToken));
     }
 }
