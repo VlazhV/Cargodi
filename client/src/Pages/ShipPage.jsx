@@ -14,6 +14,7 @@ import TrailerEdit from '../Components/TrailerEdit'
 import AutoparkEdit from '../Components/AutoparkEdit'
 import DriverEdit from '../Components/DriverEdit'
 import OrderEdit from '../Components/OrderEdit'
+import MapRoutes from '../Components/MapRoutes'
 
 export default function ShipPage() {
     const { user } = useContext(AuthContext)
@@ -395,7 +396,7 @@ export default function ShipPage() {
                 return !editing ? <div className="row w-100">
                     {
                         shipData.drivers.map((driverData, index) =>
-                            <div className="item features-without-image col-4 item-mb active border rounded">
+                            <div className="item features-without-image col-4 item-mb active border rounded" key={driverData.id}>
                                 <div className="item-wrapper">
                                     <div className="item-head">
                                         <h6 className="item-title mbr-fonts-style mb-0 display-7">
@@ -421,7 +422,7 @@ export default function ShipPage() {
                     <div className="row w-100">
                         {
                             shipData.drivers.map((driverData, index) =>
-                                <div className="item features-without-image col-4 item-mb active border rounded">
+                                <div className="item features-without-image col-4 item-mb active border rounded" key={driverData.id}>
                                     <div className="item-wrapper">
                                         <div className="item-head">
                                             <button className='btn btn-outline-secondary w-100' id={index} onClick={handleRemoveDriver}>
@@ -455,7 +456,7 @@ export default function ShipPage() {
                 return !editing ? <div className="row w-100">
                     {
                         shipData.stops.map(stopData =>
-                            <div className="item features-without-image col-5 item-mb active border rounded">
+                            <div className="item features-without-image col-5 item-mb active border rounded" key={stopData.id}>
                                 <div className="item-wrapper">
                                     <div className="item-head">
                                         <h6 className="item-title mbr-fonts-style mb-0 display-7">
@@ -503,7 +504,7 @@ export default function ShipPage() {
                     <div className="row w-100">
                         {
                             shipData.stops.map((stopData, index) =>
-                                <div className="item features-without-image col-5 item-mb active border rounded">
+                                <div className="item features-without-image col-5 item-mb active border rounded" key={stopData.id}>
                                     <div className="item-wrapper">
                                         <div className="item-head">
                                             <div className='d-flex flex-column align-items-center'>
@@ -560,6 +561,13 @@ export default function ShipPage() {
                         </button>
                         <OrderEdit id='orderId' onSelectOrder={onAddStop} />
                     </div>
+            case 'showMap':
+                {
+                    return <div className='d-flex justify-content-center w-100'>
+                        <MapRoutes stops={shipData.stops} />
+                    </div>
+                }
+
         }
     }
 
@@ -749,6 +757,11 @@ export default function ShipPage() {
                     name="btnradio" id="showStops"
                     autoComplete="off" onClick={handleShowListChange} />
                 <label className="btn btn-outline-dark" htmlFor="showStops">Заказы</label>
+                <input type="radio" className="btn-check"
+                    name="btnradio" id="showMap"
+                    autoComplete="off" onClick={handleShowListChange} />
+                <label className="btn btn-outline-dark" htmlFor="showMap">Карта</label>
+
             </div>
 
             {

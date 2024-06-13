@@ -266,7 +266,7 @@ export default function OrderPage() {
                             <AddressTwoEdit addressFrom={orderData.loadAddress}
                                 addressTo={orderData.deliverAddress}
                                 onAddressFromChange={handleLoadAddressChange}
-                                onAddressToChange={handleLoadAddressChange}
+                                onAddressToChange={handleDeliverAddressChange}
                                 name='Адреса загрузки и выгрузки' />
                         </div>
                     </div>
