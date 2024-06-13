@@ -18,6 +18,8 @@ public class ReviewRepository : IReviewRepository
     {
         var entry = await _databaseContext.Reviews.AddAsync(review, cancellationToken);
 
+        await _databaseContext.SaveChangesAsync(cancellationToken);
+
         return entry.Entity;
     }
 
@@ -25,5 +27,4 @@ public class ReviewRepository : IReviewRepository
     {
         return _databaseContext.Reviews.Where(r => r.OrderId == orderId).ToListAsync(cancellationToken);
     }
-
 }
