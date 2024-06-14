@@ -66,14 +66,21 @@ public class ShipRepository : RepositoryBase<Entities.Ship.Ship, int>, IShipRepo
     public async Task<IEnumerable<Entities.Ship.Ship>> GetShipsFullInfoOfDriverAsync(long userId, CancellationToken cancellationToken)
     {
         return await _db.Ships
-            .Include(ship => ship.Stops)                
+            .Include(ship => ship.Stops)
                 .ThenInclude(stop => stop.Order)
                     .ThenInclude(order => order.Payloads)
+            .Include(ship => ship.Stops)
+                .ThenInclude(stop => stop.Order)
+                    .ThenInclude(o => o.Operator)
             .Include(ship => ship.Drivers)
             .Include(ship => ship.Car)
+                .ThenInclude(car => car.CarType)
             .Include(ship => ship.Trailer)
+                .ThenInclude(tr => tr!.TrailerType)
             .Include(ship => ship.AutoparkStart)
+                .ThenInclude(a => a.Address)
             .Include(ship => ship.AutoparkFinish)
+                .ThenInclude(a => a.Address)
             .Where(ship => ship.Drivers.Select(d => d.UserId).Contains(userId))
             .ToListAsync(cancellationToken);
     }
