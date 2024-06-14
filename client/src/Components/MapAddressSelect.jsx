@@ -69,6 +69,7 @@ export default function MapAddressSelect(props) {
                             <YMapDefaultMarker coordinates={selectedAddress.geometry.coordinates}></YMapDefaultMarker>
                         </>
                     }
+                    {props.children}
                 </YMap>
             </div>
         </div>
