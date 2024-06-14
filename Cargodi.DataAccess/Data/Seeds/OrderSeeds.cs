@@ -12,7 +12,7 @@ public class OrderSeeds : IEntityTypeConfiguration<Order>
         var orders = new List<Order>();
         
         
-        for (int i = 1; i <= 5; i++)
+        for (int i = 1; i <= 22; i++)
         {
             var time = new DateTime(
                 2024,
@@ -23,7 +23,7 @@ public class OrderSeeds : IEntityTypeConfiguration<Order>
                 Generator.GenerateRandomNumber(0, 59)
             );
 
-            DateTime? accessTime = Generator.GenerateRandomNumber(0, 99) < 70 ? DateTime.UtcNow : null;
+            DateTime? accessTime = Generator.GenerateRandomNumber(0, 99) < 85 ? DateTime.UtcNow : null;
 
             int? operatorId = accessTime.HasValue ?
                 Generator.GenerateRandomNumber(1, 2) :

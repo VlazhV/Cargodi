@@ -108,7 +108,7 @@ export default function AutoparksPage() {
                         <YMapCustomClusterer
                             marker={autoparkMarker}
                             cluster={cluster}
-                            gridSize={200}
+                            gridSize={20}
                             features={autoparksFeatures}
                         />
                     </AddressEdit>

@@ -66,7 +66,7 @@ export default function MapRoutes(props) {
                     <YMapCustomClusterer
                         marker={stopMarker}
                         cluster={cluster}
-                        gridSize={200}
+                        gridSize={20}
                         features={features}
                     />
                     {props.children}

@@ -616,7 +616,7 @@ export default function ShipPage() {
                             <YMapCustomClusterer
                                 marker={autoparkMarker}
                                 cluster={cluster}
-                                gridSize={200}
+                                gridSize={20}
                                 features={autoparksFeatures}
                             />
                         </MapRoutes>
@@ -779,7 +779,7 @@ export default function ShipPage() {
                         </>
                     }
                     {
-                        user && (user.driver || user.operator) && (!shipData.start || !shipData.end) &&
+                        user && (user.driver || user.operator) && (!shipData.start && !shipData.end) &&
                         <button onClick={handleMarkClick} className="btn btn-success display-3">{!shipData.start ?
                             'Принять к исполнению'
                             :
