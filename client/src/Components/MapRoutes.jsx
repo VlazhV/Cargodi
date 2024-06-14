@@ -1,10 +1,9 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import ReactDOM from 'react-dom/client';
-import { YMap, YMapClusterer, YMapComponentsProvider, YMapContainer, YMapControl, YMapControls, YMapCustomClusterer, YMapDefaultFeaturesLayer, YMapDefaultMarker, YMapDefaultSchemeLayer, YMapFeature, YMapGeolocationControl, YMapListener, YMapMarker } from 'ymap3-components';
+import { YMap, YMapClusterer, YMapComponentsProvider, YMapContainer, YMapControl, YMapControls, YMapDefaultFeaturesLayer, YMapDefaultMarker, YMapDefaultSchemeLayer, YMapFeature, YMapGeolocationControl, YMapListener, YMapMarker } from 'ymap3-components';
 import { YMapsContext } from '../Contexts/YmapsContext';
 import InputDropdown from './InputDropdown';
 import StopMarker from './StopMarker';
-import ClusterMarker from './ClusterMarker';
 
 
 export default function MapRoutes(props) {
@@ -22,36 +21,7 @@ export default function MapRoutes(props) {
         }
     }, []);
 
-    const stopMarker = useCallback(
-        (feature) => {
-            return (
-                <StopMarker stop={feature.stop} />
-            )
-        },
-        []
-    );
 
-    const cluster = useCallback(
-        (coordinates, features) => (
-            <ClusterMarker coordinates={coordinates} count={features.length} />
-        ),
-        []
-    );
-
-    const features = stops.map((stop, index) => {
-
-        let longitude = stop?.address.isWest ? -stop?.address.longitude : stop?.address.longitude
-        let latitude = stop?.address.isNorth ? stop?.address.latitude : -stop?.address.latitude
-
-        const coordinates = [longitude, latitude]
-
-        return {
-            type: "Feature",
-            id: index,
-            stop: stop,
-            geometry: { coordinates, type: "Point" }
-        }
-    })
 
     return (
         <div>
@@ -63,12 +33,16 @@ export default function MapRoutes(props) {
                     <YMapListener onUpdate={onUpdate} />
                     <YMapDefaultFeaturesLayer />
                     <YMapDefaultSchemeLayer />
-                    <YMapCustomClusterer
-                        marker={stopMarker}
-                        cluster={cluster}
-                        gridSize={20}
-                        features={features}
-                    />
+
+                    {
+                        stops.map((stop, index) => {
+
+                            return <StopMarker
+                                key={index}
+                                stop={stop}
+                            />
+                        })
+                    }
                     {props.children}
                 </YMap>
             </div>

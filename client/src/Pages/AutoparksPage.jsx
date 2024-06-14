@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useFetching } from '../Hooks/useFetching'
 import { Link } from 'react-router-dom'
 import AutoparkService from '../Services/AutoparkService'
@@ -6,8 +6,6 @@ import Map from '../Components/MapAddressSelect'
 import AddressEdit from '../Components/AddressEdit'
 import EditYandexMap from '../Components/MapAddressSelect'
 import AutoparkMarker from '../Components/AutoparkMarker'
-import { YMapCustomClusterer } from 'ymap3-components'
-import ClusterMarker from '../Components/ClusterMarker'
 
 export default function AutoparksPage() {
 
@@ -60,37 +58,6 @@ export default function AutoparksPage() {
         fetch("create")
     }
 
-    const autoparkMarker = useCallback(
-        (feature) => {
-            return (
-                <AutoparkMarker autoparkData={feature.autoparkData} />
-            )
-        },
-        []
-    );
-
-    const cluster = useCallback(
-        (coordinates, features) => (
-            <ClusterMarker coordinates={coordinates} count={features.length} />
-        ),
-        []
-    );
-
-    const autoparksFeatures = autoparksData.map((autoparkData, index) => {
-
-        let longitude = autoparkData?.address.isWest ? -autoparkData?.address.longitude : autoparkData?.address.longitude
-        let latitude = autoparkData?.address.isNorth ? autoparkData?.address.latitude : -autoparkData?.address.latitude
-
-        const coordinates = [longitude, latitude]
-
-        return {
-            type: "Feature",
-            id: index,
-            autoparkData: autoparkData,
-            geometry: { coordinates, type: "Point" }
-        }
-    })
-
     return (
         <div className="container-fluid mt-5 p-5">
             <div className='mt-5'>
@@ -105,12 +72,10 @@ export default function AutoparksPage() {
                 </div>
                 <div className="justify-content-center d-flex flex-row">
                     <AddressEdit address={newParkData.address} onAddressChange={handleAddressChange}>
-                        <YMapCustomClusterer
-                            marker={autoparkMarker}
-                            cluster={cluster}
-                            gridSize={20}
-                            features={autoparksFeatures}
-                        />
+                        {
+                            autoparksData.map(autoparkData => <AutoparkMarker
+                                key={autoparkData.id} autoparkData={autoparkData} />)
+                        }
                     </AddressEdit>
                     <div className="">
                         <div className="col-12 form-group mb-3" data-for="textarea">

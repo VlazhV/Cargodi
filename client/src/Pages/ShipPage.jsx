@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useFetching } from '../Hooks/useFetching'
 import { useNavigate, useParams } from 'react-router'
 import AddressEdit from '../Components/AddressEdit'
@@ -16,8 +16,6 @@ import DriverEdit from '../Components/DriverEdit'
 import OrderEdit from '../Components/OrderEdit'
 import MapRoutes from '../Components/MapRoutes'
 import AutoparkMarker from '../Components/AutoparkMarker'
-import ClusterMarker from '../Components/ClusterMarker'
-import { YMapCustomClusterer } from 'ymap3-components'
 
 export default function ShipPage() {
     const { user } = useContext(AuthContext)
@@ -378,51 +376,6 @@ export default function ShipPage() {
         setUpdateShipData(prev => ({ ...prev, stops: stops.map(st => ({ number: st?.number, orderId: st?.order?.id })) }))
     }
 
-    const autoparkMarker = useCallback(
-        (feature) => {
-            return (
-                <AutoparkMarker autoparkData={feature.autoparkData} />
-            )
-        },
-        []
-    );
-
-    const cluster = useCallback(
-        (coordinates, features) => (
-            <ClusterMarker coordinates={coordinates} count={features.length} />
-        ),
-        []
-    );
-
-    let autoparksFeatures = []
-    if (shipData.autoparkStart) {
-        let longitude = shipData.autoparkStart?.address.isWest ? -shipData.autoparkStart?.address.longitude : shipData.autoparkStart?.address.longitude
-        let latitude = shipData.autoparkStart?.address.isNorth ? shipData.autoparkStart?.address.latitude : -shipData.autoparkStart?.address.latitude
-
-        const coordinates = [longitude, latitude]
-
-        autoparksFeatures.push({
-            type: "Feature",
-            id: 'autoparkStart',
-            autoparkData: shipData.autoparkStart,
-            geometry: { coordinates, type: "Point" }
-        })
-    }
-    if (shipData.autoparkFinish && shipData.autoparkFinish.id != shipData.autoparkStart?.id) {
-        let longitude = shipData.autoparkFinish?.address.isWest ? -shipData.autoparkFinish?.address.longitude : shipData.autoparkFinish?.address.longitude
-        let latitude = shipData.autoparkFinish?.address.isNorth ? shipData.autoparkFinish?.address.latitude : -shipData.autoparkFinish?.address.latitude
-
-        const coordinates = [longitude, latitude]
-
-        autoparksFeatures.push({
-            type: "Feature",
-            id: 'autoparkFinish',
-            autoparkData: shipData.autoparkFinish,
-            geometry: { coordinates, type: "Point" }
-        })
-    }
-
-
     const handleMarkClick = (e) => {
         fetch('mark')
     }
@@ -613,12 +566,15 @@ export default function ShipPage() {
                 {
                     return <div className='d-flex justify-content-center w-100'>
                         <MapRoutes stops={shipData.stops}>
-                            <YMapCustomClusterer
-                                marker={autoparkMarker}
-                                cluster={cluster}
-                                gridSize={20}
-                                features={autoparksFeatures}
-                            />
+                            {
+                                shipData.autoparkStart &&
+                                <AutoparkMarker autoparkData={shipData.autoparkStart} />
+                            }
+                            {
+                                shipData.autoparkFinish &&
+                                shipData.autoparkFinish != shipData.autoparkStart?.id &&
+                                <AutoparkMarker autoparkData={shipData.autoparkFinish} />
+                            }
                         </MapRoutes>
                     </div>
                 }
