@@ -5,6 +5,7 @@ import AutoparkService from '../Services/AutoparkService'
 import Map from '../Components/MapAddressSelect'
 import AddressEdit from '../Components/AddressEdit'
 import EditYandexMap from '../Components/MapAddressSelect'
+import AutoparkMarker from '../Components/AutoparkMarker'
 
 export default function AutoparksPage() {
 
@@ -70,7 +71,12 @@ export default function AutoparksPage() {
                     </div>
                 </div>
                 <div className="justify-content-center d-flex flex-row">
-                    <AddressEdit address={newParkData.address} onAddressChange={handleAddressChange} />
+                    <AddressEdit address={newParkData.address} onAddressChange={handleAddressChange}>
+                        {
+                            autoparksData.map(autoparkData => <AutoparkMarker
+                                key={autoparkData.id} autoparkData={autoparkData} />)
+                        }
+                    </AddressEdit>
                     <div className="">
                         <div className="col-12 form-group mb-3" data-for="textarea">
                             <input name="input" placeholder="Вместимость" type="number" data-form-field="input"

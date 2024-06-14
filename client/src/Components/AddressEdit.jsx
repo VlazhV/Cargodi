@@ -37,7 +37,9 @@ export default function AddressEdit(props) {
                     <strong>{name}</strong>
                 </h6>
             </div>
-            <MapAddressSelect mapAddress={mapAddress} onMapAddressSelect={onAddressSelect} />
+            <MapAddressSelect mapAddress={mapAddress} onMapAddressSelect={onAddressSelect} >
+                {props.children}
+            </MapAddressSelect>
         </div>
     )
 }

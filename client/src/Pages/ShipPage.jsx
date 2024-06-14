@@ -15,6 +15,7 @@ import AutoparkEdit from '../Components/AutoparkEdit'
 import DriverEdit from '../Components/DriverEdit'
 import OrderEdit from '../Components/OrderEdit'
 import MapRoutes from '../Components/MapRoutes'
+import AutoparkMarker from '../Components/AutoparkMarker'
 
 export default function ShipPage() {
     const { user } = useContext(AuthContext)
@@ -564,7 +565,17 @@ export default function ShipPage() {
             case 'showMap':
                 {
                     return <div className='d-flex justify-content-center w-100'>
-                        <MapRoutes stops={shipData.stops} />
+                        <MapRoutes stops={shipData.stops}>
+                            {
+                                shipData.autoparkStart &&
+                                <AutoparkMarker autoparkData={shipData.autoparkStart} />
+                            }
+                            {
+                                shipData.autoparkFinish &&
+                                shipData.autoparkFinish != shipData.autoparkStart?.id &&
+                                <AutoparkMarker autoparkData={shipData.autoparkFinish} />
+                            }
+                        </MapRoutes>
                     </div>
                 }
 

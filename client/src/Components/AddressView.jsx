@@ -1,7 +1,22 @@
-import React from 'react'
+import React, { useCallback, useContext, useState } from 'react'
+import { YMapsContext } from '../Contexts/YmapsContext';
+import { YMap, YMapDefaultFeaturesLayer, YMapDefaultSchemeLayer, YMapListener } from 'ymap3-components';
+import AddressMarker from './AddressMarker';
 
 export default function AddressView(props) {
     const address = props.address ? props.address : {}
+
+    const { ymaps } = useContext(YMapsContext)
+    const [ymap, setYmap] = useState(null);
+
+    const [currentMapLocation, setCurrentMapLocation]
+        = useState({ center: [27.561831, 53.902284], zoom: 10 })
+
+    const onUpdate = useCallback(({ location, mapInAction }) => {
+        if (!mapInAction) {
+            setCurrentMapLocation(location);
+        }
+    }, []);
 
     return (
         <div className="" >
@@ -10,22 +25,17 @@ export default function AddressView(props) {
                     <strong>Адрес</strong>
                 </h6>
             </div>
-            <div className="text-wrapper align-left">
-                <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                    <strong>Название:</strong> <span>{address.name}</span>
-                </h1>
-                <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                    <strong>Широта:</strong> <span>{address.latitude}</span>
-                </h1>
-                <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                    <strong>Долгота:</strong> <span>{address.longitude}</span>
-                </h1>
-                <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                    <strong>Запад:</strong> <span>{address.isWest ? '+' : '-'}</span>
-                </h1>
-                <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
-                    <strong>Север: </strong> <span>{address.isNorth ? '+' : '-'}</span>
-                </h1>
+            <div className='YMap mt-2'>
+                <YMap key="map"
+                    ref={(ymap) => setYmap(ymap)}
+                    location={currentMapLocation}
+                    mode="vector">
+                    <YMapListener onUpdate={onUpdate} />
+                    <YMapDefaultFeaturesLayer />
+                    <YMapDefaultSchemeLayer />
+                    {props.children}
+                    <AddressMarker address={address} />
+                </YMap>
             </div>
         </div>
     )

@@ -42,6 +42,7 @@ export default function MapRoutes(props) {
                             />
                         })
                     }
+                    {props.children}
                 </YMap>
             </div>
         </div >
