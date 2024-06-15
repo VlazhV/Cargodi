@@ -58,12 +58,10 @@ public class TrailerRepository : RepositoryBase<Trailer, int>, ITrailerRepositor
             .OrderBy(trailer => trailer.CapacityHeight * trailer.CapacityLength * trailer.CapacityWidth).ThenBy(trailer => trailer.Carrying)
             .ToListAsync(cancellationToken);
 
-        return trailers;
-
-        // return trailers.Where(t => t.Ships == null 
-        //     || t.Ships.Count == 0 
-        //     || t.Ships!.Last().Id == shipId
-        //     || t.Ships!.Last().Finish != null);
+        return trailers.OrderByDescending(t => t.Ships == null 
+            || t.Ships.Count == 0 
+            || t.Ships!.Last().Id == shipId
+            || t.Ships!.Last().Finish != null);
     }
 
     public Task<Trailer?> GetByLicenseNumberAsync(string licenseNumber, CancellationToken cancellationToken)

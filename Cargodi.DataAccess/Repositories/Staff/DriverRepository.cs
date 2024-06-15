@@ -41,11 +41,11 @@ public class DriverRepository : RepositoryBase<Driver, int>, IDriverRepository
                 .Select(dc => dc.Category.Name)
                 .Intersect(categories.Select(c => c.Name))
                 .Any())
-            // .Where(d => d.Ships == null 
-            //     || d.Ships.Count == 0 
-            //     || d.Ships.Last().Id == shipId 
-            //     || d.Ships.Last().Finish != null)
-            // .Where(d => d.DriverStatusId == DriverStatuses.Works.Id)
+            .OrderByDescending(d => d.Ships == null 
+                || d.Ships.Count == 0 
+                || d.Ships.Last().Id == shipId 
+                || d.Ships.Last().Finish != null)
+            
             .ToList();
     
     }

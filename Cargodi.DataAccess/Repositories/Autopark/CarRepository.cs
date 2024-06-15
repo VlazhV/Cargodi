@@ -106,11 +106,11 @@ public class CarRepository : RepositoryBase<Car, int>, ICarRepository
             .OrderBy(car => car.CapacityHeight * car.CapacityLength * car.CapacityWidth).ThenBy(car => car.Carrying)
             .ToListAsync(cancellationToken);
 
-        return cars;
-        // return cars.Where(car => car.Ships == null 
-        //         || car.Ships.Count == 0  
-        //         || car.Ships.Last().Id == shipId 
-        //         || car.Ships.Last().Finish != null);
+        
+        return cars.OrderByDescending(car => car.Ships == null 
+                || car.Ships.Count == 0  
+                || car.Ships.Last().Id == shipId 
+                || car.Ships.Last().Finish != null);
     }
 
     public Task<Car?> GetByLicenseNumberAsync(string licenseNumber, CancellationToken cancellationToken)

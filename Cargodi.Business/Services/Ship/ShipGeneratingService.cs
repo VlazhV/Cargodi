@@ -198,8 +198,9 @@ public class ShipGeneratingService : IShipGeneratingService
     {
         var ordersToGenerate = orders
             .Where(o => o.Payloads.All(p => 
-                p.PayloadType == PayloadTypes.Bulk
-                || p.PayloadType == PayloadTypes.Liquid
+                    p.PayloadTypeId == PayloadTypes.Bulk.Id) 
+                || o.Payloads.All(p => 
+                    p.PayloadTypeId == PayloadTypes.Liquid.Id
             )
         );
 
