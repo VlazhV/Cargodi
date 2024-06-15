@@ -254,7 +254,7 @@ export default function AutoparkPage() {
                         </div>
                         <div className='w-50 p-4'>
                             <h2 className="mbr-section-title mbr-fonts-style my-4 ">
-                                <strong>Прописанные машины</strong> <span>(Кол-во: {autoparkData.cars.length})</span>
+                                <strong>Приписанные машины</strong> <span>(Кол-во: {autoparkData.cars.length})</span>
                             </h2>
                             <div className="row w-100">
 
@@ -357,7 +357,7 @@ export default function AutoparkPage() {
                         </div>
                         <div className='w-50 p-4'>
                             <h2 className="mbr-section-title mbr-fonts-style my-4">
-                                <strong>Прописанные прицепы</strong> <span>(Кол-во: {autoparkData.trailers.length})</span>
+                                <strong>Приписанные прицепы</strong> <span>(Кол-во: {autoparkData.trailers.length})</span>
                             </h2>
                             <div className="row w-100">
 
@@ -434,9 +434,9 @@ export default function AutoparkPage() {
                         </div>
                         <div className="col-12 col-md-12 col-lg">
                             <div className="text-wrapper align-left">
-                                <h1 className="mbr-section-title mbr-fonts-style mb-4 display-7">
+                                <h3 className="mbr-section-title mbr-fonts-style mb-4 display-7">
                                     <strong>Вместимость:</strong> <span>{autoparkData.capacity}</span>
-                                </h1>
+                                </h3>
 
                             </div>
                         </div>

@@ -88,11 +88,21 @@ public class CarService : ICarService
             throw new ApiException("Car with such license number exists", ApiException.BadRequest);
         }
     
-        
         var car = _mapper.Map<Car>(carDto);
-        car.Id = id;
 
-        car = _carRepository.Update(car);
+        carEnt.CapacityHeight = car.CapacityHeight;
+        carEnt.CapacityWidth = car.CapacityWidth;
+        carEnt.CapacityLength = car.CapacityLength;
+        carEnt.Carrying = car.Carrying;
+        carEnt.CarTypeId = car.CarTypeId;
+        carEnt.ActualAutoparkId = car.ActualAutoparkId;
+        carEnt.AutoparkId = car.AutoparkId;
+        carEnt.TankVolume = car.TankVolume;
+        carEnt.Range = car.Range;
+        carEnt.Mark = car.Mark;
+        carEnt.LicenseNumber = car.LicenseNumber;
+
+        //car = _carRepository.Update(car);
         await _carRepository.SaveChangesAsync(cancellationToken);
 
         car = await _carRepository.GetCarFullInfoByIdAsync(id, cancellationToken);
