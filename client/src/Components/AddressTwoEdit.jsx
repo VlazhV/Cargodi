@@ -10,7 +10,7 @@ export default function AddressTwoEdit(props) {
     const name = props.name ? props.name : 'Адрес начала и конца'
 
     const onAddressFromSelect = (newMapAddress) => {
-        let newAddress = addressFrom
+        let newAddress = { ...addressFrom }
         let longitude = newMapAddress.geometry.coordinates[0]
         let latitude = newMapAddress.geometry.coordinates[1]
 
@@ -23,7 +23,7 @@ export default function AddressTwoEdit(props) {
     }
 
     const onAddressToSelect = (newMapAddress) => {
-        let newAddress = addressFrom
+        let newAddress = { ...addressTo }
         let longitude = newMapAddress.geometry.coordinates[0]
         let latitude = newMapAddress.geometry.coordinates[1]
 
